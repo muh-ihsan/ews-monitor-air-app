@@ -1,6 +1,6 @@
 /* This is an UI Component that's slightly modified from
    https://github.com/pritishvaidya/react-native-speedometer,
-   adding custom range and reworked the degree calculation
+   added custom range and reworked the degree calculation
 */
 
 import React, { Component } from "react";
