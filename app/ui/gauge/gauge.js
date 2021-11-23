@@ -107,7 +107,6 @@ class Speedometer extends Component {
                 circleDegree = 90 + perLevelDegree[index - 1];
               }
             }
-            console.log("circleDegree: " + circleDegree);
 
             return (
               <View

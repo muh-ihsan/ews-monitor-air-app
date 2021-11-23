@@ -11,8 +11,6 @@ calculateLabelFromValue = (
 
   const valueCheck = degreeValue / 180;
   let currentDeg;
-  console.log("perLevelDegree type: " + typeof perLevelDegree);
-
   if (!useCustomRange) {
     let currentIndex = 0;
     currentDeg = perLevelDegree;
