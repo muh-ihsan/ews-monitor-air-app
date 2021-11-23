@@ -8,33 +8,30 @@ import {
   Text,
   View,
 } from "react-native";
-import Speedometer from "../ui/gauge/gauge";
+
+import Speedometer from "react-native-speedometer";
 
 const screenHeight = Dimensions.get("window").height;
 
 function PanelPompaScreen() {
   return (
     <View style={styles.container}>
-      <View style={styles.locationTitleWrapper}>
-        <Text style={styles.title}>Nama Panel</Text>
-        <View style={styles.locationWrapper}>
-          <Text style={styles.locationText}>Latitude: 25.90657</Text>
-          <Text style={styles.locationText}>Longitude: 65.43001</Text>
-        </View>
+      <View style={styles.titleWrapper}>
+        <Text style={styles.textTitle}>Nama Panel</Text>
       </View>
       <ScrollView style={{ height: screenHeight - 240 }}>
         <View
           style={[
             styles.groupWrapper,
-            { backgroundColor: "#94ceff", height: 180 },
+            { backgroundColor: "#94ceff", height: 170 },
           ]}
         >
           <View>
-            <Text style={styles.groupTitle}>Tegangan</Text>
+            <Text style={styles.textGroupTitle}>Tegangan</Text>
           </View>
           <View style={styles.itemGroupWrapper}>
             <View>
-              <Text style={styles.itemTextTitle}>Volt R</Text>
+              <Text style={styles.textItemTitle}>Volt R</Text>
               <Speedometer
                 value={76}
                 size={100}
@@ -48,9 +45,9 @@ function PanelPompaScreen() {
               />
             </View>
             <View>
-              <Text style={styles.itemTextTitle}>Volt S</Text>
+              <Text style={styles.textItemTitle}>Volt S</Text>
               <Speedometer
-                value={12}
+                value={80}
                 size={100}
                 labelStyle={{
                   fontSize: 12,
@@ -62,7 +59,7 @@ function PanelPompaScreen() {
               />
             </View>
             <View>
-              <Text style={styles.itemTextTitle}>Volt T</Text>
+              <Text style={styles.textItemTitle}>Volt T</Text>
               <Speedometer
                 value={12}
                 size={100}
@@ -80,15 +77,15 @@ function PanelPompaScreen() {
         <View
           style={[
             styles.groupWrapper,
-            { backgroundColor: "#ff7f50", height: 180 },
+            { backgroundColor: "#ff7f50", height: 170 },
           ]}
         >
           <View>
-            <Text style={styles.groupTitle}>Arus Listrik</Text>
+            <Text style={styles.textGroupTitle}>Arus Listrik</Text>
           </View>
           <View style={styles.itemGroupWrapper}>
             <View>
-              <Text style={styles.itemTextTitle}>Current R</Text>
+              <Text style={styles.textItemTitle}>Current R</Text>
               <Speedometer
                 value={12}
                 size={100}
@@ -102,7 +99,7 @@ function PanelPompaScreen() {
               />
             </View>
             <View>
-              <Text style={styles.itemTextTitle}>Current S</Text>
+              <Text style={styles.textItemTitle}>Current S</Text>
               <Speedometer
                 value={12}
                 size={100}
@@ -116,7 +113,7 @@ function PanelPompaScreen() {
               />
             </View>
             <View>
-              <Text style={styles.itemTextTitle}>Current T</Text>
+              <Text style={styles.textItemTitle}>Current T</Text>
               <Speedometer
                 value={12}
                 size={100}
@@ -134,68 +131,71 @@ function PanelPompaScreen() {
         <View
           style={[
             styles.groupWrapper,
-            { backgroundColor: "#94ceff", height: 90 },
-          ]}
-        >
-          <View style={styles.itemGroupWrapper}>
-            <View>
-              <Text style={styles.itemTextTitle}>Power Factor</Text>
-              <Text style={styles.itemTextValue}>60 %</Text>
-            </View>
-            <View>
-              <Text style={styles.itemTextTitle}>Frequency</Text>
-              <Text style={styles.itemTextValue}>50 Hz</Text>
-            </View>
-            <View>
-              <Text style={styles.itemTextTitle}>Power</Text>
-              <Text style={styles.itemTextValue}>200 W</Text>
-            </View>
-          </View>
-        </View>
-        <View
-          style={[
-            styles.groupWrapper,
-            { backgroundColor: "#ff7f50", height: 120 },
+            { backgroundColor: "#94ceff", height: 110 },
           ]}
         >
           <View>
-            <Text style={styles.groupTitle}>LED States</Text>
+            <Text style={styles.textGroupTitle}>Power</Text>
           </View>
           <View style={styles.itemGroupWrapper}>
             <View>
-              <Text style={styles.itemTextTitle}>LED 1</Text>
-              <Text style={styles.itemTextValue}>ON</Text>
+              <Text style={styles.textItemTitle}>Power Factor</Text>
+              <Text style={styles.textItemValue}>60 %</Text>
             </View>
             <View>
-              <Text style={styles.itemTextTitle}>LED 2</Text>
-              <Text style={styles.itemTextValue}>ON</Text>
+              <Text style={styles.textItemTitle}>Frequency</Text>
+              <Text style={styles.textItemValue}>50 Hz</Text>
             </View>
             <View>
-              <Text style={styles.itemTextTitle}>LED 3</Text>
-              <Text style={styles.itemTextValue}>ON</Text>
-            </View>
-            <View>
-              <Text style={styles.itemTextTitle}>LED 4</Text>
-              <Text style={styles.itemTextValue}>OFF</Text>
-            </View>
-            <View>
-              <Text style={styles.itemTextTitle}>LED 5</Text>
-              <Text style={styles.itemTextValue}>ON</Text>
-            </View>
-            <View>
-              <Text style={styles.itemTextTitle}>LED 6</Text>
-              <Text style={styles.itemTextValue}>OFF</Text>
+              <Text style={styles.textItemTitle}>Power</Text>
+              <Text style={styles.textItemValue}>200 W</Text>
             </View>
           </View>
         </View>
         <View
           style={[
             styles.groupWrapper,
-            { backgroundColor: "#94ceff", height: 90 },
+            { backgroundColor: "#ff7f50", height: 110 },
           ]}
         >
           <View>
-            <Text style={styles.groupTitle}>Button Relays</Text>
+            <Text style={styles.textGroupTitle}>LED States</Text>
+          </View>
+          <View style={styles.itemGroupWrapper}>
+            <View>
+              <Text style={styles.textItemTitle}>LED 1</Text>
+              <Text style={styles.textItemValue}>ON</Text>
+            </View>
+            <View>
+              <Text style={styles.textItemTitle}>LED 2</Text>
+              <Text style={styles.textItemValue}>ON</Text>
+            </View>
+            <View>
+              <Text style={styles.textItemTitle}>LED 3</Text>
+              <Text style={styles.textItemValue}>ON</Text>
+            </View>
+            <View>
+              <Text style={styles.textItemTitle}>LED 4</Text>
+              <Text style={styles.textItemValue}>OFF</Text>
+            </View>
+            <View>
+              <Text style={styles.textItemTitle}>LED 5</Text>
+              <Text style={styles.textItemValue}>ON</Text>
+            </View>
+            <View>
+              <Text style={styles.textItemTitle}>LED 6</Text>
+              <Text style={styles.textItemValue}>OFF</Text>
+            </View>
+          </View>
+        </View>
+        <View
+          style={[
+            styles.groupWrapper,
+            { backgroundColor: "#94ceff", height: 100 },
+          ]}
+        >
+          <View>
+            <Text style={styles.textGroupTitle}>Button Relays</Text>
           </View>
           <View style={styles.itemGroupWrapper}>
             <Button title="Relay 1" color="#ff7f50" />
@@ -222,7 +222,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
     alignItems: "center",
   },
-  groupTitle: {
+  textGroupTitle: {
     textTransform: "uppercase",
     fontWeight: "bold",
     fontSize: 14,
@@ -232,23 +232,18 @@ const styles = StyleSheet.create({
   groupWrapper: {
     marginBottom: 12,
   },
-  itemTextValue: {
+  textItemValue: {
     fontSize: 28,
     textAlign: "center",
   },
-  locationText: {
-    color: "black",
-    fontSize: 14,
-  },
-  locationTitleWrapper: {
-    flex: 1,
+  titleWrapper: {
     marginBottom: 24,
   },
   locationWrapper: {
     alignSelf: "flex-start",
     marginTop: 12,
   },
-  itemTextTitle: {
+  textItemTitle: {
     textTransform: "uppercase",
     fontSize: 12,
     fontWeight: "bold",
@@ -258,7 +253,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     flexGrow: 1,
   },
-  title: {
+  textTitle: {
     color: "black",
     alignSelf: "center",
     fontWeight: "bold",
