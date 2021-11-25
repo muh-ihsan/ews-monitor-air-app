@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Button,
   Dimensions,
@@ -9,123 +9,106 @@ import {
   View,
 } from "react-native";
 
-import Speedometer from "react-native-speedometer";
+import GaugeComponent from "../ui/GaugeComponent";
+import LedStatusComponent from "../ui/ledStatusComponent";
+
+import database from "@react-native-firebase/database";
 
 const screenHeight = Dimensions.get("window").height;
 
 function PanelPompaScreen() {
+  const dbRef = database().ref("geolocations/asdasd/panel-pompa/panel1");
+  const [dbObject, setDbObject] = useState([]);
+
+  React.useEffect(() => {
+    dbRef.on("value", (snapshot) => {
+      let data = snapshot.val();
+      setDbObject(data);
+    });
+  }, []);
+
+  console.log("database return: ", dbObject);
+
   return (
     <View style={styles.container}>
       <View style={styles.titleWrapper}>
-        <Text style={styles.textTitle}>Nama Panel</Text>
+        <Text style={styles.textTitle}>Panel Pompa</Text>
       </View>
       <ScrollView style={{ height: screenHeight - 240 }}>
         <View
           style={[
             styles.groupWrapper,
-            { backgroundColor: "#94ceff", height: 170 },
+            { backgroundColor: "#94ceff", height: 480 },
           ]}
         >
           <View>
             <Text style={styles.textGroupTitle}>Tegangan</Text>
           </View>
           <View style={styles.itemGroupWrapper}>
-            <View>
-              <Text style={styles.textItemTitle}>Volt R</Text>
-              <Speedometer
-                value={76}
-                size={100}
-                labelStyle={{
-                  fontSize: 12,
-                }}
-                labelNoteStyle={{
-                  fontSize: 12,
-                  textAlign: "center",
-                }}
-              />
-            </View>
-            <View>
-              <Text style={styles.textItemTitle}>Volt S</Text>
-              <Speedometer
-                value={80}
-                size={100}
-                labelStyle={{
-                  fontSize: 12,
-                }}
-                labelNoteStyle={{
-                  fontSize: 12,
-                  textAlign: "center",
-                }}
-              />
-            </View>
-            <View>
-              <Text style={styles.textItemTitle}>Volt T</Text>
-              <Speedometer
-                value={12}
-                size={100}
-                labelStyle={{
-                  fontSize: 12,
-                }}
-                labelNoteStyle={{
-                  fontSize: 12,
-                  textAlign: "center",
-                }}
-              />
-            </View>
+            <GaugeComponent
+              title="Volt R"
+              value={dbObject.volt_r}
+              min={100}
+              max={300}
+              markStep={20}
+              unit="V"
+            />
+            <GaugeComponent
+              title="Volt S"
+              value={dbObject.volt_s}
+              min={100}
+              max={300}
+              markStep={20}
+              unit="V"
+            />
+          </View>
+          <View style={styles.itemGroupWrapper}>
+            <GaugeComponent
+              title="Volt T"
+              value={dbObject.volt_t}
+              min={100}
+              max={300}
+              markStep={20}
+              unit="V"
+            />
           </View>
         </View>
         <View
           style={[
             styles.groupWrapper,
-            { backgroundColor: "#ff7f50", height: 170 },
+            { backgroundColor: "#ff7f50", height: 480 },
           ]}
         >
           <View>
             <Text style={styles.textGroupTitle}>Arus Listrik</Text>
           </View>
           <View style={styles.itemGroupWrapper}>
-            <View>
-              <Text style={styles.textItemTitle}>Current R</Text>
-              <Speedometer
-                value={12}
-                size={100}
-                labelStyle={{
-                  fontSize: 12,
-                }}
-                labelNoteStyle={{
-                  fontSize: 12,
-                  textAlign: "center",
-                }}
-              />
-            </View>
-            <View>
-              <Text style={styles.textItemTitle}>Current S</Text>
-              <Speedometer
-                value={12}
-                size={100}
-                labelStyle={{
-                  fontSize: 12,
-                }}
-                labelNoteStyle={{
-                  fontSize: 12,
-                  textAlign: "center",
-                }}
-              />
-            </View>
-            <View>
-              <Text style={styles.textItemTitle}>Current T</Text>
-              <Speedometer
-                value={12}
-                size={100}
-                labelStyle={{
-                  fontSize: 12,
-                }}
-                labelNoteStyle={{
-                  fontSize: 12,
-                  textAlign: "center",
-                }}
-              />
-            </View>
+            <GaugeComponent
+              title="Current R"
+              value={dbObject.current_r}
+              min={0}
+              max={5000}
+              markStep={500}
+              unit="mA"
+            />
+            <GaugeComponent
+              title="Current S"
+              value={dbObject.current_s}
+              min={0}
+              max={5000}
+              markStep={500}
+              unit="mA"
+            />
+          </View>
+          <View style={styles.itemGroupWrapper}>
+            <GaugeComponent
+              title="Current T"
+              value={dbObject.current_t}
+              min={0}
+              max={5000}
+              markStep={500}
+              unit="mA"
+            />
           </View>
         </View>
         <View
@@ -140,40 +123,44 @@ function PanelPompaScreen() {
           <View style={styles.itemGroupWrapper}>
             <View>
               <Text style={styles.textItemTitle}>Power Factor</Text>
-              <Text style={styles.textItemValue}>60 %</Text>
+              <Text style={styles.textItemValue}>
+                {dbObject.power_factor * 100}%
+              </Text>
             </View>
             <View>
               <Text style={styles.textItemTitle}>Frequency</Text>
-              <Text style={styles.textItemValue}>50 Hz</Text>
+              <Text style={styles.textItemValue}>{dbObject.frequency} Hz</Text>
             </View>
             <View>
               <Text style={styles.textItemTitle}>Power</Text>
-              <Text style={styles.textItemValue}>200 W</Text>
+              <Text style={styles.textItemValue}>{dbObject.power} W</Text>
             </View>
           </View>
         </View>
         <View
           style={[
             styles.groupWrapper,
-            { backgroundColor: "#ff7f50", height: 110 },
+            { backgroundColor: "#ff7f50", height: 200 },
           ]}
         >
           <View>
             <Text style={styles.textGroupTitle}>LED States</Text>
           </View>
           <View style={styles.itemGroupWrapper}>
-            <View>
-              <Text style={styles.textItemTitle}>LED 1</Text>
-              <Text style={styles.textItemValue}>ON</Text>
-            </View>
-            <View>
-              <Text style={styles.textItemTitle}>LED 2</Text>
-              <Text style={styles.textItemValue}>ON</Text>
-            </View>
-            <View>
-              <Text style={styles.textItemTitle}>LED 3</Text>
-              <Text style={styles.textItemValue}>ON</Text>
-            </View>
+            <LedStatusComponent
+              name={dbObject.led_1.nama}
+              value={dbObject.led_1.value}
+            />
+            <LedStatusComponent
+              name={dbObject.led_2.nama}
+              value={dbObject.led_2.value}
+            />
+            <LedStatusComponent
+              name={dbObject.led_3.nama}
+              value={dbObject.led_3.value}
+            />
+          </View>
+          <View style={styles.itemGroupWrapper}>
             <View>
               <Text style={styles.textItemTitle}>LED 4</Text>
               <Text style={styles.textItemValue}>OFF</Text>
@@ -239,10 +226,6 @@ const styles = StyleSheet.create({
   titleWrapper: {
     marginBottom: 24,
   },
-  locationWrapper: {
-    alignSelf: "flex-start",
-    marginTop: 12,
-  },
   textItemTitle: {
     textTransform: "uppercase",
     fontSize: 12,
@@ -258,7 +241,6 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     fontWeight: "bold",
     fontSize: 18,
-    marginTop: 24,
   },
 });
 

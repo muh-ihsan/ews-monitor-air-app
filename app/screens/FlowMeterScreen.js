@@ -1,145 +1,113 @@
 import React from "react";
-import { View, StyleSheet, Text } from "react-native";
+import { View, ScrollView, Dimensions, Text } from "react-native";
 
-import Speedometer from "react-native-speedometer";
+import GaugeComponent from "../ui/GaugeComponent";
 import styles from "../styles/stylesheet";
+
+const screenHeight = Dimensions.get("window").height;
 
 function FlowMeterScreen() {
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { flex: 1 }]}>
       <View style={styles.titleWrapper}>
-        <Text style={styles.textTitle}>Nama Flow Meter</Text>
+        <Text style={styles.textTitle}>Flow Meter</Text>
       </View>
-      <View
-        style={[
-          styles.groupWrapper,
-          { backgroundColor: "#94ceff", height: 280 },
-        ]}
-      >
-        <View>
-          <Text style={styles.textGroupTitle}>Flow Rate</Text>
-        </View>
-        <View style={styles.itemGroupWrapper}>
+      <ScrollView style={{ height: screenHeight - 240 }}>
+        <View
+          style={[
+            styles.groupWrapper,
+            { backgroundColor: "#94ceff", height: 480 },
+          ]}
+        >
           <View>
-            <Text style={styles.textItemTitle}>Flow Rate</Text>
-            <Speedometer
-              value={76}
-              size={100}
-              labelStyle={{
-                fontSize: 12,
-              }}
-              labelNoteStyle={{
-                fontSize: 12,
-                textAlign: "center",
-              }}
+            <Text style={styles.textGroupTitle}>Flow Rate</Text>
+          </View>
+          <View style={styles.itemGroupWrapper}>
+            <GaugeComponent
+              title="Flow Rate"
+              value={200}
+              min={100}
+              max={300}
+              markStep={20}
+              unit="m3/h"
+            />
+            <GaugeComponent
+              title="Energy Flow Rate"
+              value={200}
+              min={100}
+              max={300}
+              markStep={20}
+              unit="GJ/h"
             />
           </View>
-          <View>
-            <Text style={styles.textItemTitle}>Energy Flow Rate</Text>
-            <Speedometer
-              value={76}
-              size={100}
-              labelStyle={{
-                fontSize: 12,
-              }}
-              labelNoteStyle={{
-                fontSize: 12,
-                textAlign: "center",
-              }}
+          <View style={styles.itemGroupWrapper}>
+            <GaugeComponent
+              title="Velocity"
+              value={200}
+              min={100}
+              max={300}
+              markStep={20}
+              unit="m/s"
             />
-          </View>
-        </View>
-        <View style={styles.itemGroupWrapper}>
-          <View>
-            <Text style={styles.textItemTitle}>Velocity</Text>
-            <Speedometer
-              value={76}
-              size={100}
-              labelStyle={{
-                fontSize: 12,
-              }}
-              labelNoteStyle={{
-                fontSize: 12,
-                textAlign: "center",
-              }}
-            />
-          </View>
-          <View>
-            <Text style={styles.textItemTitle}>Fluid Sound Speed</Text>
-            <Speedometer
-              value={76}
-              size={100}
-              labelStyle={{
-                fontSize: 12,
-              }}
-              labelNoteStyle={{
-                fontSize: 12,
-                textAlign: "center",
-              }}
+            <GaugeComponent
+              title="Fluid Sound Speed"
+              value={200}
+              min={100}
+              max={300}
+              markStep={20}
+              unit="m/s"
             />
           </View>
         </View>
-      </View>
-      <View
-        style={[
-          styles.groupWrapper,
-          { backgroundColor: "#ff7f50", height: 170 },
-        ]}
-      >
-        <View>
-          <Text style={styles.textGroupTitle}>Temperature</Text>
-        </View>
-        <View style={styles.itemGroupWrapper}>
+        <View
+          style={[
+            styles.groupWrapper,
+            { backgroundColor: "#ff7f50", height: 260 },
+          ]}
+        >
           <View>
-            <Text style={styles.textItemTitle}>Temperature Inlet</Text>
-            <Speedometer
-              value={76}
-              size={100}
-              labelStyle={{
-                fontSize: 12,
-              }}
-              labelNoteStyle={{
-                fontSize: 12,
-                textAlign: "center",
-              }}
-            />
+            <Text style={styles.textGroupTitle}>Temperature</Text>
           </View>
-          <View>
-            <Text style={styles.textItemTitle}>Temperature Outlet</Text>
-            <Speedometer
-              value={76}
-              size={100}
-              labelStyle={{
-                fontSize: 12,
-              }}
-              labelNoteStyle={{
-                fontSize: 12,
-                textAlign: "center",
-              }}
+          <View style={styles.itemGroupWrapper}>
+            <GaugeComponent
+              title="Temperature Inlet"
+              value={200}
+              min={100}
+              max={300}
+              markStep={20}
+              unit="°C"
+            />
+            <GaugeComponent
+              title="Temperature Outlet"
+              value={200}
+              min={100}
+              max={300}
+              markStep={20}
+              unit="°C"
             />
           </View>
         </View>
-      </View>
-      <View
-        style={[
-          styles.groupWrapper,
-          { backgroundColor: "#94ceff", height: 120 },
-        ]}
-      >
-        <View>
-          <Text style={styles.textGroupTitle}>Accumulator</Text>
-        </View>
-        <View style={styles.itemGroupWrapper}>
+        <View
+          style={[
+            styles.groupWrapper,
+            { backgroundColor: "#94ceff", height: 120 },
+          ]}
+        >
           <View>
-            <Text style={styles.textItemTitle}>Positive Accumulator</Text>
-            <Text style={styles.textItemValue}>2.51</Text>
+            <Text style={styles.textGroupTitle}>Accumulator</Text>
           </View>
-          <View>
-            <Text style={styles.textItemTitle}>Negative Accumulator</Text>
-            <Text style={styles.textItemValue}>-3.12</Text>
+          <View style={styles.itemGroupWrapper}>
+            <View>
+              <Text style={styles.textItemTitle}>Positive Accumulator</Text>
+              <Text style={styles.textItemValue}>2.51</Text>
+            </View>
+            <View>
+              <Text style={styles.textItemTitle}>Negative Accumulator</Text>
+              <Text style={styles.textItemValue}>-3.12</Text>
+            </View>
           </View>
         </View>
-      </View>
+      </ScrollView>
     </View>
   );
 }

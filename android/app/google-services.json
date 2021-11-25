@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "716932028185",
+    "firebase_url": "https://tes-pdam-default-rtdb.firebaseio.com",
+    "project_id": "tes-pdam",
+    "storage_bucket": "tes-pdam.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:716932028185:android:748976ba2cb6d4031e9788",
+        "android_client_info": {
+          "package_name": "com.ewsmonitorair"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "716932028185-g5ar5ign0tkt3btu76l4rb8q70kth4p8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3vsAxhhDY8XAUjO5zBR3pRh_nMuKW0YI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "716932028185-g5ar5ign0tkt3btu76l4rb8q70kth4p8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

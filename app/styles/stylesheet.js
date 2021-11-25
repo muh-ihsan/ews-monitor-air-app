@@ -2,7 +2,6 @@ import { StyleSheet } from "react-native";
 
 export default styles = StyleSheet.create({
   container: {
-    // flex: 1,
     marginHorizontal: 16,
     flexDirection: "column",
     justifyContent: "space-between",
@@ -25,6 +24,11 @@ export default styles = StyleSheet.create({
   groupWrapper: {
     marginBottom: 12,
   },
+  textGaugeValue: {
+    fontSize: 16,
+    textAlign: "center",
+    marginTop: 8,
+  },
   textItemValue: {
     fontSize: 28,
     textAlign: "center",
@@ -38,6 +42,7 @@ export default styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: "bold",
     textAlign: "center",
+    marginBottom: 8,
   },
   scrollContainer: {
     justifyContent: "space-between",
@@ -48,6 +53,5 @@ export default styles = StyleSheet.create({
     alignSelf: "center",
     fontWeight: "bold",
     fontSize: 18,
-    marginTop: 24,
   },
 });
