@@ -7,7 +7,8 @@
     "ios": "expo run:ios",
     "web": "expo start --web",
     "eject": "expo eject",
-    "test": "jest"
+    "test": "jest",
+    "android-emulator": "emulator -avd Pixel_3a_API_30_x86"
   },
   "dependencies": {
     "@react-native-firebase/app": "^13.0.1",
@@ -30,6 +31,7 @@
     "react-native-screens": "~3.8.0",
     "react-native-speedometer": "^1.0.5",
     "react-native-svg": "^12.1.0",
+    "react-native-vector-icons": "^9.0.0",
     "react-native-web": "0.17.1"
   },
   "jest": {

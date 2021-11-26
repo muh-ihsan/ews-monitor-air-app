@@ -1,12 +1,14 @@
 import { StyleSheet } from "react-native";
 
+import colors from "./colors";
+
 export default styles = StyleSheet.create({
   container: {
     marginHorizontal: 16,
     flexDirection: "column",
     justifyContent: "space-between",
     fontFamily: "Roboto",
-    backgroundColor: "#FFF",
+    backgroundColor: colors.background,
   },
   itemGroupWrapper: {
     marginVertical: 16,
@@ -15,6 +17,7 @@ export default styles = StyleSheet.create({
     alignItems: "center",
   },
   textGroupTitle: {
+    color: "white",
     textTransform: "uppercase",
     fontWeight: "bold",
     fontSize: 14,
@@ -22,22 +25,26 @@ export default styles = StyleSheet.create({
     marginStart: 8,
   },
   groupWrapper: {
+    backgroundColor: colors.primary,
     marginBottom: 12,
   },
   textGaugeValue: {
+    color: "white",
     fontSize: 16,
     textAlign: "center",
     marginTop: 8,
   },
   textItemValue: {
+    color: "white",
     fontSize: 28,
     textAlign: "center",
   },
   titleWrapper: {
-    // flex: 1,
+    marginTop: 12,
     marginBottom: 24,
   },
   textItemTitle: {
+    color: "white",
     textTransform: "uppercase",
     fontSize: 12,
     fontWeight: "bold",
@@ -49,7 +56,7 @@ export default styles = StyleSheet.create({
     flexGrow: 1,
   },
   textTitle: {
-    color: "black",
+    color: "white",
     alignSelf: "center",
     fontWeight: "bold",
     fontSize: 18,

@@ -1,34 +1,34 @@
 {
   "project_info": {
-    "project_number": "716932028185",
-    "firebase_url": "https://tes-pdam-default-rtdb.firebaseio.com",
-    "project_id": "tes-pdam",
-    "storage_bucket": "tes-pdam.appspot.com"
+    "project_number": "730063556872",
+    "firebase_url": "https://pdam-iot-65ebf-default-rtdb.firebaseio.com",
+    "project_id": "pdam-iot-65ebf",
+    "storage_bucket": "pdam-iot-65ebf.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:716932028185:android:748976ba2cb6d4031e9788",
+        "mobilesdk_app_id": "1:730063556872:android:a3814437a1d211d7b49cbd",
         "android_client_info": {
           "package_name": "com.ewsmonitorair"
         }
       },
       "oauth_client": [
         {
-          "client_id": "716932028185-g5ar5ign0tkt3btu76l4rb8q70kth4p8.apps.googleusercontent.com",
+          "client_id": "730063556872-2a4mbf3167p3b2v2bt1ocu17lsnm1c58.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyC3vsAxhhDY8XAUjO5zBR3pRh_nMuKW0YI"
+          "current_key": "AIzaSyDyu4vZqsJ5G8FX1Kze1gz1shPNTokvsSo"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "716932028185-g5ar5ign0tkt3btu76l4rb8q70kth4p8.apps.googleusercontent.com",
+              "client_id": "730063556872-2a4mbf3167p3b2v2bt1ocu17lsnm1c58.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

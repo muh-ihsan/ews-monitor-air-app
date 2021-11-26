@@ -8,17 +8,28 @@ import {
   Text,
   View,
 } from "react-native";
-
-import GaugeComponent from "../ui/GaugeComponent";
-import LedStatusComponent from "../ui/ledStatusComponent";
-
 import database from "@react-native-firebase/database";
 
+import GaugeComponent from "../ui/GaugeComponent";
+import LedStatusComponent from "../ui/LedStatusComponent";
+
+import styles from "../styles/stylesheet";
+import colors from "../styles/colors";
+
 const screenHeight = Dimensions.get("window").height;
+const dbRef = database().ref("ewsApp/panel-pompa");
 
 function PanelPompaScreen() {
-  const dbRef = database().ref("geolocations/asdasd/panel-pompa/panel1");
-  const [dbObject, setDbObject] = useState([]);
+  const [dbObject, setDbObject] = useState({
+    led1: {},
+    led2: {},
+    led3: {},
+    led4: {},
+    led5: {},
+    led6: {},
+    relay1: { nama: "" },
+    relay2: { nama: "" },
+  });
 
   React.useEffect(() => {
     dbRef.on("value", (snapshot) => {
@@ -27,27 +38,23 @@ function PanelPompaScreen() {
     });
   }, []);
 
-  console.log("database return: ", dbObject);
+  console.log("db panel pompa: ", dbObject);
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { flex: 1 }]}>
+      <StatusBar barStyle="light-content" backgroundColor={colors.background} />
       <View style={styles.titleWrapper}>
         <Text style={styles.textTitle}>Panel Pompa</Text>
       </View>
       <ScrollView style={{ height: screenHeight - 240 }}>
-        <View
-          style={[
-            styles.groupWrapper,
-            { backgroundColor: "#94ceff", height: 480 },
-          ]}
-        >
+        <View style={[styles.groupWrapper, { height: 480 }]}>
           <View>
             <Text style={styles.textGroupTitle}>Tegangan</Text>
           </View>
           <View style={styles.itemGroupWrapper}>
             <GaugeComponent
               title="Volt R"
-              value={dbObject.volt_r}
+              value={dbObject.voltR}
               min={100}
               max={300}
               markStep={20}
@@ -55,7 +62,7 @@ function PanelPompaScreen() {
             />
             <GaugeComponent
               title="Volt S"
-              value={dbObject.volt_s}
+              value={dbObject.voltS}
               min={100}
               max={300}
               markStep={20}
@@ -65,7 +72,7 @@ function PanelPompaScreen() {
           <View style={styles.itemGroupWrapper}>
             <GaugeComponent
               title="Volt T"
-              value={dbObject.volt_t}
+              value={dbObject.voltT}
               min={100}
               max={300}
               markStep={20}
@@ -73,19 +80,14 @@ function PanelPompaScreen() {
             />
           </View>
         </View>
-        <View
-          style={[
-            styles.groupWrapper,
-            { backgroundColor: "#ff7f50", height: 480 },
-          ]}
-        >
+        <View style={[styles.groupWrapper, { height: 480 }]}>
           <View>
             <Text style={styles.textGroupTitle}>Arus Listrik</Text>
           </View>
           <View style={styles.itemGroupWrapper}>
             <GaugeComponent
               title="Current R"
-              value={dbObject.current_r}
+              value={dbObject.currentR}
               min={0}
               max={5000}
               markStep={500}
@@ -93,7 +95,7 @@ function PanelPompaScreen() {
             />
             <GaugeComponent
               title="Current S"
-              value={dbObject.current_s}
+              value={dbObject.currentS}
               min={0}
               max={5000}
               markStep={500}
@@ -103,7 +105,7 @@ function PanelPompaScreen() {
           <View style={styles.itemGroupWrapper}>
             <GaugeComponent
               title="Current T"
-              value={dbObject.current_t}
+              value={dbObject.currentT}
               min={0}
               max={5000}
               markStep={500}
@@ -111,12 +113,7 @@ function PanelPompaScreen() {
             />
           </View>
         </View>
-        <View
-          style={[
-            styles.groupWrapper,
-            { backgroundColor: "#94ceff", height: 110 },
-          ]}
-        >
+        <View style={[styles.groupWrapper, { height: 120 }]}>
           <View>
             <Text style={styles.textGroupTitle}>Power</Text>
           </View>
@@ -124,7 +121,7 @@ function PanelPompaScreen() {
             <View>
               <Text style={styles.textItemTitle}>Power Factor</Text>
               <Text style={styles.textItemValue}>
-                {dbObject.power_factor * 100}%
+                {dbObject.powerFactor * 100}%
               </Text>
             </View>
             <View>
@@ -137,56 +134,64 @@ function PanelPompaScreen() {
             </View>
           </View>
         </View>
-        <View
-          style={[
-            styles.groupWrapper,
-            { backgroundColor: "#ff7f50", height: 200 },
-          ]}
-        >
+        <View style={[styles.groupWrapper, { height: 210 }]}>
           <View>
             <Text style={styles.textGroupTitle}>LED States</Text>
           </View>
           <View style={styles.itemGroupWrapper}>
             <LedStatusComponent
-              name={dbObject.led_1.nama}
-              value={dbObject.led_1.value}
+              name={dbObject.led1.nama}
+              value={dbObject.led1.value}
             />
             <LedStatusComponent
-              name={dbObject.led_2.nama}
-              value={dbObject.led_2.value}
+              name={dbObject.led2.nama}
+              value={dbObject.led2.value}
             />
             <LedStatusComponent
-              name={dbObject.led_3.nama}
-              value={dbObject.led_3.value}
+              name={dbObject.led3.nama}
+              value={dbObject.led3.value}
             />
           </View>
           <View style={styles.itemGroupWrapper}>
-            <View>
-              <Text style={styles.textItemTitle}>LED 4</Text>
-              <Text style={styles.textItemValue}>OFF</Text>
-            </View>
-            <View>
-              <Text style={styles.textItemTitle}>LED 5</Text>
-              <Text style={styles.textItemValue}>ON</Text>
-            </View>
-            <View>
-              <Text style={styles.textItemTitle}>LED 6</Text>
-              <Text style={styles.textItemValue}>OFF</Text>
-            </View>
+            <LedStatusComponent
+              name={dbObject.led4.nama}
+              value={dbObject.led4.value}
+            />
+            <LedStatusComponent
+              name={dbObject.led5.nama}
+              value={dbObject.led5.value}
+            />
+            <LedStatusComponent
+              name={dbObject.led6.nama}
+              value={dbObject.led6.value}
+            />
           </View>
         </View>
-        <View
-          style={[
-            styles.groupWrapper,
-            { backgroundColor: "#94ceff", height: 100 },
-          ]}
-        >
+        <View style={[styles.groupWrapper, { height: 100 }]}>
           <View>
             <Text style={styles.textGroupTitle}>Button Relays</Text>
           </View>
           <View style={styles.itemGroupWrapper}>
-            <Button title="Relay 1" color="#ff7f50" />
-            <Button title="Relay 2" color="#ff7f50" />
+            <Button
+              title={dbObject.relay1.nama}
+              color={colors.secondary}
+              onPress={() => {
+                database()
+                  .ref("ewsApp/panel-pompa/relay1")
+                  .update({ trigger: true })
+                  .then(() => console.log("relay 1 triggered"));
+              }}
+            />
+            <Button
+              title={dbObject.relay2.nama}
+              color={colors.secondary}
+              onPress={() => {
+                database()
+                  .ref("ewsApp/panel-pompa/relay2")
+                  .update({ trigger: true })
+                  .then(() => console.log("relay 2 triggered"));
+              }}
+            />
           </View>
         </View>
       </ScrollView>
@@ -195,53 +200,12 @@ function PanelPompaScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginHorizontal: 16,
-    justifyContent: "space-between",
-    fontFamily: "Roboto",
-    backgroundColor: "#FFF",
-  },
-  itemGroupWrapper: {
-    marginVertical: 16,
-    flexDirection: "row",
-    justifyContent: "space-evenly",
-    alignItems: "center",
-  },
-  textGroupTitle: {
-    textTransform: "uppercase",
-    fontWeight: "bold",
-    fontSize: 14,
-    marginTop: 8,
-    marginStart: 8,
-  },
-  groupWrapper: {
-    marginBottom: 12,
-  },
-  textItemValue: {
-    fontSize: 28,
-    textAlign: "center",
-  },
-  titleWrapper: {
-    marginBottom: 24,
-  },
-  textItemTitle: {
-    textTransform: "uppercase",
-    fontSize: 12,
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  scrollContainer: {
-    justifyContent: "space-between",
-    flexGrow: 1,
-  },
-  textTitle: {
-    color: "black",
-    alignSelf: "center",
-    fontWeight: "bold",
-    fontSize: 18,
-  },
-});
+// const setTrigger = (relay) => {
+//   const relayRef = "ewsApp/panel-pompa/" + relay;
+//   database()
+//     .ref(relayRef)
+//     .update({ trigger: true })
+//     .then(() => console.log(relay + " triggered"));
+// };
 
 export default PanelPompaScreen;
