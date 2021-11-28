@@ -179,7 +179,10 @@ function PanelPompaScreen() {
                 database()
                   .ref("ewsApp/panel-pompa/relay1")
                   .update({ trigger: true })
-                  .then(() => console.log("relay 1 triggered"));
+                  .then(() => console.log("relay 1 triggered"))
+                  .catch((err) => {
+                    console.log("Error: ", err);
+                  });
               }}
             />
             <Button
@@ -189,7 +192,10 @@ function PanelPompaScreen() {
                 database()
                   .ref("ewsApp/panel-pompa/relay2")
                   .update({ trigger: true })
-                  .then(() => console.log("relay 2 triggered"));
+                  .then(() => console.log("relay 2 triggered"))
+                  .catch((err) => {
+                    console.log("Error: ", err);
+                  });
               }}
             />
           </View>
@@ -199,13 +205,5 @@ function PanelPompaScreen() {
     </View>
   );
 }
-
-// const setTrigger = (relay) => {
-//   const relayRef = "ewsApp/panel-pompa/" + relay;
-//   database()
-//     .ref(relayRef)
-//     .update({ trigger: true })
-//     .then(() => console.log(relay + " triggered"));
-// };
 
 export default PanelPompaScreen;
