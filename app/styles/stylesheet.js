@@ -27,6 +27,7 @@ export default styles = StyleSheet.create({
   groupWrapper: {
     backgroundColor: colors.primary,
     marginBottom: 12,
+    borderRadius: 10,
   },
   textGaugeValue: {
     color: "white",

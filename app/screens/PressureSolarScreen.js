@@ -21,10 +21,10 @@ function PressureSolarScreen() {
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor={colors.background} />
-      <View style={styles.titleWrapper}>
+      {/* <View style={styles.titleWrapper}>
         <Text style={styles.textTitle}>Pressure & Solar Panel</Text>
-      </View>
-      <View style={[styles.groupWrapper, { height: 260 }]}>
+      </View> */}
+      <View style={[styles.groupWrapper, { marginTop: 24, height: 260 }]}>
         <View>
           <Text style={styles.textGroupTitle}>Pressure</Text>
         </View>

@@ -5,6 +5,7 @@ import {
   ScrollView,
   StatusBar,
   StyleSheet,
+  Switch,
   Text,
   View,
 } from "react-native";
@@ -30,11 +31,15 @@ function PanelPompaScreen() {
     relay1: { nama: "" },
     relay2: { nama: "" },
   });
+  const [relay1, setRelay1] = useState(false);
+  const [relay2, setRelay2] = useState(false);
 
   React.useEffect(() => {
     dbRef.on("value", (snapshot) => {
       let data = snapshot.val();
       setDbObject(data);
+      setRelay1(data.relay1.trigger);
+      setRelay2(data.relay2.trigger);
     });
   }, []);
 
@@ -43,10 +48,10 @@ function PanelPompaScreen() {
   return (
     <View style={[styles.container, { flex: 1 }]}>
       <StatusBar barStyle="light-content" backgroundColor={colors.background} />
-      <View style={styles.titleWrapper}>
+      {/* <View style={styles.titleWrapper}>
         <Text style={styles.textTitle}>Panel Pompa</Text>
-      </View>
-      <ScrollView style={{ height: screenHeight - 240 }}>
+      </View> */}
+      <ScrollView style={{ marginTop: 24, height: screenHeight - 240 }}>
         <View style={[styles.groupWrapper, { height: 480 }]}>
           <View>
             <Text style={styles.textGroupTitle}>Tegangan</Text>
@@ -167,37 +172,50 @@ function PanelPompaScreen() {
             />
           </View>
         </View>
-        <View style={[styles.groupWrapper, { height: 100 }]}>
+        <View style={[styles.groupWrapper, { height: 110 }]}>
           <View>
             <Text style={styles.textGroupTitle}>Button Relays</Text>
           </View>
+          {/* <View>
+            <Text style={styles.textCheckmark}>Enable Relay Button?</Text>
+          </View> */}
           <View style={styles.itemGroupWrapper}>
-            <Button
-              title={dbObject.relay1.nama}
-              color={colors.secondary}
-              onPress={() => {
-                database()
-                  .ref("ewsApp/panel-pompa/relay1")
-                  .update({ trigger: true })
-                  .then(() => console.log("relay 1 triggered"))
-                  .catch((err) => {
-                    console.log("Error: ", err);
-                  });
-              }}
-            />
-            <Button
-              title={dbObject.relay2.nama}
-              color={colors.secondary}
-              onPress={() => {
-                database()
-                  .ref("ewsApp/panel-pompa/relay2")
-                  .update({ trigger: true })
-                  .then(() => console.log("relay 2 triggered"))
-                  .catch((err) => {
-                    console.log("Error: ", err);
-                  });
-              }}
-            />
+            <View>
+              <Text style={styles.textItemTitle}>{dbObject.relay1.nama}</Text>
+              <Switch
+                onValueChange={() => {
+                  const value = !relay1;
+                  setRelay1(value);
+                  database()
+                    .ref("ewsApp/panel-pompa/relay1")
+                    .update({ trigger: value })
+                    .then(() => console.log("Relay 1 triggered"))
+                    .catch((err) => {
+                      console.log("Error: ", err);
+                    });
+                }}
+                value={relay1}
+                thumbColor={relay1 ? colors.secondary : "white"}
+              />
+            </View>
+            <View>
+              <Text style={styles.textItemTitle}>{dbObject.relay2.nama}</Text>
+              <Switch
+                onValueChange={() => {
+                  const value = !relay2;
+                  setRelay2(value);
+                  database()
+                    .ref("ewsApp/panel-pompa/relay2")
+                    .update({ trigger: value })
+                    .then(() => console.log("Relay 2 triggered"))
+                    .catch((err) => {
+                      console.log("Error: ", err);
+                    });
+                }}
+                value={relay2}
+                thumbColor={relay2 ? colors.secondary : "white"}
+              />
+            </View>
           </View>
         </View>
       </ScrollView>
@@ -205,5 +223,20 @@ function PanelPompaScreen() {
     </View>
   );
 }
+
+const localstyles = StyleSheet.create({
+  itemGroupWrapper: {
+    marginVertical: 16,
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    alignItems: "center",
+  },
+  textCheckmark: {
+    color: "white",
+    alignSelf: "flex-start",
+    marginTop: 8,
+    marginStart: 8,
+  },
+});
 
 export default PanelPompaScreen;

@@ -24,10 +24,10 @@ function FlowMeterScreen() {
   return (
     <View style={[styles.container, { flex: 1 }]}>
       <StatusBar barStyle="light-content" backgroundColor={colors.background} />
-      <View style={styles.titleWrapper}>
+      {/* <View style={styles.titleWrapper}>
         <Text style={styles.textTitle}>Flow Meter</Text>
-      </View>
-      <ScrollView style={{ height: screenHeight - 240 }}>
+      </View> */}
+      <ScrollView style={{ marginTop: 24, height: screenHeight - 240 }}>
         <View style={[styles.groupWrapper, { height: 480 }]}>
           <View>
             <Text style={styles.textGroupTitle}>Flow Rate</Text>
