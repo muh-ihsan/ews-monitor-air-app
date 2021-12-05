@@ -108,8 +108,8 @@ export default function App() {
   useState(() => {
     const unsubscribe = messaging().onMessage(async (remoteMessage) => {
       Alert.alert(
-        "A new message from FCM has arrived!",
-        JSON.stringify(remoteMessage)
+        remoteMessage.notification.title,
+        remoteMessage.notification.body
       );
     });
 
