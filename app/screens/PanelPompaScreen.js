@@ -10,6 +10,7 @@ import {
   View,
 } from "react-native";
 import database from "@react-native-firebase/database";
+import { Picker } from "@react-native-picker/picker";
 
 import GaugeComponent from "../ui/GaugeComponent";
 import LedStatusComponent from "../ui/LedStatusComponent";
@@ -18,9 +19,10 @@ import styles from "../styles/stylesheet";
 import colors from "../styles/colors";
 
 const screenHeight = Dimensions.get("window").height;
-const dbRef = database().ref("ewsApp/panel-pompa");
+const Item = Picker.Item;
 
 function PanelPompaScreen() {
+  const dbPath = "ewsApp/panel-pompa/";
   const [dbObject, setDbObject] = useState({
     led1: {},
     led2: {},
@@ -33,14 +35,32 @@ function PanelPompaScreen() {
   });
   const [relay1, setRelay1] = useState(false);
   const [relay2, setRelay2] = useState(false);
+  const [listPanel, setListPanel] = useState("panelPompa1");
 
   React.useEffect(() => {
-    dbRef.on("value", (snapshot) => {
-      let data = snapshot.val();
-      setDbObject(data);
-      setRelay1(data.relay1.trigger);
-      setRelay2(data.relay2.trigger);
-    });
+    database()
+      .ref(dbPath + listPanel)
+      .on("value", (snapshot) => {
+        let data = snapshot.val();
+        let relay1Convert = false;
+        let relay2Convert = false;
+        setDbObject(data);
+
+        if (data.relay1.trigger === 1) {
+          relay1Convert = true;
+        } else {
+          relay1Convert = false;
+        }
+        if (data.relay2.trigger === 1) {
+          relay2Convert = true;
+        } else {
+          relay2Convert = false;
+        }
+        setRelay1(relay1Convert);
+        setRelay2(relay2Convert);
+        // setRelay1(data.relay1.trigger);
+        // setRelay2(data.relay2.trigger);
+      });
   }, []);
 
   console.log("db panel pompa: ", dbObject);
@@ -51,6 +71,14 @@ function PanelPompaScreen() {
       {/* <View style={styles.titleWrapper}>
         <Text style={styles.textTitle}>Panel Pompa</Text>
       </View> */}
+      <Picker
+        style={styles.picker}
+        selectedValue={listPanel}
+        onValueChange={(v) => setListPanel(v)}
+      >
+        <Item label={"Panel 1"} value={"panelPompa1"} />
+        <Item label={"Panel 2"} value={"panelPompa2"} />
+      </Picker>
       <ScrollView style={{ marginTop: 24, height: screenHeight - 240 }}>
         <View style={[styles.groupWrapper, { height: 480 }]}>
           <View>
@@ -185,10 +213,11 @@ function PanelPompaScreen() {
               <Switch
                 onValueChange={() => {
                   const value = !relay1;
+                  const valueInt = value ? 1 : 0;
                   setRelay1(value);
                   database()
-                    .ref("ewsApp/panel-pompa/relay1")
-                    .update({ trigger: value })
+                    .ref("ewsApp/panel-pompa/panelPompa1/relay1")
+                    .update({ trigger: valueInt })
                     .then(() => console.log("Relay 1 triggered"))
                     .catch((err) => {
                       console.log("Error: ", err);
@@ -203,10 +232,11 @@ function PanelPompaScreen() {
               <Switch
                 onValueChange={() => {
                   const value = !relay2;
+                  const valueInt = value ? 1 : 0;
                   setRelay2(value);
                   database()
-                    .ref("ewsApp/panel-pompa/relay2")
-                    .update({ trigger: value })
+                    .ref("ewsApp/panel-pompa/panelPompa1/relay2")
+                    .update({ trigger: valueInt })
                     .then(() => console.log("Relay 2 triggered"))
                     .catch((err) => {
                       console.log("Error: ", err);

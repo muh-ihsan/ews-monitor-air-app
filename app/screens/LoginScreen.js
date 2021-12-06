@@ -64,6 +64,7 @@ function LoginScreen() {
         barStyle={"light-content"}
         backgroundColor={colors.background}
       />
+      <Text style={styles.textLogin}>Log In</Text>
       <View style={styles.inputWrapper}>
         <TextInput
           style={styles.textInput}
@@ -147,6 +148,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     color: "white",
     borderColor: colors.primary,
+  },
+  textLogin: {
+    color: "white",
+    textAlign: "center",
+    fontSize: 18,
   },
   textSignInButton: {
     color: "white",

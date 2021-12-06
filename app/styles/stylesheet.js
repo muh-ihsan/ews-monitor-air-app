@@ -29,6 +29,11 @@ export default styles = StyleSheet.create({
     marginBottom: 12,
     borderRadius: 10,
   },
+  picker: {
+    color: "black",
+    marginTop: 16,
+    backgroundColor: "white",
+  },
   textGaugeValue: {
     color: "white",
     fontSize: 16,
