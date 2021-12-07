@@ -53,8 +53,22 @@ function LoginScreen() {
           .subscribeToTopic("notif")
           .then(() => console.log("Subscribe to topic"));
       })
-      .catch((e) => {
-        Alert.alert("Error Login", e.message);
+      .catch((err) => {
+        if (err.code === "auth/invalid-email") {
+          Alert.alert("Error Login", "Email tidak valid");
+        } else if (err.code === "auth/user-disabled") {
+          Alert.alert(
+            "Error Login",
+            "User dengan email ini tidak di-enable. Kontak admin"
+          );
+        } else if (err.code === "auth/user-not-found") {
+          Alert.alert(
+            "Error Login",
+            "User tidak ditemukan. Silahkan sign-up terlebih dahulu"
+          );
+        } else if (err.code === "auth/wrong-password") {
+          Alert.alert("Error Login", "Password salah");
+        }
       });
   };
 
@@ -64,8 +78,8 @@ function LoginScreen() {
         barStyle={"light-content"}
         backgroundColor={colors.background}
       />
-      <Text style={styles.textLogin}>Log In</Text>
       <View style={styles.inputWrapper}>
+        <Text style={styles.textLogin}>Log In</Text>
         <TextInput
           style={styles.textInput}
           placeholder="Email"
@@ -110,7 +124,7 @@ const styles = StyleSheet.create({
   buttonSignIn: {
     width: 160,
     height: 50,
-    marginVertical: 16,
+    marginVertical: 24,
     flexDirection: "row",
     justifyContent: "center",
     borderRadius: 10,
@@ -150,9 +164,11 @@ const styles = StyleSheet.create({
     borderColor: colors.primary,
   },
   textLogin: {
+    marginBottom: 28,
+    fontWeight: "bold",
     color: "white",
     textAlign: "center",
-    fontSize: 18,
+    fontSize: 24,
   },
   textSignInButton: {
     color: "white",

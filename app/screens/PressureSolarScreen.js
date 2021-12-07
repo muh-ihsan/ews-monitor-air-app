@@ -75,9 +75,9 @@ function PressureSolarScreen() {
           <GaugeComponent
             title="Pressure"
             value={dbObject.pressure}
-            min={100}
-            max={300}
-            markStep={20}
+            min={0}
+            max={80}
+            markStep={5}
             unit="psi"
           />
         </View>

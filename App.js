@@ -129,7 +129,11 @@ export default function App() {
           />
         ) : (
           // Pengguna belum login
-          <Stack.Screen name={"Login"} component={LoginScreen} />
+          <Stack.Screen
+            name={"Login"}
+            component={LoginScreen}
+            options={{ headerShown: false }}
+          />
         )}
       </Stack.Navigator>
     </NavigationContainer>

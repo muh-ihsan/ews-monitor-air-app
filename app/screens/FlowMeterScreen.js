@@ -80,9 +80,9 @@ function FlowMeterScreen() {
             <GaugeComponent
               title="Velocity"
               value={dbObject.velocity}
-              min={100}
-              max={300}
-              markStep={20}
+              min={1}
+              max={5}
+              markStep={0.6}
               unit="m/s"
             />
             <GaugeComponent
@@ -103,17 +103,17 @@ function FlowMeterScreen() {
             <GaugeComponent
               title="Temperature Inlet"
               value={dbObject.tempInlet}
-              min={100}
-              max={300}
-              markStep={20}
+              min={5}
+              max={40}
+              markStep={3}
               unit="°C"
             />
             <GaugeComponent
               title="Temperature Outlet"
               value={dbObject.tempOutlet}
-              min={100}
-              max={300}
-              markStep={20}
+              min={5}
+              max={40}
+              markStep={3}
               unit="°C"
             />
           </View>
