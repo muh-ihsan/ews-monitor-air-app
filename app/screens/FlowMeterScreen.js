@@ -12,7 +12,7 @@ const Item = Picker.Item;
 
 function FlowMeterScreen() {
   const dbPath = "ewsApp/flow-meter/";
-  const [dbObject, setDbObject] = useState({});
+  const [dbObject, setDbObject] = useState({ flowMeter1: {} });
   const [listFlow, setListFlow] = useState("flowMeter1");
 
   // database()
@@ -29,15 +29,17 @@ function FlowMeterScreen() {
   //   });
 
   React.useEffect(() => {
-    database()
-      .ref(dbPath + listFlow)
+    const dbListen = database()
+      .ref(dbPath)
       .on("value", (snapshot) => {
         let data = snapshot.val();
         setDbObject(data);
       });
+
+    return () => database().ref(dbPath).off("value", dbListen);
   }, []);
 
-  console.log("db panel pompa: ", dbObject);
+  console.log("db flow meter: ", dbObject);
 
   return (
     <View style={[styles.container, { flex: 1 }]}>
@@ -61,7 +63,7 @@ function FlowMeterScreen() {
           <View style={styles.itemGroupWrapper}>
             <GaugeComponent
               title="Flow Rate"
-              value={dbObject.flowRate}
+              value={dbObject[listFlow]["flowRate"]}
               min={100}
               max={300}
               markStep={20}
@@ -69,7 +71,7 @@ function FlowMeterScreen() {
             />
             <GaugeComponent
               title="Energy Flow Rate"
-              value={dbObject.energyFlow}
+              value={dbObject[listFlow]["energyFlow"]}
               min={100}
               max={300}
               markStep={20}
@@ -79,7 +81,7 @@ function FlowMeterScreen() {
           <View style={styles.itemGroupWrapper}>
             <GaugeComponent
               title="Velocity"
-              value={dbObject.velocity}
+              value={dbObject[listFlow]["velocity"]}
               min={1}
               max={5}
               markStep={0.6}
@@ -87,7 +89,7 @@ function FlowMeterScreen() {
             />
             <GaugeComponent
               title="Fluid Sound Speed"
-              value={dbObject.fluidSoundSpeed}
+              value={dbObject[listFlow]["fluidSoundSpeed"]}
               min={100}
               max={300}
               markStep={20}
@@ -102,7 +104,7 @@ function FlowMeterScreen() {
           <View style={styles.itemGroupWrapper}>
             <GaugeComponent
               title="Temperature Inlet"
-              value={dbObject.tempInlet}
+              value={dbObject[listFlow]["tempInlet"]}
               min={5}
               max={40}
               markStep={3}
@@ -110,7 +112,7 @@ function FlowMeterScreen() {
             />
             <GaugeComponent
               title="Temperature Outlet"
-              value={dbObject.tempOutlet}
+              value={dbObject[listFlow]["tempOutlet"]}
               min={5}
               max={40}
               markStep={3}
@@ -125,11 +127,15 @@ function FlowMeterScreen() {
           <View style={styles.itemGroupWrapper}>
             <View>
               <Text style={styles.textItemTitle}>Positive Accumulator</Text>
-              <Text style={styles.textItemValue}>{dbObject.positiveAcc}</Text>
+              <Text style={styles.textItemValue}>
+                {dbObject[listFlow]["positiveAcc"]}
+              </Text>
             </View>
             <View>
               <Text style={styles.textItemTitle}>Negative Accumulator</Text>
-              <Text style={styles.textItemValue}>{dbObject.negativeAcc}</Text>
+              <Text style={styles.textItemValue}>
+                {dbObject[listFlow]["negativeAcc"]}
+              </Text>
             </View>
           </View>
         </View>

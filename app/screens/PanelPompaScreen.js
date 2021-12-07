@@ -24,34 +24,36 @@ const Item = Picker.Item;
 function PanelPompaScreen() {
   const dbPath = "ewsApp/panel-pompa/";
   const [dbObject, setDbObject] = useState({
-    led1: {},
-    led2: {},
-    led3: {},
-    led4: {},
-    led5: {},
-    led6: {},
-    relay1: { nama: "" },
-    relay2: { nama: "" },
+    panelPompa1: {
+      led1: {},
+      led2: {},
+      led3: {},
+      led4: {},
+      led5: {},
+      led6: {},
+      relay1: { nama: "" },
+      relay2: { nama: "" },
+    },
   });
   const [relay1, setRelay1] = useState(false);
   const [relay2, setRelay2] = useState(false);
   const [listPanel, setListPanel] = useState("panelPompa1");
 
   React.useEffect(() => {
-    database()
-      .ref(dbPath + listPanel)
+    const dbListen = database()
+      .ref(dbPath)
       .on("value", (snapshot) => {
         let data = snapshot.val();
         let relay1Convert = false;
         let relay2Convert = false;
         setDbObject(data);
 
-        if (data.relay1.trigger === 1) {
+        if (data[listPanel]["relay1"]["trigger"] === 1) {
           relay1Convert = true;
         } else {
           relay1Convert = false;
         }
-        if (data.relay2.trigger === 1) {
+        if (data[listPanel]["relay2"]["trigger"] === 1) {
           relay2Convert = true;
         } else {
           relay2Convert = false;
@@ -61,6 +63,8 @@ function PanelPompaScreen() {
         // setRelay1(data.relay1.trigger);
         // setRelay2(data.relay2.trigger);
       });
+
+    return () => database().ref(dbPath).off("value", dbListen);
   }, []);
 
   console.log("db panel pompa: ", dbObject);
@@ -87,7 +91,7 @@ function PanelPompaScreen() {
           <View style={styles.itemGroupWrapper}>
             <GaugeComponent
               title="Volt R"
-              value={dbObject.voltR}
+              value={dbObject[listPanel]["voltR"]}
               min={100}
               max={300}
               markStep={20}
@@ -95,7 +99,7 @@ function PanelPompaScreen() {
             />
             <GaugeComponent
               title="Volt S"
-              value={dbObject.voltS}
+              value={dbObject[listPanel]["voltS"]}
               min={100}
               max={300}
               markStep={20}
@@ -105,7 +109,7 @@ function PanelPompaScreen() {
           <View style={styles.itemGroupWrapper}>
             <GaugeComponent
               title="Volt T"
-              value={dbObject.voltT}
+              value={dbObject[listPanel]["voltT"]}
               min={100}
               max={300}
               markStep={20}
@@ -120,7 +124,7 @@ function PanelPompaScreen() {
           <View style={styles.itemGroupWrapper}>
             <GaugeComponent
               title="Current R"
-              value={dbObject.currentR}
+              value={dbObject[listPanel]["currentR"]}
               min={0}
               max={5000}
               markStep={500}
@@ -128,7 +132,7 @@ function PanelPompaScreen() {
             />
             <GaugeComponent
               title="Current S"
-              value={dbObject.currentS}
+              value={dbObject[listPanel]["currentS"]}
               min={0}
               max={5000}
               markStep={500}
@@ -138,7 +142,7 @@ function PanelPompaScreen() {
           <View style={styles.itemGroupWrapper}>
             <GaugeComponent
               title="Current T"
-              value={dbObject.currentT}
+              value={dbObject[listPanel]["currentT"]}
               min={0}
               max={5000}
               markStep={500}
@@ -154,16 +158,20 @@ function PanelPompaScreen() {
             <View>
               <Text style={styles.textItemTitle}>Power Factor</Text>
               <Text style={styles.textItemValue}>
-                {dbObject.powerFactor * 100}%
+                {dbObject[listPanel]["powerFactor"] * 100}%
               </Text>
             </View>
             <View>
               <Text style={styles.textItemTitle}>Frequency</Text>
-              <Text style={styles.textItemValue}>{dbObject.frequency} Hz</Text>
+              <Text style={styles.textItemValue}>
+                {dbObject[listPanel]["frequency"]} Hz
+              </Text>
             </View>
             <View>
               <Text style={styles.textItemTitle}>Power</Text>
-              <Text style={styles.textItemValue}>{dbObject.power} W</Text>
+              <Text style={styles.textItemValue}>
+                {dbObject[listPanel]["power"]} W
+              </Text>
             </View>
           </View>
         </View>
@@ -173,30 +181,30 @@ function PanelPompaScreen() {
           </View>
           <View style={styles.itemGroupWrapper}>
             <LedStatusComponent
-              name={dbObject.led1.nama}
-              value={dbObject.led1.value}
+              name={dbObject[listPanel]["led1"]["nama"]}
+              value={dbObject[listPanel]["led1"]["value"]}
             />
             <LedStatusComponent
-              name={dbObject.led2.nama}
-              value={dbObject.led2.value}
+              name={dbObject[listPanel]["led2"]["nama"]}
+              value={dbObject[listPanel]["led2"]["value"]}
             />
             <LedStatusComponent
-              name={dbObject.led3.nama}
-              value={dbObject.led3.value}
+              name={dbObject[listPanel]["led3"]["nama"]}
+              value={dbObject[listPanel]["led3"]["value"]}
             />
           </View>
           <View style={styles.itemGroupWrapper}>
             <LedStatusComponent
-              name={dbObject.led4.nama}
-              value={dbObject.led4.value}
+              name={dbObject[listPanel]["led4"]["nama"]}
+              value={dbObject[listPanel]["led4"]["value"]}
             />
             <LedStatusComponent
-              name={dbObject.led5.nama}
-              value={dbObject.led5.value}
+              name={dbObject[listPanel]["led5"]["nama"]}
+              value={dbObject[listPanel]["led5"]["value"]}
             />
             <LedStatusComponent
-              name={dbObject.led6.nama}
-              value={dbObject.led6.value}
+              name={dbObject[listPanel]["led6"]["nama"]}
+              value={dbObject[listPanel]["led6"]["value"]}
             />
           </View>
         </View>
@@ -209,7 +217,9 @@ function PanelPompaScreen() {
           </View> */}
           <View style={styles.itemGroupWrapper}>
             <View>
-              <Text style={styles.textItemTitle}>{dbObject.relay1.nama}</Text>
+              <Text style={styles.textItemTitle}>
+                {dbObject[listPanel]["relay1"]["nama"]}
+              </Text>
               <Switch
                 onValueChange={() => {
                   const value = !relay1;
@@ -228,7 +238,9 @@ function PanelPompaScreen() {
               />
             </View>
             <View>
-              <Text style={styles.textItemTitle}>{dbObject.relay2.nama}</Text>
+              <Text style={styles.textItemTitle}>
+                {dbObject[listPanel]["relay2"]["nama"]}
+              </Text>
               <Switch
                 onValueChange={() => {
                   const value = !relay2;

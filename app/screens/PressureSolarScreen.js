@@ -11,46 +11,53 @@ const Item = Picker.Item;
 
 function PressureSolarScreen() {
   const dbPath = "ewsApp/pressure-solar/";
-  const [dbObject, setDbObject] = useState({});
+  const [dbObject, setDbObject] = useState({ pressureSolar1: {} });
   const [listValue, setListValue] = useState("pressureSolar1");
-  console.log(dbPath + listValue);
-  var listPanel = [];
-
-  // React.useEffect(() => {
-  //   database()
-  //     .ref("ewsApp/pressure-solar")
-  //     .once("value", (snapshot) => {
-  //       const fetchData = snapshot.val();
-  //       console.log("Pressure Solar Object:\n", fetchData);
-  //       for (const panel in fetchData) {
-  //         listPanel.push({
-  //           label: fetchData[panel].nama,
-  //           value: panel.toString(),
-  //         });
-  //         console.log("Successfully add list");
-  //         console.log("List: ", listPanel);
-  //       }
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // }, []);
-
-  // const renderMonitorList = () => {
-  //   return listPanel.map((index) => {
-  //     console.log("Label: ", index.label);
-  //     return <Item label={index.label} value={index.value} />;
-  //   });
-  // };
+  const [listPanel, setListPanel] = useState([]);
 
   React.useEffect(() => {
+    const listPanelTemp = [];
     database()
-      .ref(dbPath + listValue)
+      .ref("ewsApp/pressure-solar")
+      .once("value", (snapshot) => {
+        const fetchData = snapshot.val();
+        console.log("Pressure Solar Object:\n", fetchData);
+        for (const panel in fetchData) {
+          listPanelTemp.push({
+            label: fetchData[panel].nama,
+            value: panel.toString(),
+          });
+          console.log("Successfully add list");
+          console.log("List: ", listPanel);
+        }
+        setListPanel(listPanelTemp);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
+  const renderMonitorList = () => {
+    console.log("Render List dipanggil");
+    console.log("List: ", listPanel);
+    return listPanel.map((index) => {
+      console.log("Label: ", index.label);
+      return <Item key={index} label={index.label} value={index.value} />;
+    });
+  };
+
+  React.useEffect(() => {
+    const dbListen = database()
+      .ref(dbPath)
       .on("value", (snapshot) => {
         let data = snapshot.val();
         setDbObject(data);
       });
+
+    return () => database().ref(dbPath).off("value", dbListen);
   }, []);
+
+  console.log("db pressure solar: ", dbObject);
 
   return (
     <View style={styles.container}>
@@ -74,7 +81,7 @@ function PressureSolarScreen() {
         <View style={styles.itemGroupWrapper}>
           <GaugeComponent
             title="Pressure"
-            value={dbObject.pressure}
+            value={dbObject[listValue]["pressure"]}
             min={0}
             max={80}
             markStep={5}
@@ -89,19 +96,23 @@ function PressureSolarScreen() {
         <View style={styles.itemGroupWrapper}>
           <View>
             <Text style={styles.textItemTitle}>Battery</Text>
-            <Text style={styles.textItemValue}>{dbObject.battery}%</Text>
+            <Text style={styles.textItemValue}>
+              {dbObject[listValue]["battery"]}%
+            </Text>
           </View>
           <View>
             <Text style={styles.textItemTitle}>Charging Current</Text>
             <Text style={styles.textItemValue}>
-              {dbObject.chargingCurrent} A
+              {dbObject[listValue]["chargingCurrent"]} A
             </Text>
           </View>
         </View>
         <View style={styles.itemGroupWrapper}>
           <View>
             <Text style={styles.textItemTitle}>Light Received</Text>
-            <Text style={styles.textItemValue}>{dbObject.light} lux</Text>
+            <Text style={styles.textItemValue}>
+              {dbObject[listValue]["light"]} lux
+            </Text>
           </View>
         </View>
       </View>

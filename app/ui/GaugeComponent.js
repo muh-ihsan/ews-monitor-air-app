@@ -16,7 +16,7 @@ const GaugeComponent = (props) => {
     <View>
       <Text style={styles.textItemTitle}>{props.title || Gauge}</Text>
       <Speedometer
-        value={props.value}
+        value={props.value || 0}
         width={props.width || 140}
         min={props.min || 0}
         max={props.max || 100}
