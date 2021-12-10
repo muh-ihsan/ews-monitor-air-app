@@ -106,14 +106,14 @@ export default function App() {
   });
 
   useState(() => {
-    const unsubscribe = messaging().onMessage(async (remoteMessage) => {
+    const notifOnScreen = messaging().onMessage(async (remoteMessage) => {
       Alert.alert(
         remoteMessage.notification.title,
         remoteMessage.notification.body
       );
     });
 
-    return unsubscribe;
+    return notifOnScreen;
   }, []);
 
   console.log("App started...");

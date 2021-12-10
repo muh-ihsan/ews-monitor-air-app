@@ -4,6 +4,7 @@ import database from "@react-native-firebase/database";
 import { Picker } from "@react-native-picker/picker";
 
 import GaugeComponent from "../ui/GaugeComponent";
+import LoadingModalComponent from "../ui/LoadingModalComponent";
 import styles from "../styles/stylesheet";
 import colors from "../styles/colors";
 
@@ -12,48 +13,71 @@ const Item = Picker.Item;
 
 function FlowMeterScreen() {
   const dbPath = "ewsApp/flow-meter/";
-  const [dbObject, setDbObject] = useState({ flowMeter1: {} });
+  const [dbObject, setDbObject] = useState({});
   const [listFlow, setListFlow] = useState("flowMeter1");
+  const [listMonitor, setListMonitor] = useState([]);
+  const [intializing, setInitializing] = useState(true);
 
-  // database()
-  //   .ref("ewsApp/flow-meter")
-  //   .once("value", (snapshot) => {
-  //     const fetchData = snapshot.val();
-  //     console.log("FLow Meter Object:\n", fetchData);
-  //     for (const panel in fetchData) {
-  //       console.log(`${panel}: ${fetchData[panel].nama}`);
-  //     }
-  //   })
-  //   .catch((err) => {
-  //     console.log(err);
-  //   });
+  React.useEffect(() => {
+    const listPanelTemp = [];
+    database()
+      .ref(dbPath)
+      .once("value", (snapshot) => {
+        const fetchData = snapshot.val();
+        console.log("FLow Meter Object:\n", fetchData);
+        for (const panel in fetchData) {
+          listPanelTemp.push({
+            label: fetchData[panel].nama,
+            value: panel.toString(),
+          });
+        }
+        console.log("List Panel Flow: ", listPanelTemp);
+        setListMonitor(listPanelTemp);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
+  const renderMonitorList = () => {
+    console.log("Render List dipanggil");
+    console.log("List: ", listMonitor);
+    return listMonitor.map((index) => {
+      console.log("Label: ", index.label);
+      console.log("Value: ", index.value);
+      return <Item key={index} label={index.label} value={index.value} />;
+    });
+  };
 
   React.useEffect(() => {
     const dbListen = database()
-      .ref(dbPath)
+      .ref(dbPath + listFlow)
       .on("value", (snapshot) => {
         let data = snapshot.val();
         setDbObject(data);
+        setInitializing(false);
       });
 
-    return () => database().ref(dbPath).off("value", dbListen);
-  }, []);
+    return () => {
+      database().ref(dbPath).off("value", dbListen);
+      setInitializing(true);
+    };
+  }, [listFlow]);
 
   console.log("db flow meter: ", dbObject);
 
   return (
     <View style={[styles.container, { flex: 1 }]}>
       <StatusBar barStyle="light-content" backgroundColor={colors.background} />
-      {/* <View style={styles.titleWrapper}>
-        <Text style={styles.textTitle}>Flow Meter</Text>
-      </View> */}
+      <LoadingModalComponent show={intializing} />
       <Picker
         style={styles.picker}
         selectedValue={listFlow}
         onValueChange={(v) => setListFlow(v)}
       >
-        <Item label={"Flow Meter 1"} value={"flowMeter1"} />
-        <Item label={"Flow Meter 2"} value={"flowMeter2"} />
+        {/* <Item label={"Flow Meter 1"} value={"flowMeter1"} />
+        <Item label={"Flow Meter 2"} value={"flowMeter2"} /> */}
+        {renderMonitorList()}
       </Picker>
       <ScrollView style={{ marginTop: 24, height: screenHeight - 240 }}>
         <View style={[styles.groupWrapper, { height: 480 }]}>
@@ -63,7 +87,7 @@ function FlowMeterScreen() {
           <View style={styles.itemGroupWrapper}>
             <GaugeComponent
               title="Flow Rate"
-              value={dbObject[listFlow]["flowRate"]}
+              value={dbObject["flowRate"]}
               min={100}
               max={300}
               markStep={20}
@@ -71,7 +95,7 @@ function FlowMeterScreen() {
             />
             <GaugeComponent
               title="Energy Flow Rate"
-              value={dbObject[listFlow]["energyFlow"]}
+              value={dbObject["energyFlow"]}
               min={100}
               max={300}
               markStep={20}
@@ -81,7 +105,7 @@ function FlowMeterScreen() {
           <View style={styles.itemGroupWrapper}>
             <GaugeComponent
               title="Velocity"
-              value={dbObject[listFlow]["velocity"]}
+              value={dbObject["velocity"]}
               min={1}
               max={5}
               markStep={0.6}
@@ -89,7 +113,7 @@ function FlowMeterScreen() {
             />
             <GaugeComponent
               title="Fluid Sound Speed"
-              value={dbObject[listFlow]["fluidSoundSpeed"]}
+              value={dbObject["fluidSoundSpeed"]}
               min={100}
               max={300}
               markStep={20}
@@ -104,7 +128,7 @@ function FlowMeterScreen() {
           <View style={styles.itemGroupWrapper}>
             <GaugeComponent
               title="Temperature Inlet"
-              value={dbObject[listFlow]["tempInlet"]}
+              value={dbObject["tempInlet"]}
               min={5}
               max={40}
               markStep={3}
@@ -112,7 +136,7 @@ function FlowMeterScreen() {
             />
             <GaugeComponent
               title="Temperature Outlet"
-              value={dbObject[listFlow]["tempOutlet"]}
+              value={dbObject["tempOutlet"]}
               min={5}
               max={40}
               markStep={3}
@@ -128,13 +152,13 @@ function FlowMeterScreen() {
             <View>
               <Text style={styles.textItemTitle}>Positive Accumulator</Text>
               <Text style={styles.textItemValue}>
-                {dbObject[listFlow]["positiveAcc"]}
+                {dbObject["positiveAcc"]}
               </Text>
             </View>
             <View>
               <Text style={styles.textItemTitle}>Negative Accumulator</Text>
               <Text style={styles.textItemValue}>
-                {dbObject[listFlow]["negativeAcc"]}
+                {dbObject["negativeAcc"]}
               </Text>
             </View>
           </View>
