@@ -27,6 +27,12 @@ export default styles = StyleSheet.create({
   groupWrapper: {
     backgroundColor: colors.primary,
     marginBottom: 12,
+    borderRadius: 10,
+  },
+  picker: {
+    color: "black",
+    marginTop: 16,
+    backgroundColor: "white",
   },
   textGaugeValue: {
     color: "white",

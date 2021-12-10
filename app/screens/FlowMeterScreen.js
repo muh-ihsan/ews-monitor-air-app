@@ -1,33 +1,85 @@
 import React, { useState } from "react";
 import { View, ScrollView, Dimensions, StatusBar, Text } from "react-native";
 import database from "@react-native-firebase/database";
+import { Picker } from "@react-native-picker/picker";
 
 import GaugeComponent from "../ui/GaugeComponent";
+import LoadingModalComponent from "../ui/LoadingModalComponent";
 import styles from "../styles/stylesheet";
 import colors from "../styles/colors";
 
 const screenHeight = Dimensions.get("window").height;
-const dbRef = database().ref("ewsApp/flow-meter");
+const Item = Picker.Item;
 
 function FlowMeterScreen() {
+  const dbPath = "ewsApp/flow-meter/";
   const [dbObject, setDbObject] = useState({});
+  const [listFlow, setListFlow] = useState("flowMeter1");
+  const [listMonitor, setListMonitor] = useState([]);
+  const [intializing, setInitializing] = useState(true);
 
   React.useEffect(() => {
-    dbRef.on("value", (snapshot) => {
-      let data = snapshot.val();
-      setDbObject(data);
-    });
+    const listPanelTemp = [];
+    database()
+      .ref(dbPath)
+      .once("value", (snapshot) => {
+        const fetchData = snapshot.val();
+        console.log("FLow Meter Object:\n", fetchData);
+        for (const panel in fetchData) {
+          listPanelTemp.push({
+            label: fetchData[panel].nama,
+            value: panel.toString(),
+          });
+        }
+        console.log("List Panel Flow: ", listPanelTemp);
+        setListMonitor(listPanelTemp);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }, []);
 
-  console.log("db panel pompa: ", dbObject);
+  const renderMonitorList = () => {
+    console.log("Render List dipanggil");
+    console.log("List: ", listMonitor);
+    return listMonitor.map((index) => {
+      console.log("Label: ", index.label);
+      console.log("Value: ", index.value);
+      return <Item key={index} label={index.label} value={index.value} />;
+    });
+  };
+
+  React.useEffect(() => {
+    const dbListen = database()
+      .ref(dbPath + listFlow)
+      .on("value", (snapshot) => {
+        let data = snapshot.val();
+        setDbObject(data);
+        setInitializing(false);
+      });
+
+    return () => {
+      database().ref(dbPath).off("value", dbListen);
+      setInitializing(true);
+    };
+  }, [listFlow]);
+
+  console.log("db flow meter: ", dbObject);
 
   return (
     <View style={[styles.container, { flex: 1 }]}>
       <StatusBar barStyle="light-content" backgroundColor={colors.background} />
-      <View style={styles.titleWrapper}>
-        <Text style={styles.textTitle}>Flow Meter</Text>
-      </View>
-      <ScrollView style={{ height: screenHeight - 240 }}>
+      <LoadingModalComponent show={intializing} />
+      <Picker
+        style={styles.picker}
+        selectedValue={listFlow}
+        onValueChange={(v) => setListFlow(v)}
+      >
+        {/* <Item label={"Flow Meter 1"} value={"flowMeter1"} />
+        <Item label={"Flow Meter 2"} value={"flowMeter2"} /> */}
+        {renderMonitorList()}
+      </Picker>
+      <ScrollView style={{ marginTop: 24, height: screenHeight - 240 }}>
         <View style={[styles.groupWrapper, { height: 480 }]}>
           <View>
             <Text style={styles.textGroupTitle}>Flow Rate</Text>
@@ -35,7 +87,7 @@ function FlowMeterScreen() {
           <View style={styles.itemGroupWrapper}>
             <GaugeComponent
               title="Flow Rate"
-              value={dbObject.flowRate}
+              value={dbObject["flowRate"]}
               min={100}
               max={300}
               markStep={20}
@@ -43,7 +95,7 @@ function FlowMeterScreen() {
             />
             <GaugeComponent
               title="Energy Flow Rate"
-              value={dbObject.energyFlow}
+              value={dbObject["energyFlow"]}
               min={100}
               max={300}
               markStep={20}
@@ -53,15 +105,15 @@ function FlowMeterScreen() {
           <View style={styles.itemGroupWrapper}>
             <GaugeComponent
               title="Velocity"
-              value={dbObject.velocity}
-              min={100}
-              max={300}
-              markStep={20}
+              value={dbObject["velocity"]}
+              min={1}
+              max={5}
+              markStep={0.6}
               unit="m/s"
             />
             <GaugeComponent
               title="Fluid Sound Speed"
-              value={dbObject.fluidSoundSpeed}
+              value={dbObject["fluidSoundSpeed"]}
               min={100}
               max={300}
               markStep={20}
@@ -76,18 +128,18 @@ function FlowMeterScreen() {
           <View style={styles.itemGroupWrapper}>
             <GaugeComponent
               title="Temperature Inlet"
-              value={dbObject.tempInlet}
-              min={100}
-              max={300}
-              markStep={20}
+              value={dbObject["tempInlet"]}
+              min={5}
+              max={40}
+              markStep={3}
               unit="°C"
             />
             <GaugeComponent
               title="Temperature Outlet"
-              value={dbObject.tempOutlet}
-              min={100}
-              max={300}
-              markStep={20}
+              value={dbObject["tempOutlet"]}
+              min={5}
+              max={40}
+              markStep={3}
               unit="°C"
             />
           </View>
@@ -99,11 +151,15 @@ function FlowMeterScreen() {
           <View style={styles.itemGroupWrapper}>
             <View>
               <Text style={styles.textItemTitle}>Positive Accumulator</Text>
-              <Text style={styles.textItemValue}>{dbObject.positiveAcc}</Text>
+              <Text style={styles.textItemValue}>
+                {dbObject["positiveAcc"]}
+              </Text>
             </View>
             <View>
               <Text style={styles.textItemTitle}>Negative Accumulator</Text>
-              <Text style={styles.textItemValue}>{dbObject.negativeAcc}</Text>
+              <Text style={styles.textItemValue}>
+                {dbObject["negativeAcc"]}
+              </Text>
             </View>
           </View>
         </View>
