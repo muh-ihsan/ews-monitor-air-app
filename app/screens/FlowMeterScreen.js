@@ -13,7 +13,16 @@ const Item = Picker.Item;
 
 function FlowMeterScreen() {
   const dbPath = "ewsApp/flow-meter/";
-  const [dbObject, setDbObject] = useState({});
+  const [dbObject, setDbObject] = useState({
+    energyFlow: 0,
+    flowRate: 0,
+    fluidSoundSpeed: 0,
+    tempInlet: 0,
+    tempOutlet: 0,
+    negativeAcc: 0,
+    positiveAcc: 0,
+    velocity: 0,
+  });
   const [listFlow, setListFlow] = useState("flowMeter1");
   const [listMonitor, setListMonitor] = useState([]);
   const [intializing, setInitializing] = useState(true);
@@ -87,7 +96,7 @@ function FlowMeterScreen() {
           <View style={styles.itemGroupWrapper}>
             <GaugeComponent
               title="Flow Rate"
-              value={dbObject["flowRate"]}
+              value={dbObject["flowRate"].toPrecision(5)}
               min={100}
               max={300}
               markStep={20}
@@ -95,7 +104,7 @@ function FlowMeterScreen() {
             />
             <GaugeComponent
               title="Energy Flow Rate"
-              value={dbObject["energyFlow"]}
+              value={dbObject["energyFlow"].toPrecision(5)}
               min={100}
               max={300}
               markStep={20}
@@ -105,7 +114,7 @@ function FlowMeterScreen() {
           <View style={styles.itemGroupWrapper}>
             <GaugeComponent
               title="Velocity"
-              value={dbObject["velocity"]}
+              value={dbObject["velocity"].toPrecision(5)}
               min={1}
               max={5}
               markStep={0.6}
@@ -128,18 +137,18 @@ function FlowMeterScreen() {
           <View style={styles.itemGroupWrapper}>
             <GaugeComponent
               title="Temperature Inlet"
-              value={dbObject["tempInlet"]}
+              value={dbObject["tempInlet"].toPrecision(5)}
               min={5}
-              max={40}
-              markStep={3}
+              max={75}
+              markStep={5}
               unit="°C"
             />
             <GaugeComponent
               title="Temperature Outlet"
-              value={dbObject["tempOutlet"]}
+              value={dbObject["tempOutlet"].toPrecision(5)}
               min={5}
-              max={40}
-              markStep={3}
+              max={75}
+              markStep={5}
               unit="°C"
             />
           </View>

@@ -13,14 +13,12 @@ const Item = Picker.Item;
 const screenHeight = Dimensions.get("window").height;
 
 function PressureSolarScreen() {
-  const dbPath = "ewsApp/pressure-solar/";
+  const dbPath = "pressureSensor/";
   const [dbObject, setDbObject] = useState({
     pressureSolar1: { pressure: {} },
   });
-  const [listValue, setListValue] = useState("pressureSolar1");
+  const [listValue, setListValue] = useState("1");
   const [listPanel, setListPanel] = useState([]);
-  const [listPressure, setListPressure] = useState([]);
-  const [pressureHeight, setPressureHeight] = useState(260);
   const [intializing, setInitializing] = useState(true);
 
   React.useEffect(() => {
@@ -32,12 +30,13 @@ function PressureSolarScreen() {
         console.log("Pressure Solar Object:\n", fetchData);
         for (const panel in fetchData) {
           listPanelTemp.push({
-            label: fetchData[panel].nama,
+            label: "Pressure Sensor " + panel.toString(),
             value: panel.toString(),
           });
           console.log("Successfully add list");
           console.log("List: ", listPanel);
         }
+        listPanelTemp.shift();
         setListPanel(listPanelTemp);
       })
       .catch((err) => {
@@ -60,20 +59,6 @@ function PressureSolarScreen() {
       .on("value", (snapshot) => {
         let data = snapshot.val();
         setDbObject(data);
-
-        const listPressureTemp = [];
-        for (const pressure in data["pressure"]) {
-          listPressureTemp.push({
-            index: pressure,
-            nama: "Sensor " + pressure.toString(),
-            value: data["pressure"][pressure],
-          });
-        }
-        console.log(listPressureTemp);
-        const CalcPressureHeight =
-          Math.ceil(listPressureTemp.length / 2) * 200 + 60;
-        setPressureHeight(CalcPressureHeight);
-        setListPressure(listPressureTemp);
         setInitializing(false);
       });
 
@@ -85,21 +70,21 @@ function PressureSolarScreen() {
 
   console.log("db pressure solar: ", dbObject);
 
-  const renderGaugePressure = () => {
-    return listPressure.map((element, i) => {
-      return (
-        <GaugeComponent
-          key={i}
-          title={element.nama}
-          value={element.value}
-          min={0}
-          max={80}
-          markStep={5}
-          unit="psi"
-        />
-      );
-    });
-  };
+  // const renderGaugePressure = () => {
+  //   return listPressure.map((element, i) => {
+  //     return (
+  //       <GaugeComponent
+  //         key={i}
+  //         title={element.nama}
+  //         value={element.value}
+  //         min={0}
+  //         max={80}
+  //         markStep={5}
+  //         unit="psi"
+  //       />
+  //     );
+  //   });
+  // };
 
   return (
     <View style={[styles.container, { flex: 1 }]}>
@@ -115,7 +100,7 @@ function PressureSolarScreen() {
         {renderMonitorList()}
       </Picker>
       <ScrollView style={{ marginTop: 24, height: screenHeight - 240 }}>
-        <View style={[styles.groupWrapper, { height: pressureHeight }]}>
+        <View style={[styles.groupWrapper, { height: 260 }]}>
           <View>
             <Text style={styles.textGroupTitle}>Pressure</Text>
           </View>
@@ -125,14 +110,23 @@ function PressureSolarScreen() {
               { flexWrap: "wrap", alignContent: "space-around" },
             ]}
           >
-            {renderGaugePressure()}
-            {/* <GaugeComponent
-            title="Pressure"
-            value={dbObject[listValue]["pressure"]["0"]}
-            min={0}
-            max={80}
-            markStep={5}
-            unit="psi" */}
+            {/* {renderGaugePressure()} */}
+            <GaugeComponent
+              title="Pressure Bar"
+              value={dbObject["pressurebar"]}
+              min={0}
+              max={10}
+              markStep={1}
+              unit="bar"
+            />
+            <GaugeComponent
+              title="Pressure Psi"
+              value={dbObject["pressurepsi"]}
+              min={0}
+              max={200}
+              markStep={20}
+              unit="psi"
+            />
           </View>
         </View>
         <View style={[styles.groupWrapper, { height: 220 }]}>
@@ -142,21 +136,19 @@ function PressureSolarScreen() {
           <View style={styles.itemGroupWrapper}>
             <View>
               <Text style={styles.textItemTitle}>Battery</Text>
-              <Text style={styles.textItemValue}>{dbObject["battery"]}%</Text>
+              <Text style={styles.textItemValue}>{dbObject["voltage"]}%</Text>
             </View>
             <View>
               <Text style={styles.textItemTitle}>Charging Current</Text>
-              <Text style={styles.textItemValue}>
-                {dbObject["chargingCurrent"]} A
-              </Text>
+              <Text style={styles.textItemValue}>{0} A</Text>
             </View>
           </View>
-          <View style={styles.itemGroupWrapper}>
+          {/* <View style={styles.itemGroupWrapper}>
             <View>
               <Text style={styles.textItemTitle}>Light Received</Text>
               <Text style={styles.textItemValue}>{dbObject["light"]} lux</Text>
             </View>
-          </View>
+          </View> */}
         </View>
       </ScrollView>
     </View>
