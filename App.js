@@ -6,6 +6,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
 import MaterialIcon from "react-native-vector-icons/MaterialCommunityIcons";
 import auth from "@react-native-firebase/auth";
+import { Provider as PaperProvider } from "react-native-paper";
 
 import colors from "./app/styles/colors";
 import FlowMeterScreen from "./app/screens/FlowMeterScreen";
@@ -34,7 +35,7 @@ messaging().setBackgroundMessageHandler(async (remoteMessage) => {
 
 function logOut() {
   return (
-    <View style={{ marginHorizontal: 8 }}>
+    <View style={{ marginHorizontal: 8, backgroundColor: "transparent" }}>
       <Button
         title="Logout"
         onPress={() => {
@@ -54,43 +55,45 @@ function logOut() {
 
 function Home() {
   return (
-    <Tab.Navigator
-      screenOptions={({ route }) => ({
-        tabBarIcon: ({ color, size }) => {
-          let iconName;
-          if (route.name === "Panel Pompa") {
-            iconName = "calculator";
-          } else if (route.name === "Flow Meter") {
-            iconName = "water-pump";
-          } else if (route.name === "Pressure & Solar") {
-            iconName = "gauge";
-          } else if (route.name === "Setting") {
-            iconName = "cog";
-          }
+    <PaperProvider>
+      <Tab.Navigator
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ color, size }) => {
+            let iconName;
+            if (route.name === "Panel Pompa") {
+              iconName = "calculator";
+            } else if (route.name === "Flow Meter") {
+              iconName = "water-pump";
+            } else if (route.name === "Pressure & Solar") {
+              iconName = "gauge";
+            } else if (route.name === "Setting") {
+              iconName = "cog";
+            }
 
-          return <MaterialIcon name={iconName} size={size} color={color} />;
-        },
-        tabBarActiveTintColor: "white",
-        tabBarInactiveTintColor: colors.inactive,
-      })}
-    >
-      <Tab.Screen
-        name="Panel Pompa"
-        component={PanelPompaScreen}
-        options={{ headerRight: logOut }}
-      />
-      <Tab.Screen
-        name="Flow Meter"
-        component={FlowMeterScreen}
-        options={{ headerRight: logOut }}
-      />
-      <Tab.Screen
-        name="Pressure & Solar"
-        component={PressureSolarScreen}
-        options={{ headerRight: logOut }}
-      />
-      {/* <Tab.Screen name="Setting" component={SettingScreen} options={{ headerRight: logOut }} /> */}
-    </Tab.Navigator>
+            return <MaterialIcon name={iconName} size={size} color={color} />;
+          },
+          tabBarActiveTintColor: "white",
+          tabBarInactiveTintColor: colors.inactive,
+        })}
+      >
+        <Tab.Screen
+          name="Panel Pompa"
+          component={PanelPompaScreen}
+          options={{ headerRight: logOut }}
+        />
+        <Tab.Screen
+          name="Flow Meter"
+          component={FlowMeterScreen}
+          options={{ headerRight: logOut }}
+        />
+        <Tab.Screen
+          name="Pressure & Solar"
+          component={PressureSolarScreen}
+          options={{ headerRight: logOut }}
+        />
+        {/* <Tab.Screen name="Setting" component={SettingScreen} options={{ headerRight: logOut }} /> */}
+      </Tab.Navigator>
+    </PaperProvider>
   );
 }
 

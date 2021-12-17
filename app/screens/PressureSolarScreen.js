@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Dimensions, Text, View, StatusBar } from "react-native";
 import database from "@react-native-firebase/database";
 import { Picker } from "@react-native-picker/picker";
+import { Card } from "react-native-paper";
 
 import GaugeComponent from "../ui/GaugeComponent";
 import LoadingModalComponent from "../ui/LoadingModalComponent";
@@ -13,11 +14,14 @@ const Item = Picker.Item;
 const screenHeight = Dimensions.get("window").height;
 
 function PressureSolarScreen() {
-  const dbPath = "pressureSensor/";
+  const dbPath = "ewsApp/pressure-solar/";
   const [dbObject, setDbObject] = useState({
-    pressureSolar1: { pressure: {} },
+    current: 0,
+    pressureBar: 0,
+    pressurePsi: 0,
+    voltage: 0,
   });
-  const [listValue, setListValue] = useState("1");
+  const [listValue, setListValue] = useState("pressureSolar1");
   const [listPanel, setListPanel] = useState([]);
   const [intializing, setInitializing] = useState(true);
 
@@ -29,14 +33,13 @@ function PressureSolarScreen() {
         const fetchData = snapshot.val();
         console.log("Pressure Solar Object:\n", fetchData);
         for (const panel in fetchData) {
+          console.log(panel.toString());
           listPanelTemp.push({
-            label: "Pressure Sensor " + panel.toString(),
+            label: fetchData[panel].nama,
             value: panel.toString(),
           });
-          console.log("Successfully add list");
-          console.log("List: ", listPanel);
         }
-        listPanelTemp.shift();
+        console.log("List Panel Pressure: ", listPanelTemp);
         setListPanel(listPanelTemp);
       })
       .catch((err) => {
@@ -88,68 +91,71 @@ function PressureSolarScreen() {
 
   return (
     <View style={[styles.container, { flex: 1 }]}>
-      <StatusBar barStyle="light-content" backgroundColor={colors.background} />
+      <StatusBar
+        barStyle="light-content"
+        backgroundColor={colors.secondary}
+        translucent={true}
+      />
       <LoadingModalComponent show={intializing} />
-      <Picker
-        style={styles.picker}
-        selectedValue={listValue}
-        onValueChange={(v) => setListValue(v)}
-      >
-        {/* <Item label={"Pressure 1"} value={"pressureSolar1"} />
-        <Item label={"Pressure 2"} value={"pressureSolar2"} /> */}
-        {renderMonitorList()}
-      </Picker>
+      <View style={styles.pickerBorder}>
+        <Picker
+          dropdownIconColor="white"
+          dropdownIconRippleColor="#313C78"
+          style={styles.picker}
+          selectedValue={listValue}
+          onValueChange={(v) => setListValue(v)}
+        >
+          {renderMonitorList()}
+        </Picker>
+      </View>
       <ScrollView style={{ marginTop: 24, height: screenHeight - 240 }}>
-        <View style={[styles.groupWrapper, { height: 260 }]}>
-          <View>
-            <Text style={styles.textGroupTitle}>Pressure</Text>
-          </View>
-          <View
-            style={[
-              styles.itemGroupWrapper,
-              { flexWrap: "wrap", alignContent: "space-around" },
-            ]}
-          >
-            {/* {renderGaugePressure()} */}
-            <GaugeComponent
-              title="Pressure Bar"
-              value={dbObject["pressurebar"]}
-              min={0}
-              max={10}
-              markStep={1}
-              unit="bar"
-            />
-            <GaugeComponent
-              title="Pressure Psi"
-              value={dbObject["pressurepsi"]}
-              min={0}
-              max={200}
-              markStep={20}
-              unit="psi"
-            />
-          </View>
-        </View>
-        <View style={[styles.groupWrapper, { height: 220 }]}>
-          <View>
-            <Text style={styles.textGroupTitle}>Solar Panel</Text>
-          </View>
-          <View style={styles.itemGroupWrapper}>
-            <View>
-              <Text style={styles.textItemTitle}>Battery</Text>
-              <Text style={styles.textItemValue}>{dbObject["voltage"]}%</Text>
+        <Card
+          mode="outlined"
+          elevation={3}
+          style={[styles.groupWrapper, { height: 288 }]}
+        >
+          <Card.Title title="Pressure" titleStyle={styles.textTitle} />
+          <Card.Content>
+            <View style={styles.itemGroupWrapper}>
+              {/* {renderGaugePressure()} */}
+              <GaugeComponent
+                title="Pressure Bar"
+                value={dbObject["pressureBar"]}
+                min={0}
+                max={10}
+                markStep={1}
+                unit="bar"
+              />
+              <GaugeComponent
+                title="Pressure Psi"
+                value={dbObject["pressurePsi"]}
+                min={0}
+                max={200}
+                markStep={20}
+                unit="psi"
+              />
             </View>
-            <View>
-              <Text style={styles.textItemTitle}>Charging Current</Text>
-              <Text style={styles.textItemValue}>{0} A</Text>
+          </Card.Content>
+        </Card>
+        <Card
+          mode="outlined"
+          elevation={3}
+          style={[styles.groupWrapper, { height: 156 }]}
+        >
+          <Card.Title title="Solar Panel" titleStyle={styles.textTitle} />
+          <Card.Content>
+            <View style={styles.itemGroupWrapper}>
+              <View style={styles.itemTextValueWrapper}>
+                <Text style={styles.textItemTitle}>Battery</Text>
+                <Text style={styles.textItemValue}>{dbObject["voltage"]}%</Text>
+              </View>
+              <View style={styles.itemTextValueWrapper}>
+                <Text style={styles.textItemTitle}>Charging Current</Text>
+                <Text style={styles.textItemValue}>{0} A</Text>
+              </View>
             </View>
-          </View>
-          {/* <View style={styles.itemGroupWrapper}>
-            <View>
-              <Text style={styles.textItemTitle}>Light Received</Text>
-              <Text style={styles.textItemValue}>{dbObject["light"]} lux</Text>
-            </View>
-          </View> */}
-        </View>
+          </Card.Content>
+        </Card>
       </ScrollView>
     </View>
   );

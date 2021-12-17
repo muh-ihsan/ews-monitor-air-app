@@ -1,6 +1,7 @@
 export default {
   primary: "#029ADF",
-  secondary: "#3423A6",
-  background: "#171738",
+  secondary: "#313C78",
+  background: "#222222",
   inactive: "#AAA1A1",
+  bgCard: "#353535",
 };

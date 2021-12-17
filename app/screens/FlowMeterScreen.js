@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { View, ScrollView, Dimensions, StatusBar, Text } from "react-native";
 import database from "@react-native-firebase/database";
 import { Picker } from "@react-native-picker/picker";
+import { Card } from "react-native-paper";
 
 import GaugeComponent from "../ui/GaugeComponent";
 import LoadingModalComponent from "../ui/LoadingModalComponent";
@@ -77,101 +78,117 @@ function FlowMeterScreen() {
 
   return (
     <View style={[styles.container, { flex: 1 }]}>
-      <StatusBar barStyle="light-content" backgroundColor={colors.background} />
+      <StatusBar
+        barStyle="light-content"
+        backgroundColor={colors.secondary}
+        translucent={true}
+      />
       <LoadingModalComponent show={intializing} />
-      <Picker
-        style={styles.picker}
-        selectedValue={listFlow}
-        onValueChange={(v) => setListFlow(v)}
-      >
-        {/* <Item label={"Flow Meter 1"} value={"flowMeter1"} />
-        <Item label={"Flow Meter 2"} value={"flowMeter2"} /> */}
-        {renderMonitorList()}
-      </Picker>
+      <View style={styles.pickerBorder}>
+        <Picker
+          dropdownIconColor="white"
+          dropdownIconRippleColor="#313C78"
+          style={styles.picker}
+          selectedValue={listFlow}
+          onValueChange={(v) => setListFlow(v)}
+        >
+          {renderMonitorList()}
+        </Picker>
+      </View>
       <ScrollView style={{ marginTop: 24, height: screenHeight - 240 }}>
-        <View style={[styles.groupWrapper, { height: 480 }]}>
-          <View>
-            <Text style={styles.textGroupTitle}>Flow Rate</Text>
-          </View>
-          <View style={styles.itemGroupWrapper}>
-            <GaugeComponent
-              title="Flow Rate"
-              value={dbObject["flowRate"].toPrecision(5)}
-              min={100}
-              max={300}
-              markStep={20}
-              unit="m3/h"
-            />
-            <GaugeComponent
-              title="Energy Flow Rate"
-              value={dbObject["energyFlow"].toPrecision(5)}
-              min={100}
-              max={300}
-              markStep={20}
-              unit="GJ/h"
-            />
-          </View>
-          <View style={styles.itemGroupWrapper}>
-            <GaugeComponent
-              title="Velocity"
-              value={dbObject["velocity"].toPrecision(5)}
-              min={1}
-              max={5}
-              markStep={0.6}
-              unit="m/s"
-            />
-            <GaugeComponent
-              title="Fluid Sound Speed"
-              value={dbObject["fluidSoundSpeed"]}
-              min={100}
-              max={300}
-              markStep={20}
-              unit="m/s"
-            />
-          </View>
-        </View>
-        <View style={[styles.groupWrapper, { height: 260 }]}>
-          <View>
-            <Text style={styles.textGroupTitle}>Temperature</Text>
-          </View>
-          <View style={styles.itemGroupWrapper}>
-            <GaugeComponent
-              title="Temperature Inlet"
-              value={dbObject["tempInlet"].toPrecision(5)}
-              min={5}
-              max={75}
-              markStep={5}
-              unit="°C"
-            />
-            <GaugeComponent
-              title="Temperature Outlet"
-              value={dbObject["tempOutlet"].toPrecision(5)}
-              min={5}
-              max={75}
-              markStep={5}
-              unit="°C"
-            />
-          </View>
-        </View>
-        <View style={[styles.groupWrapper, { height: 120 }]}>
-          <View>
-            <Text style={styles.textGroupTitle}>Accumulator</Text>
-          </View>
-          <View style={styles.itemGroupWrapper}>
-            <View>
-              <Text style={styles.textItemTitle}>Positive Accumulator</Text>
-              <Text style={styles.textItemValue}>
-                {dbObject["positiveAcc"]}
-              </Text>
+        <Card
+          mode="outlined"
+          elevation={3}
+          style={[styles.groupWrapper, { height: 520 }]}
+        >
+          <Card.Title title="Flow Rate" titleStyle={styles.textTitle} />
+          <Card.Content>
+            <View style={styles.itemGroupWrapper}>
+              <GaugeComponent
+                title="Flow Rate"
+                value={dbObject["flowRate"]}
+                min={100}
+                max={300}
+                markStep={20}
+                unit="m3/h"
+              />
+              <GaugeComponent
+                title="Energy Flow Rate"
+                value={dbObject["energyFlow"]}
+                min={100}
+                max={300}
+                markStep={20}
+                unit="GJ/h"
+              />
+              <GaugeComponent
+                title="Velocity"
+                value={dbObject["velocity"]}
+                min={1}
+                max={5}
+                markStep={0.6}
+                unit="m/s"
+              />
+              <GaugeComponent
+                title="Fluid Sound Speed"
+                value={dbObject["fluidSoundSpeed"]}
+                min={100}
+                max={300}
+                markStep={20}
+                unit="m/s"
+              />
             </View>
-            <View>
-              <Text style={styles.textItemTitle}>Negative Accumulator</Text>
-              <Text style={styles.textItemValue}>
-                {dbObject["negativeAcc"]}
-              </Text>
+          </Card.Content>
+        </Card>
+        <Card
+          mode="outlined"
+          elevation={3}
+          style={[styles.groupWrapper, { height: 288 }]}
+        >
+          <Card.Title title="Temperature" titleStyle={styles.textTitle} />
+          <Card.Content>
+            <View style={styles.itemGroupWrapper}>
+              <GaugeComponent
+                title="Temperature Inlet"
+                value={dbObject["tempInlet"]}
+                min={5}
+                max={75}
+                markStep={5}
+                unit="°C"
+              />
+              <GaugeComponent
+                title="Temperature Outlet"
+                value={dbObject["tempOutlet"]}
+                min={5}
+                max={75}
+                markStep={5}
+                unit="°C"
+              />
             </View>
-          </View>
-        </View>
+          </Card.Content>
+        </Card>
+        <Card
+          mode="outlined"
+          elevation={3}
+          style={[styles.groupWrapper, { height: 148 }]}
+        >
+          <Card.Title title="Accumulator" titleStyle={styles.textTitle} />
+          <Card.Content>
+            <View style={styles.itemGroupWrapper}>
+              <View style={styles.itemTextValueWrapper}>
+                <Text style={styles.textItemTitle}>Positive Accumulator</Text>
+                <Text style={styles.textItemValue}>
+                  {dbObject["positiveAcc"]}
+                </Text>
+              </View>
+              <View style={styles.itemTextValueWrapper}>
+                <Text style={styles.textItemTitle}>Negative Accumulator</Text>
+                <Text style={styles.textItemValue}>
+                  {dbObject["negativeAcc"]}
+                </Text>
+              </View>
+            </View>
+          </Card.Content>
+        </Card>
       </ScrollView>
     </View>
   );
