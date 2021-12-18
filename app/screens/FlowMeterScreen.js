@@ -24,10 +24,18 @@ function FlowMeterScreen() {
     positiveAcc: 0,
     velocity: 0,
   });
+  const [gaugeValue, setGaugeValue] = useState({
+    energyFlowRate: {},
+    flowRate: {},
+    fluidSound: {},
+    temperature: {},
+    velocity: {},
+  });
   const [listFlow, setListFlow] = useState("flowMeter1");
   const [listMonitor, setListMonitor] = useState([]);
   const [intializing, setInitializing] = useState(true);
 
+  // Untuk ambil berapa banyak monitor flow
   React.useEffect(() => {
     const listPanelTemp = [];
     database()
@@ -49,6 +57,7 @@ function FlowMeterScreen() {
       });
   }, []);
 
+  // Untuk merender list dari banyak monitor
   const renderMonitorList = () => {
     console.log("Render List dipanggil");
     console.log("List: ", listMonitor);
@@ -59,6 +68,24 @@ function FlowMeterScreen() {
     });
   };
 
+  // Untuk ambil value gauge
+  React.useEffect(() => {
+    const dbListen = database()
+      .ref("ewsApp/gaugeValue/flow-meter")
+      .once("value", (snapshot) => {
+        const fetchGauge = snapshot.val();
+        setGaugeValue(fetchGauge);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    return () => {
+      database().ref(dbPath).off("value", dbListen);
+    };
+  }, []);
+
+  // Untuk real-time data dari monitor
   React.useEffect(() => {
     const dbListen = database()
       .ref(dbPath + listFlow)
@@ -107,33 +134,43 @@ function FlowMeterScreen() {
               <GaugeComponent
                 title="Flow Rate"
                 value={dbObject["flowRate"]}
-                min={100}
-                max={300}
-                markStep={20}
+                min={gaugeValue.flowRate.min}
+                max={gaugeValue.flowRate.max}
+                markStep={
+                  (gaugeValue.flowRate.max - gaugeValue.flowRate.min) / 10
+                }
                 unit="m3/h"
               />
               <GaugeComponent
                 title="Energy Flow Rate"
                 value={dbObject["energyFlow"]}
-                min={100}
-                max={300}
-                markStep={20}
+                min={gaugeValue.energyFlowRate.min}
+                max={gaugeValue.energyFlowRate.max}
+                markStep={
+                  (gaugeValue.energyFlowRate.max -
+                    gaugeValue.energyFlowRate.min) /
+                  10
+                }
                 unit="GJ/h"
               />
               <GaugeComponent
                 title="Velocity"
                 value={dbObject["velocity"]}
-                min={1}
-                max={5}
-                markStep={0.6}
+                min={gaugeValue.velocity.min}
+                max={gaugeValue.velocity.max}
+                markStep={
+                  (gaugeValue.velocity.max - gaugeValue.velocity.min) / 10
+                }
                 unit="m/s"
               />
               <GaugeComponent
                 title="Fluid Sound Speed"
                 value={dbObject["fluidSoundSpeed"]}
-                min={100}
-                max={300}
-                markStep={20}
+                min={gaugeValue.fluidSound.min}
+                max={gaugeValue.fluidSound.max}
+                markStep={
+                  (gaugeValue.fluidSound.max - gaugeValue.fluidSound.min) / 10
+                }
                 unit="m/s"
               />
             </View>
@@ -150,17 +187,21 @@ function FlowMeterScreen() {
               <GaugeComponent
                 title="Temperature Inlet"
                 value={dbObject["tempInlet"]}
-                min={5}
-                max={75}
-                markStep={5}
+                min={gaugeValue.temperature.min}
+                max={gaugeValue.temperature.max}
+                markStep={
+                  (gaugeValue.temperature.max - gaugeValue.temperature.min) / 10
+                }
                 unit="°C"
               />
               <GaugeComponent
                 title="Temperature Outlet"
                 value={dbObject["tempOutlet"]}
-                min={5}
-                max={75}
-                markStep={5}
+                min={gaugeValue.temperature.min}
+                max={gaugeValue.temperature.max}
+                markStep={
+                  (gaugeValue.temperature.max - gaugeValue.temperature.min) / 10
+                }
                 unit="°C"
               />
             </View>

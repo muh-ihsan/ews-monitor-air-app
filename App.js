@@ -12,7 +12,7 @@ import colors from "./app/styles/colors";
 import FlowMeterScreen from "./app/screens/FlowMeterScreen";
 import PanelPompaScreen from "./app/screens/PanelPompaScreen";
 import PressureSolarScreen from "./app/screens/PressureSolarScreen";
-import { Alert, Button, View } from "react-native";
+import { Alert, Button, Image, StyleSheet, View } from "react-native";
 import LoginScreen from "./app/screens/LoginScreen";
 
 const Tab = createBottomTabNavigator();
@@ -53,6 +53,15 @@ function logOut() {
   );
 }
 
+function Logo() {
+  return (
+    <Image
+      style={{ width: 32, height: 32, marginLeft: 20 }}
+      source={require("./app/assets/logo_purabaya.png")}
+    />
+  );
+}
+
 function Home() {
   return (
     <PaperProvider>
@@ -79,17 +88,29 @@ function Home() {
         <Tab.Screen
           name="Panel Pompa"
           component={PanelPompaScreen}
-          options={{ headerRight: logOut }}
+          options={{
+            headerRight: logOut,
+            headerTitleAlign: "center",
+            headerLeft: Logo,
+          }}
         />
         <Tab.Screen
           name="Flow Meter"
           component={FlowMeterScreen}
-          options={{ headerRight: logOut }}
+          options={{
+            headerRight: logOut,
+            headerTitleAlign: "center",
+            headerLeft: Logo,
+          }}
         />
         <Tab.Screen
           name="Pressure & Solar"
           component={PressureSolarScreen}
-          options={{ headerRight: logOut }}
+          options={{
+            headerRight: logOut,
+            headerTitleAlign: "center",
+            headerLeft: Logo,
+          }}
         />
         {/* <Tab.Screen name="Setting" component={SettingScreen} options={{ headerRight: logOut }} /> */}
       </Tab.Navigator>

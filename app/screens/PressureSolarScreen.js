@@ -21,6 +21,10 @@ function PressureSolarScreen() {
     pressurePsi: 0,
     voltage: 0,
   });
+  const [gaugeValue, setGaugeValue] = useState({
+    pressureBar: {},
+    pressurePsi: {},
+  });
   const [listValue, setListValue] = useState("pressureSolar1");
   const [listPanel, setListPanel] = useState([]);
   const [intializing, setInitializing] = useState(true);
@@ -55,6 +59,23 @@ function PressureSolarScreen() {
       return <Item key={index} label={index.label} value={index.value} />;
     });
   };
+
+  // Untuk ambil value gauge
+  React.useEffect(() => {
+    const dbListen = database()
+      .ref("ewsApp/gaugeValue/pressure-solar")
+      .once("value", (snapshot) => {
+        const fetchGauge = snapshot.val();
+        setGaugeValue(fetchGauge);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    return () => {
+      database().ref(dbPath).off("value", dbListen);
+    };
+  }, []);
 
   React.useEffect(() => {
     const dbListen = database()
@@ -121,17 +142,21 @@ function PressureSolarScreen() {
               <GaugeComponent
                 title="Pressure Bar"
                 value={dbObject["pressureBar"]}
-                min={0}
-                max={10}
-                markStep={1}
+                min={gaugeValue.pressureBar.min}
+                max={gaugeValue.pressureBar.max}
+                markStep={
+                  (gaugeValue.pressureBar.max - gaugeValue.pressureBar.min) / 10
+                }
                 unit="bar"
               />
               <GaugeComponent
                 title="Pressure Psi"
                 value={dbObject["pressurePsi"]}
-                min={0}
-                max={200}
-                markStep={20}
+                min={gaugeValue.pressurePsi.min}
+                max={gaugeValue.pressurePsi.max}
+                markStep={
+                  (gaugeValue.pressurePsi.max - gaugeValue.pressurePsi.min) / 10
+                }
                 unit="psi"
               />
             </View>
@@ -151,7 +176,9 @@ function PressureSolarScreen() {
               </View>
               <View style={styles.itemTextValueWrapper}>
                 <Text style={styles.textItemTitle}>Charging Current</Text>
-                <Text style={styles.textItemValue}>{0} A</Text>
+                <Text style={styles.textItemValue}>
+                  {dbObject["current"]} mA
+                </Text>
               </View>
             </View>
           </Card.Content>

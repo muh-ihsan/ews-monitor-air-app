@@ -35,6 +35,10 @@ function PanelPompaScreen() {
     relay1: { nama: "" },
     relay2: { nama: "" },
   });
+  const [gaugeValue, setGaugeValue] = useState({
+    current: {},
+    volt: {},
+  });
   const [relay1, setRelay1] = useState(false);
   const [relay2, setRelay2] = useState(false);
   const [listPanel, setListPanel] = useState("panelPompa1");
@@ -60,6 +64,23 @@ function PanelPompaScreen() {
       .catch((err) => {
         console.log(err);
       });
+  }, []);
+
+  // Untuk ambil value gauge
+  React.useEffect(() => {
+    const dbListen = database()
+      .ref("ewsApp/gaugeValue/panel-pompa")
+      .once("value", (snapshot) => {
+        const fetchGauge = snapshot.val();
+        setGaugeValue(fetchGauge);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    return () => {
+      database().ref(dbPath).off("value", dbListen);
+    };
   }, []);
 
   React.useEffect(() => {
@@ -137,25 +158,25 @@ function PanelPompaScreen() {
               <GaugeComponent
                 title="Volt R"
                 value={dbObject["voltR"]}
-                min={100}
-                max={300}
-                markStep={20}
+                min={gaugeValue.volt.min}
+                max={gaugeValue.volt.max}
+                markStep={(gaugeValue.volt.max - gaugeValue.volt.min) / 10}
                 unit="V"
               />
               <GaugeComponent
                 title="Volt S"
                 value={dbObject["voltS"]}
-                min={100}
-                max={300}
-                markStep={20}
+                min={gaugeValue.volt.min}
+                max={gaugeValue.volt.max}
+                markStep={(gaugeValue.volt.max - gaugeValue.volt.min) / 10}
                 unit="V"
               />
               <GaugeComponent
                 title="Volt T"
                 value={dbObject["voltT"]}
-                min={100}
-                max={300}
-                markStep={20}
+                min={gaugeValue.volt.min}
+                max={gaugeValue.volt.max}
+                markStep={(gaugeValue.volt.max - gaugeValue.volt.min) / 10}
                 unit="V"
               />
             </View>
@@ -172,25 +193,31 @@ function PanelPompaScreen() {
               <GaugeComponent
                 title="Current R"
                 value={dbObject["currentR"]}
-                min={500}
-                max={3000}
-                markStep={250}
+                min={gaugeValue.current.min}
+                max={gaugeValue.current.max}
+                markStep={
+                  (gaugeValue.current.max - gaugeValue.current.min) / 10
+                }
                 unit="mA"
               />
               <GaugeComponent
                 title="Current S"
                 value={dbObject["currentS"]}
-                min={500}
-                max={3000}
-                markStep={250}
+                min={gaugeValue.current.min}
+                max={gaugeValue.current.max}
+                markStep={
+                  (gaugeValue.current.max - gaugeValue.current.min) / 10
+                }
                 unit="mA"
               />
               <GaugeComponent
                 title="Current T"
                 value={dbObject["currentT"]}
-                min={500}
-                max={3000}
-                markStep={250}
+                min={gaugeValue.current.min}
+                max={gaugeValue.current.max}
+                markStep={
+                  (gaugeValue.current.max - gaugeValue.current.min) / 10
+                }
                 unit="mA"
               />
             </View>
