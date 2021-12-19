@@ -45,6 +45,7 @@ function PanelPompaScreen() {
   const [listMonitor, setListMonitor] = useState([]);
   const [intializing, setInitializing] = useState(true);
 
+  // Untuk ambil berapa banyak monitor panel pompa
   React.useEffect(() => {
     const listPanelTemp = [];
     database()
@@ -68,19 +69,16 @@ function PanelPompaScreen() {
 
   // Untuk ambil value gauge
   React.useEffect(() => {
-    const dbListen = database()
+    database()
       .ref("ewsApp/gaugeValue/panel-pompa")
       .once("value", (snapshot) => {
         const fetchGauge = snapshot.val();
         setGaugeValue(fetchGauge);
+        console.log("Gauge Panel Pompa: ", fetchGauge);
       })
       .catch((err) => {
         console.log(err);
       });
-
-    return () => {
-      database().ref(dbPath).off("value", dbListen);
-    };
   }, []);
 
   React.useEffect(() => {

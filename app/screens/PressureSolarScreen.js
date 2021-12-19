@@ -28,7 +28,9 @@ function PressureSolarScreen() {
   const [listValue, setListValue] = useState("pressureSolar1");
   const [listPanel, setListPanel] = useState([]);
   const [intializing, setInitializing] = useState(true);
+  const [charging, setCharging] = useState(false);
 
+  // Untuk ambil berapa banyak monitor pressure
   React.useEffect(() => {
     const listPanelTemp = [];
     database()
@@ -51,6 +53,7 @@ function PressureSolarScreen() {
       });
   }, []);
 
+  // Untuk merender list dari banyak monitor
   const renderMonitorList = () => {
     console.log("Render List dipanggil");
     console.log("List: ", listPanel);
@@ -62,7 +65,7 @@ function PressureSolarScreen() {
 
   // Untuk ambil value gauge
   React.useEffect(() => {
-    const dbListen = database()
+    database()
       .ref("ewsApp/gaugeValue/pressure-solar")
       .once("value", (snapshot) => {
         const fetchGauge = snapshot.val();
@@ -71,18 +74,20 @@ function PressureSolarScreen() {
       .catch((err) => {
         console.log(err);
       });
-
-    return () => {
-      database().ref(dbPath).off("value", dbListen);
-    };
   }, []);
 
+  // Untuk real-time data dari monitor
   React.useEffect(() => {
     const dbListen = database()
       .ref(dbPath + listValue)
       .on("value", (snapshot) => {
         let data = snapshot.val();
         setDbObject(data);
+        if (data.current > 0) {
+          setCharging(true);
+        } else {
+          setCharging(false);
+        }
         setInitializing(false);
       });
 
@@ -165,7 +170,7 @@ function PressureSolarScreen() {
         <Card
           mode="outlined"
           elevation={3}
-          style={[styles.groupWrapper, { height: 156 }]}
+          style={[styles.groupWrapper, { height: 250 }]}
         >
           <Card.Title title="Solar Panel" titleStyle={styles.textTitle} />
           <Card.Content>
@@ -178,6 +183,14 @@ function PressureSolarScreen() {
                 <Text style={styles.textItemTitle}>Charging Current</Text>
                 <Text style={styles.textItemValue}>
                   {dbObject["current"]} mA
+                </Text>
+              </View>
+            </View>
+            <View style={styles.itemGroupWrapper}>
+              <View style={styles.itemTextValueWrapper}>
+                <Text style={styles.textItemTitle}>Charging?</Text>
+                <Text style={styles.textItemValue}>
+                  {charging ? "YES" : "NO"}
                 </Text>
               </View>
             </View>

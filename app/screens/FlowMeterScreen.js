@@ -70,7 +70,7 @@ function FlowMeterScreen() {
 
   // Untuk ambil value gauge
   React.useEffect(() => {
-    const dbListen = database()
+    database()
       .ref("ewsApp/gaugeValue/flow-meter")
       .once("value", (snapshot) => {
         const fetchGauge = snapshot.val();
@@ -79,10 +79,6 @@ function FlowMeterScreen() {
       .catch((err) => {
         console.log(err);
       });
-
-    return () => {
-      database().ref(dbPath).off("value", dbListen);
-    };
   }, []);
 
   // Untuk real-time data dari monitor
