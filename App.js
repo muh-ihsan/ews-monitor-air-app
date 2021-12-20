@@ -6,12 +6,13 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
 import MaterialIcon from "react-native-vector-icons/MaterialCommunityIcons";
 import auth from "@react-native-firebase/auth";
+import { Provider as PaperProvider } from "react-native-paper";
 
 import colors from "./app/styles/colors";
 import FlowMeterScreen from "./app/screens/FlowMeterScreen";
 import PanelPompaScreen from "./app/screens/PanelPompaScreen";
 import PressureSolarScreen from "./app/screens/PressureSolarScreen";
-import { Alert, Button, View } from "react-native";
+import { Alert, Button, Image, Text, StyleSheet, View } from "react-native";
 import LoginScreen from "./app/screens/LoginScreen";
 
 const Tab = createBottomTabNavigator();
@@ -34,7 +35,7 @@ messaging().setBackgroundMessageHandler(async (remoteMessage) => {
 
 function logOut() {
   return (
-    <View style={{ marginHorizontal: 8 }}>
+    <View style={{ marginHorizontal: 8, backgroundColor: "transparent" }}>
       <Button
         title="Logout"
         onPress={() => {
@@ -49,6 +50,15 @@ function logOut() {
         }}
       />
     </View>
+  );
+}
+
+function Logo() {
+  return (
+    <Image
+      style={{ width: 32, height: 32, marginLeft: 20 }}
+      source={require("./app/assets/logo_purabaya.png")}
+    />
   );
 }
 
@@ -77,17 +87,29 @@ function Home() {
       <Tab.Screen
         name="Panel Pompa"
         component={PanelPompaScreen}
-        options={{ headerRight: logOut }}
+        options={{
+          headerRight: logOut,
+          headerTitleAlign: "center",
+          headerLeft: Logo,
+        }}
       />
       <Tab.Screen
         name="Flow Meter"
         component={FlowMeterScreen}
-        options={{ headerRight: logOut }}
+        options={{
+          headerRight: logOut,
+          headerTitleAlign: "center",
+          headerLeft: Logo,
+        }}
       />
       <Tab.Screen
         name="Pressure & Solar"
         component={PressureSolarScreen}
-        options={{ headerRight: logOut }}
+        options={{
+          headerRight: logOut,
+          headerTitleAlign: "center",
+          headerLeft: Logo,
+        }}
       />
       {/* <Tab.Screen name="Setting" component={SettingScreen} options={{ headerRight: logOut }} /> */}
     </Tab.Navigator>
@@ -118,24 +140,28 @@ export default function App() {
 
   console.log("App started...");
   return (
-    <NavigationContainer theme={Theme}>
-      <Stack.Navigator>
-        {authenticated ? (
-          // Pengguna sudah login
-          <Stack.Screen
-            name="Home"
-            component={Home}
-            options={{ headerShown: false }}
-          />
-        ) : (
-          // Pengguna belum login
-          <Stack.Screen
-            name={"Login"}
-            component={LoginScreen}
-            options={{ headerShown: false }}
-          />
-        )}
-      </Stack.Navigator>
-    </NavigationContainer>
+    <PaperProvider>
+      <View style={{ flex: 1 }}>
+        <NavigationContainer theme={Theme}>
+          <Stack.Navigator>
+            {authenticated ? (
+              // Pengguna sudah login
+              <Stack.Screen
+                name="Home"
+                component={Home}
+                options={{ headerShown: false }}
+              />
+            ) : (
+              // Pengguna belum login
+              <Stack.Screen
+                name={"Login"}
+                component={LoginScreen}
+                options={{ headerShown: false }}
+              />
+            )}
+          </Stack.Navigator>
+        </NavigationContainer>
+      </View>
+    </PaperProvider>
   );
 }

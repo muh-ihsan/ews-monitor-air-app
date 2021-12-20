@@ -5,7 +5,7 @@ import styles from "../styles/stylesheet";
 
 const LedStatusComponent = (props) => {
   return (
-    <View>
+    <View style={styles.itemTextValueWrapper}>
       <Text style={styles.textItemTitle}>{props.name}</Text>
       <Text style={styles.textItemValue}>{props.value ? "ON" : "OFF"}</Text>
     </View>

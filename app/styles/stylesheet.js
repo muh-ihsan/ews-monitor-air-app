@@ -11,9 +11,15 @@ export default styles = StyleSheet.create({
     backgroundColor: colors.background,
   },
   itemGroupWrapper: {
-    marginVertical: 16,
+    flexWrap: "wrap",
+    alignContent: "stretch",
     flexDirection: "row",
-    justifyContent: "space-evenly",
+    justifyContent: "space-around",
+    alignItems: "center",
+  },
+  itemTextValueWrapper: {
+    marginVertical: 16,
+    alignContent: "space-around",
     alignItems: "center",
   },
   textGroupTitle: {
@@ -25,14 +31,18 @@ export default styles = StyleSheet.create({
     marginStart: 8,
   },
   groupWrapper: {
-    backgroundColor: colors.primary,
+    backgroundColor: colors.bgCard,
     marginBottom: 12,
     borderRadius: 10,
   },
   picker: {
-    color: "black",
+    color: "white",
+  },
+  pickerBorder: {
+    backgroundColor: colors.primary,
     marginTop: 16,
-    backgroundColor: "white",
+    borderRadius: 8,
+    elevation: 5,
   },
   textGaugeValue: {
     color: "white",
@@ -55,7 +65,7 @@ export default styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: "bold",
     textAlign: "center",
-    marginBottom: 8,
+    marginBottom: 12,
   },
   scrollContainer: {
     justifyContent: "space-between",
@@ -63,8 +73,6 @@ export default styles = StyleSheet.create({
   },
   textTitle: {
     color: "white",
-    alignSelf: "center",
-    fontWeight: "bold",
-    fontSize: 18,
+    textAlign: "center",
   },
 });

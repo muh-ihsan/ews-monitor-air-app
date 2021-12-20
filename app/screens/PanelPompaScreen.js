@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import database from "@react-native-firebase/database";
 import { Picker } from "@react-native-picker/picker";
+import { Card } from "react-native-paper";
 
 import GaugeComponent from "../ui/GaugeComponent";
 import LedStatusComponent from "../ui/LedStatusComponent";
@@ -34,12 +35,17 @@ function PanelPompaScreen() {
     relay1: { nama: "" },
     relay2: { nama: "" },
   });
+  const [gaugeValue, setGaugeValue] = useState({
+    current: {},
+    volt: {},
+  });
   const [relay1, setRelay1] = useState(false);
   const [relay2, setRelay2] = useState(false);
   const [listPanel, setListPanel] = useState("panelPompa1");
   const [listMonitor, setListMonitor] = useState([]);
   const [intializing, setInitializing] = useState(true);
 
+  // Untuk ambil berapa banyak monitor panel pompa
   React.useEffect(() => {
     const listPanelTemp = [];
     database()
@@ -55,6 +61,20 @@ function PanelPompaScreen() {
           console.log("List: ", listPanel);
         }
         setListMonitor(listPanelTemp);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
+  // Untuk ambil value gauge
+  React.useEffect(() => {
+    database()
+      .ref("ewsApp/gaugeValue/panel-pompa")
+      .once("value", (snapshot) => {
+        const fetchGauge = snapshot.val();
+        setGaugeValue(fetchGauge);
+        console.log("Gauge Panel Pompa: ", fetchGauge);
       })
       .catch((err) => {
         console.log(err);
@@ -107,192 +127,222 @@ function PanelPompaScreen() {
 
   return (
     <View style={[styles.container, { flex: 1 }]}>
-      <StatusBar barStyle="light-content" backgroundColor={colors.background} />
+      <StatusBar
+        barStyle="light-content"
+        backgroundColor={colors.secondary}
+        translucent={true}
+      />
       <LoadingModalComponent show={intializing} />
-      <Picker
-        style={styles.picker}
-        selectedValue={listPanel}
-        onValueChange={(v) => setListPanel(v)}
-      >
-        {/* <Item label={"Panel 1"} value={"panelPompa1"} />
-        <Item label={"Panel 2"} value={"panelPompa2"} /> */}
-        {renderMonitorList()}
-      </Picker>
+      <View style={styles.pickerBorder}>
+        <Picker
+          dropdownIconColor="white"
+          dropdownIconRippleColor="#313C78"
+          style={styles.picker}
+          selectedValue={listPanel}
+          onValueChange={(v) => setListPanel(v)}
+        >
+          {renderMonitorList()}
+        </Picker>
+      </View>
       <ScrollView style={{ marginTop: 24, height: screenHeight - 240 }}>
-        <View style={[styles.groupWrapper, { height: 480 }]}>
-          <View>
-            <Text style={styles.textGroupTitle}>Tegangan</Text>
-          </View>
-          <View style={styles.itemGroupWrapper}>
-            <GaugeComponent
-              title="Volt R"
-              value={dbObject["voltR"]}
-              min={100}
-              max={300}
-              markStep={20}
-              unit="V"
-            />
-            <GaugeComponent
-              title="Volt S"
-              value={dbObject["voltS"]}
-              min={100}
-              max={300}
-              markStep={20}
-              unit="V"
-            />
-          </View>
-          <View style={styles.itemGroupWrapper}>
-            <GaugeComponent
-              title="Volt T"
-              value={dbObject["voltT"]}
-              min={100}
-              max={300}
-              markStep={20}
-              unit="V"
-            />
-          </View>
-        </View>
-        <View style={[styles.groupWrapper, { height: 480 }]}>
-          <View>
-            <Text style={styles.textGroupTitle}>Arus Listrik</Text>
-          </View>
-          <View style={styles.itemGroupWrapper}>
-            <GaugeComponent
-              title="Current R"
-              value={dbObject["currentR"]}
-              min={500}
-              max={3000}
-              markStep={250}
-              unit="mA"
-            />
-            <GaugeComponent
-              title="Current S"
-              value={dbObject["currentS"]}
-              min={500}
-              max={3000}
-              markStep={250}
-              unit="mA"
-            />
-          </View>
-          <View style={styles.itemGroupWrapper}>
-            <GaugeComponent
-              title="Current T"
-              value={dbObject["currentT"]}
-              min={500}
-              max={3000}
-              markStep={250}
-              unit="mA"
-            />
-          </View>
-        </View>
-        <View style={[styles.groupWrapper, { height: 120 }]}>
-          <View>
-            <Text style={styles.textGroupTitle}>Power</Text>
-          </View>
-          <View style={styles.itemGroupWrapper}>
-            <View>
-              <Text style={styles.textItemTitle}>Power Factor</Text>
-              <Text style={styles.textItemValue}>
-                {dbObject["powerFactor"] * 100}%
-              </Text>
-            </View>
-            <View>
-              <Text style={styles.textItemTitle}>Frequency</Text>
-              <Text style={styles.textItemValue}>
-                {dbObject["frequency"]} Hz
-              </Text>
-            </View>
-            <View>
-              <Text style={styles.textItemTitle}>Power</Text>
-              <Text style={styles.textItemValue}>{dbObject["power"]} W</Text>
-            </View>
-          </View>
-        </View>
-        <View style={[styles.groupWrapper, { height: 210 }]}>
-          <View>
-            <Text style={styles.textGroupTitle}>LED States</Text>
-          </View>
-          <View style={styles.itemGroupWrapper}>
-            <LedStatusComponent
-              name={dbObject["led1"]["nama"]}
-              value={dbObject["led1"]["value"]}
-            />
-            <LedStatusComponent
-              name={dbObject["led2"]["nama"]}
-              value={dbObject["led2"]["value"]}
-            />
-            <LedStatusComponent
-              name={dbObject["led3"]["nama"]}
-              value={dbObject["led3"]["value"]}
-            />
-          </View>
-          <View style={styles.itemGroupWrapper}>
-            <LedStatusComponent
-              name={dbObject["led4"]["nama"]}
-              value={dbObject["led4"]["value"]}
-            />
-            <LedStatusComponent
-              name={dbObject["led5"]["nama"]}
-              value={dbObject["led5"]["value"]}
-            />
-            <LedStatusComponent
-              name={dbObject["led6"]["nama"]}
-              value={dbObject["led6"]["value"]}
-            />
-          </View>
-        </View>
-        <View style={[styles.groupWrapper, { height: 110 }]}>
-          <View>
-            <Text style={styles.textGroupTitle}>Button Relays</Text>
-          </View>
-          {/* <View>
-            <Text style={styles.textCheckmark}>Enable Relay Button?</Text>
-          </View> */}
-          <View style={styles.itemGroupWrapper}>
-            <View>
-              <Text style={styles.textItemTitle}>
-                {dbObject["relay1"]["nama"]}
-              </Text>
-              <Switch
-                onValueChange={() => {
-                  const value = !relay1;
-                  const valueInt = value ? 1 : 0;
-                  setRelay1(value);
-                  database()
-                    .ref(`ewsApp/panel-pompa/${listPanel}/relay1`)
-                    .update({ trigger: valueInt })
-                    .then(() => console.log("Relay 1 triggered"))
-                    .catch((err) => {
-                      console.log("Error: ", err);
-                    });
-                }}
-                value={relay1}
-                thumbColor={relay1 ? colors.secondary : "white"}
+        <Card
+          mode="outlined"
+          elevation={3}
+          style={[styles.groupWrapper, { height: 520 }]}
+        >
+          <Card.Title title="Tegangan" titleStyle={styles.textTitle} />
+          <Card.Content>
+            <View style={styles.itemGroupWrapper}>
+              <GaugeComponent
+                title="Volt R"
+                value={dbObject["voltR"]}
+                min={gaugeValue.volt.min}
+                max={gaugeValue.volt.max}
+                markStep={(gaugeValue.volt.max - gaugeValue.volt.min) / 10}
+                unit="V"
+              />
+              <GaugeComponent
+                title="Volt S"
+                value={dbObject["voltS"]}
+                min={gaugeValue.volt.min}
+                max={gaugeValue.volt.max}
+                markStep={(gaugeValue.volt.max - gaugeValue.volt.min) / 10}
+                unit="V"
+              />
+              <GaugeComponent
+                title="Volt T"
+                value={dbObject["voltT"]}
+                min={gaugeValue.volt.min}
+                max={gaugeValue.volt.max}
+                markStep={(gaugeValue.volt.max - gaugeValue.volt.min) / 10}
+                unit="V"
               />
             </View>
-            <View>
-              <Text style={styles.textItemTitle}>
-                {dbObject["relay2"]["nama"]}
-              </Text>
-              <Switch
-                onValueChange={() => {
-                  const value = !relay2;
-                  const valueInt = value ? 1 : 0;
-                  setRelay2(value);
-                  database()
-                    .ref(`ewsApp/panel-pompa/${listPanel}/relay2`)
-                    .update({ trigger: valueInt })
-                    .then(() => console.log("Relay 2 triggered"))
-                    .catch((err) => {
-                      console.log("Error: ", err);
-                    });
-                }}
-                value={relay2}
-                thumbColor={relay2 ? colors.secondary : "white"}
+          </Card.Content>
+        </Card>
+        <Card
+          mode="outlined"
+          elevation={3}
+          style={[styles.groupWrapper, { height: 520 }]}
+        >
+          <Card.Title title="Arus Listrik" titleStyle={styles.textTitle} />
+          <Card.Content>
+            <View style={styles.itemGroupWrapper}>
+              <GaugeComponent
+                title="Current R"
+                value={dbObject["currentR"]}
+                min={gaugeValue.current.min}
+                max={gaugeValue.current.max}
+                markStep={
+                  (gaugeValue.current.max - gaugeValue.current.min) / 10
+                }
+                unit="mA"
+              />
+              <GaugeComponent
+                title="Current S"
+                value={dbObject["currentS"]}
+                min={gaugeValue.current.min}
+                max={gaugeValue.current.max}
+                markStep={
+                  (gaugeValue.current.max - gaugeValue.current.min) / 10
+                }
+                unit="mA"
+              />
+              <GaugeComponent
+                title="Current T"
+                value={dbObject["currentT"]}
+                min={gaugeValue.current.min}
+                max={gaugeValue.current.max}
+                markStep={
+                  (gaugeValue.current.max - gaugeValue.current.min) / 10
+                }
+                unit="mA"
               />
             </View>
-          </View>
-        </View>
+          </Card.Content>
+        </Card>
+        <Card
+          mode="outlined"
+          elevation={3}
+          style={[styles.groupWrapper, { height: 160 }]}
+        >
+          <Card.Title title="Power" titleStyle={styles.textTitle} />
+          <Card.Content>
+            <View style={styles.itemGroupWrapper}>
+              <View style={styles.itemTextValueWrapper}>
+                <Text style={styles.textItemTitle}>Power Factor</Text>
+                <Text style={styles.textItemValue}>
+                  {dbObject["powerFactor"] * 100}%
+                </Text>
+              </View>
+              <View style={styles.itemTextValueWrapper}>
+                <Text style={styles.textItemTitle}>Frequency</Text>
+                <Text style={styles.textItemValue}>
+                  {dbObject["frequency"]} Hz
+                </Text>
+              </View>
+              <View style={styles.itemTextValueWrapper}>
+                <Text style={styles.textItemTitle}>Power</Text>
+                <Text style={styles.textItemValue}>{dbObject["power"]} W</Text>
+              </View>
+            </View>
+          </Card.Content>
+        </Card>
+        <Card
+          mode="outlined"
+          elevation={3}
+          style={[styles.groupWrapper, { height: 248 }]}
+        >
+          <Card.Title title="LED States" titleStyle={styles.textTitle} />
+          <Card.Content>
+            <View style={styles.itemGroupWrapper}>
+              <LedStatusComponent
+                name={dbObject["led1"]["nama"]}
+                value={dbObject["led1"]["value"]}
+              />
+              <LedStatusComponent
+                name={dbObject["led2"]["nama"]}
+                value={dbObject["led2"]["value"]}
+              />
+              <LedStatusComponent
+                name={dbObject["led3"]["nama"]}
+                value={dbObject["led3"]["value"]}
+              />
+            </View>
+            <View style={styles.itemGroupWrapper}>
+              <LedStatusComponent
+                name={dbObject["led4"]["nama"]}
+                value={dbObject["led4"]["value"]}
+              />
+              <LedStatusComponent
+                name={dbObject["led5"]["nama"]}
+                value={dbObject["led5"]["value"]}
+              />
+              <LedStatusComponent
+                name={dbObject["led6"]["nama"]}
+                value={dbObject["led6"]["value"]}
+              />
+            </View>
+          </Card.Content>
+        </Card>
+        <Card
+          mode="outlined"
+          elevation={3}
+          style={[styles.groupWrapper, { height: 132 }]}
+        >
+          <Card.Title title="Button Relays" titleStyle={styles.textTitle} />
+          <Card.Content>
+            <View
+              style={[
+                styles.itemGroupWrapper,
+                { alignContent: "space-between" },
+              ]}
+            >
+              <View style={styles.itemTextValueWrapper}>
+                <Text style={styles.textItemTitle}>
+                  {dbObject["relay1"]["nama"]}
+                </Text>
+                <Switch
+                  onValueChange={() => {
+                    const value = !relay1;
+                    const valueInt = value ? 1 : 0;
+                    setRelay1(value);
+                    database()
+                      .ref(`ewsApp/panel-pompa/${listPanel}/relay1`)
+                      .update({ trigger: valueInt })
+                      .then(() => console.log("Relay 1 triggered"))
+                      .catch((err) => {
+                        console.log("Error: ", err);
+                      });
+                  }}
+                  value={relay1}
+                  thumbColor={relay1 ? colors.primary : "white"}
+                />
+              </View>
+              <View style={styles.itemTextValueWrapper}>
+                <Text style={styles.textItemTitle}>
+                  {dbObject["relay2"]["nama"]}
+                </Text>
+                <Switch
+                  onValueChange={() => {
+                    const value = !relay2;
+                    const valueInt = value ? 1 : 0;
+                    setRelay2(value);
+                    database()
+                      .ref(`ewsApp/panel-pompa/${listPanel}/relay2`)
+                      .update({ trigger: valueInt })
+                      .then(() => console.log("Relay 2 triggered"))
+                      .catch((err) => {
+                        console.log("Error: ", err);
+                      });
+                  }}
+                  value={relay2}
+                  thumbColor={relay2 ? colors.primary : "white"}
+                />
+              </View>
+            </View>
+          </Card.Content>
+        </Card>
       </ScrollView>
       <StatusBar style="auto" />
     </View>

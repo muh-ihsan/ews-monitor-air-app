@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import {
   Alert,
+  Image,
   StatusBar,
   StyleSheet,
   Text,
@@ -79,7 +80,12 @@ function LoginScreen() {
         backgroundColor={colors.background}
       />
       <View style={styles.inputWrapper}>
-        <Text style={styles.textLogin}>Log In</Text>
+        {/* <Text style={styles.textLogin}>Log In</Text> */}
+        <Image
+          style={styles.imageLogin}
+          source={require("../assets/logo_purabaya.png")}
+          fadeDuration={0}
+        />
         <TextInput
           style={styles.textInput}
           placeholder="Email"
@@ -138,19 +144,26 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    justifyContent: "space-around",
+    justifyContent: "space-evenly",
     backgroundColor: colors.background,
   },
   errorLabelContainer: {
+    padding: 16,
     alignItems: "center",
     justifyContent: "center",
+  },
+  imageLogin: {
+    width: 148,
+    height: 148,
+    alignSelf: "center",
+    marginBottom: 40,
   },
   inputWrapper: {
     paddingHorizontal: 24,
     justifyContent: "space-around",
   },
   textError: {
-    color: "red",
+    color: "#CA566B",
     textAlign: "center",
   },
   textInput: {
@@ -158,10 +171,8 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     padding: 8,
     height: 55,
-    backgroundColor: "transparent",
-    borderWidth: 1,
+    backgroundColor: colors.bgCard,
     color: "white",
-    borderColor: colors.primary,
   },
   textLogin: {
     marginBottom: 28,

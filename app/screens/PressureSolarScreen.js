@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Dimensions, Text, View, StatusBar } from "react-native";
 import database from "@react-native-firebase/database";
 import { Picker } from "@react-native-picker/picker";
+import { Card } from "react-native-paper";
 
 import GaugeComponent from "../ui/GaugeComponent";
 import LoadingModalComponent from "../ui/LoadingModalComponent";
@@ -15,14 +16,21 @@ const screenHeight = Dimensions.get("window").height;
 function PressureSolarScreen() {
   const dbPath = "ewsApp/pressure-solar/";
   const [dbObject, setDbObject] = useState({
-    pressureSolar1: { pressure: {} },
+    current: 0,
+    pressureBar: 0,
+    pressurePsi: 0,
+    voltage: 0,
+  });
+  const [gaugeValue, setGaugeValue] = useState({
+    pressureBar: {},
+    pressurePsi: {},
   });
   const [listValue, setListValue] = useState("pressureSolar1");
   const [listPanel, setListPanel] = useState([]);
-  const [listPressure, setListPressure] = useState([]);
-  const [pressureHeight, setPressureHeight] = useState(260);
   const [intializing, setInitializing] = useState(true);
+  const [charging, setCharging] = useState(false);
 
+  // Untuk ambil berapa banyak monitor pressure
   React.useEffect(() => {
     const listPanelTemp = [];
     database()
@@ -31,13 +39,13 @@ function PressureSolarScreen() {
         const fetchData = snapshot.val();
         console.log("Pressure Solar Object:\n", fetchData);
         for (const panel in fetchData) {
+          console.log(panel.toString());
           listPanelTemp.push({
             label: fetchData[panel].nama,
             value: panel.toString(),
           });
-          console.log("Successfully add list");
-          console.log("List: ", listPanel);
         }
+        console.log("List Panel Pressure: ", listPanelTemp);
         setListPanel(listPanelTemp);
       })
       .catch((err) => {
@@ -45,6 +53,7 @@ function PressureSolarScreen() {
       });
   }, []);
 
+  // Untuk merender list dari banyak monitor
   const renderMonitorList = () => {
     console.log("Render List dipanggil");
     console.log("List: ", listPanel);
@@ -54,26 +63,31 @@ function PressureSolarScreen() {
     });
   };
 
+  // Untuk ambil value gauge
+  React.useEffect(() => {
+    database()
+      .ref("ewsApp/gaugeValue/pressure-solar")
+      .once("value", (snapshot) => {
+        const fetchGauge = snapshot.val();
+        setGaugeValue(fetchGauge);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
+  // Untuk real-time data dari monitor
   React.useEffect(() => {
     const dbListen = database()
       .ref(dbPath + listValue)
       .on("value", (snapshot) => {
         let data = snapshot.val();
         setDbObject(data);
-
-        const listPressureTemp = [];
-        for (const pressure in data["pressure"]) {
-          listPressureTemp.push({
-            index: pressure,
-            nama: "Sensor " + pressure.toString(),
-            value: data["pressure"][pressure],
-          });
+        if (data.current > 0) {
+          setCharging(true);
+        } else {
+          setCharging(false);
         }
-        console.log(listPressureTemp);
-        const CalcPressureHeight =
-          Math.ceil(listPressureTemp.length / 2) * 200 + 60;
-        setPressureHeight(CalcPressureHeight);
-        setListPressure(listPressureTemp);
         setInitializing(false);
       });
 
@@ -85,79 +99,103 @@ function PressureSolarScreen() {
 
   console.log("db pressure solar: ", dbObject);
 
-  const renderGaugePressure = () => {
-    return listPressure.map((element, i) => {
-      return (
-        <GaugeComponent
-          key={i}
-          title={element.nama}
-          value={element.value}
-          min={0}
-          max={80}
-          markStep={5}
-          unit="psi"
-        />
-      );
-    });
-  };
+  // const renderGaugePressure = () => {
+  //   return listPressure.map((element, i) => {
+  //     return (
+  //       <GaugeComponent
+  //         key={i}
+  //         title={element.nama}
+  //         value={element.value}
+  //         min={0}
+  //         max={80}
+  //         markStep={5}
+  //         unit="psi"
+  //       />
+  //     );
+  //   });
+  // };
 
   return (
     <View style={[styles.container, { flex: 1 }]}>
-      <StatusBar barStyle="light-content" backgroundColor={colors.background} />
+      <StatusBar
+        barStyle="light-content"
+        backgroundColor={colors.secondary}
+        translucent={true}
+      />
       <LoadingModalComponent show={intializing} />
-      <Picker
-        style={styles.picker}
-        selectedValue={listValue}
-        onValueChange={(v) => setListValue(v)}
-      >
-        {/* <Item label={"Pressure 1"} value={"pressureSolar1"} />
-        <Item label={"Pressure 2"} value={"pressureSolar2"} /> */}
-        {renderMonitorList()}
-      </Picker>
+      <View style={styles.pickerBorder}>
+        <Picker
+          dropdownIconColor="white"
+          dropdownIconRippleColor="#313C78"
+          style={styles.picker}
+          selectedValue={listValue}
+          onValueChange={(v) => setListValue(v)}
+        >
+          {renderMonitorList()}
+        </Picker>
+      </View>
       <ScrollView style={{ marginTop: 24, height: screenHeight - 240 }}>
-        <View style={[styles.groupWrapper, { height: pressureHeight }]}>
-          <View>
-            <Text style={styles.textGroupTitle}>Pressure</Text>
-          </View>
-          <View
-            style={[
-              styles.itemGroupWrapper,
-              { flexWrap: "wrap", alignContent: "space-around" },
-            ]}
-          >
-            {renderGaugePressure()}
-            {/* <GaugeComponent
-            title="Pressure"
-            value={dbObject[listValue]["pressure"]["0"]}
-            min={0}
-            max={80}
-            markStep={5}
-            unit="psi" */}
-          </View>
-        </View>
-        <View style={[styles.groupWrapper, { height: 220 }]}>
-          <View>
-            <Text style={styles.textGroupTitle}>Solar Panel</Text>
-          </View>
-          <View style={styles.itemGroupWrapper}>
-            <View>
-              <Text style={styles.textItemTitle}>Battery</Text>
-              <Text style={styles.textItemValue}>{dbObject["battery"]}%</Text>
+        <Card
+          mode="outlined"
+          elevation={3}
+          style={[styles.groupWrapper, { height: 288 }]}
+        >
+          <Card.Title title="Pressure" titleStyle={styles.textTitle} />
+          <Card.Content>
+            <View style={styles.itemGroupWrapper}>
+              {/* {renderGaugePressure()} */}
+              <GaugeComponent
+                title="Pressure Bar"
+                value={dbObject["pressureBar"]}
+                min={gaugeValue.pressureBar.min}
+                max={gaugeValue.pressureBar.max}
+                markStep={
+                  (gaugeValue.pressureBar.max - gaugeValue.pressureBar.min) / 10
+                }
+                unit="bar"
+              />
+              <GaugeComponent
+                title="Pressure Psi"
+                value={dbObject["pressurePsi"]}
+                min={gaugeValue.pressurePsi.min}
+                max={gaugeValue.pressurePsi.max}
+                markStep={
+                  (gaugeValue.pressurePsi.max - gaugeValue.pressurePsi.min) / 10
+                }
+                unit="psi"
+              />
             </View>
-            <View>
-              <Text style={styles.textItemTitle}>Charging Current</Text>
-              <Text style={styles.textItemValue}>
-                {dbObject["chargingCurrent"]} A
-              </Text>
+          </Card.Content>
+        </Card>
+        <Card
+          mode="outlined"
+          elevation={3}
+          style={[styles.groupWrapper, { height: 250 }]}
+        >
+          <Card.Title title="Solar Panel" titleStyle={styles.textTitle} />
+          <Card.Content>
+            <View style={styles.itemGroupWrapper}>
+              <View style={styles.itemTextValueWrapper}>
+                <Text style={styles.textItemTitle}>Battery</Text>
+                <Text style={styles.textItemValue}>{dbObject["voltage"]}%</Text>
+              </View>
+              <View style={styles.itemTextValueWrapper}>
+                <Text style={styles.textItemTitle}>Charging Current</Text>
+                <Text style={styles.textItemValue}>
+                  {dbObject["current"]} mA
+                </Text>
+              </View>
             </View>
-          </View>
-          <View style={styles.itemGroupWrapper}>
-            <View>
-              <Text style={styles.textItemTitle}>Light Received</Text>
-              <Text style={styles.textItemValue}>{dbObject["light"]} lux</Text>
+            <View style={styles.itemGroupWrapper}>
+              <View style={styles.itemTextValueWrapper}>
+                <Text style={styles.textItemTitle}>Charging?</Text>
+                <Text style={styles.textItemValue}>
+                  {charging ? "YES" : "NO"}
+                </Text>
+              </View>
             </View>
-          </View>
-        </View>
+          </Card.Content>
+        </Card>
       </ScrollView>
     </View>
   );
