@@ -9,6 +9,7 @@ import auth from "@react-native-firebase/auth";
 import { Provider as PaperProvider } from "react-native-paper";
 
 import colors from "./app/styles/colors";
+import HomeScreen from "./app/screens/HomeScreen";
 import FlowMeterScreen from "./app/screens/FlowMeterScreen";
 import PanelPompaScreen from "./app/screens/PanelPompaScreen";
 import PressureSolarScreen from "./app/screens/PressureSolarScreen";
@@ -33,26 +34,6 @@ messaging().setBackgroundMessageHandler(async (remoteMessage) => {
   console.log("Message handled in the background!", remoteMessage);
 });
 
-function logOut() {
-  return (
-    <View style={{ marginHorizontal: 8, backgroundColor: "transparent" }}>
-      <Button
-        title="Logout"
-        onPress={() => {
-          auth()
-            .signOut()
-            .then(() => {
-              console.log("User signed out!");
-              messaging()
-                .unsubscribeFromTopic("notif")
-                .then(() => console.log("Unsubscribe to topic"));
-            });
-        }}
-      />
-    </View>
-  );
-}
-
 function Logo() {
   return (
     <Image
@@ -68,7 +49,9 @@ function Home() {
       screenOptions={({ route }) => ({
         tabBarIcon: ({ color, size }) => {
           let iconName;
-          if (route.name === "Panel Pompa") {
+          if (route.name === "Home Screen") {
+            iconName = "home";
+          } else if (route.name === "Panel Pompa") {
             iconName = "calculator";
           } else if (route.name === "Flow Meter") {
             iconName = "water-pump";
@@ -85,10 +68,16 @@ function Home() {
       })}
     >
       <Tab.Screen
+        name="Home Screen"
+        component={HomeScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Tab.Screen
         name="Panel Pompa"
         component={PanelPompaScreen}
         options={{
-          headerRight: logOut,
           headerTitleAlign: "center",
           headerLeft: Logo,
         }}
@@ -97,7 +86,6 @@ function Home() {
         name="Flow Meter"
         component={FlowMeterScreen}
         options={{
-          headerRight: logOut,
           headerTitleAlign: "center",
           headerLeft: Logo,
         }}
@@ -106,7 +94,6 @@ function Home() {
         name="Pressure & Solar"
         component={PressureSolarScreen}
         options={{
-          headerRight: logOut,
           headerTitleAlign: "center",
           headerLeft: Logo,
         }}
