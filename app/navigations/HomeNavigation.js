@@ -76,6 +76,7 @@ function HomeNavigation() {
       <Tab.Screen
         name="Panel Pompa"
         component={PanelPompaScreen}
+        initialParams={{ monitorValue: "panelPompa1" }}
         options={{
           headerTitleAlign: "center",
           headerLeft: Logo,
@@ -84,6 +85,7 @@ function HomeNavigation() {
       <Tab.Screen
         name="Flow Meter"
         component={FlowMeterScreen}
+        initialParams={{ monitorValue: "flowMeter1" }}
         options={{
           headerTitleAlign: "center",
           headerLeft: Logo,
@@ -92,6 +94,7 @@ function HomeNavigation() {
       <Tab.Screen
         name="Pressure & Solar"
         component={PressureSolarScreen}
+        initialParams={{ monitorValue: "pressureSolar1" }}
         options={{
           headerTitleAlign: "center",
           headerLeft: Logo,

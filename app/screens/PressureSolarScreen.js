@@ -13,7 +13,8 @@ import { ScrollView } from "react-native-gesture-handler";
 const Item = Picker.Item;
 const screenHeight = Dimensions.get("window").height;
 
-function PressureSolarScreen() {
+function PressureSolarScreen({ route }) {
+  const { monitorValue } = route.params;
   const dbPath = "ewsApp/pressure-solar/";
   const [dbObject, setDbObject] = useState({
     current: 0,
@@ -25,7 +26,7 @@ function PressureSolarScreen() {
     pressureBar: {},
     pressurePsi: {},
   });
-  const [listValue, setListValue] = useState("pressureSolar1");
+  const [listValue, setListValue] = useState(monitorValue);
   const [listPanel, setListPanel] = useState([]);
   const [intializing, setInitializing] = useState(true);
   const [charging, setCharging] = useState(false);
@@ -52,6 +53,11 @@ function PressureSolarScreen() {
         console.log(err);
       });
   }, []);
+
+  // Mengambil value monitor dari route
+  React.useEffect(() => {
+    setListValue(monitorValue);
+  }, [monitorValue]);
 
   // Untuk merender list dari banyak monitor
   const renderMonitorList = () => {
@@ -95,7 +101,7 @@ function PressureSolarScreen() {
       database().ref(dbPath).off("value", dbListen);
       setInitializing(true);
     };
-  }, [listValue]);
+  }, [monitorValue, listValue]);
 
   console.log("db pressure solar: ", dbObject);
 

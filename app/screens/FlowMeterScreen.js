@@ -12,7 +12,8 @@ import colors from "../styles/colors";
 const screenHeight = Dimensions.get("window").height;
 const Item = Picker.Item;
 
-function FlowMeterScreen() {
+function FlowMeterScreen({ route }) {
+  const { monitorValue } = route.params;
   const dbPath = "ewsApp/flow-meter/";
   const [dbObject, setDbObject] = useState({
     energyFlow: 0,
@@ -31,7 +32,7 @@ function FlowMeterScreen() {
     temperature: {},
     velocity: {},
   });
-  const [listFlow, setListFlow] = useState("flowMeter1");
+  const [listFlow, setListFlow] = useState(monitorValue);
   const [listMonitor, setListMonitor] = useState([]);
   const [intializing, setInitializing] = useState(true);
 
@@ -68,6 +69,11 @@ function FlowMeterScreen() {
     });
   };
 
+  // Mengambil value monitor dari route
+  React.useEffect(() => {
+    setListFlow(monitorValue);
+  }, [monitorValue]);
+
   // Untuk ambil value gauge
   React.useEffect(() => {
     database()
@@ -95,7 +101,7 @@ function FlowMeterScreen() {
       database().ref(dbPath).off("value", dbListen);
       setInitializing(true);
     };
-  }, [listFlow]);
+  }, [monitorValue, listFlow]);
 
   console.log("db flow meter: ", dbObject);
 

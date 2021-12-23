@@ -23,7 +23,8 @@ import colors from "../styles/colors";
 const screenHeight = Dimensions.get("window").height;
 const Item = Picker.Item;
 
-function PanelPompaScreen() {
+function PanelPompaScreen({ route }) {
+  const { monitorValue } = route.params;
   const dbPath = "ewsApp/panel-pompa/";
   const [dbObject, setDbObject] = useState({
     led1: {},
@@ -41,7 +42,7 @@ function PanelPompaScreen() {
   });
   const [relay1, setRelay1] = useState(false);
   const [relay2, setRelay2] = useState(false);
-  const [listPanel, setListPanel] = useState("panelPompa1");
+  const [listPanel, setListPanel] = useState(monitorValue);
   const [listMonitor, setListMonitor] = useState([]);
   const [intializing, setInitializing] = useState(true);
 
@@ -81,6 +82,11 @@ function PanelPompaScreen() {
       });
   }, []);
 
+  // Mengambil value monitor dari route
+  React.useEffect(() => {
+    setListPanel(monitorValue);
+  }, [monitorValue]);
+
   React.useEffect(() => {
     const dbListen = database()
       .ref(dbPath + listPanel)
@@ -111,7 +117,7 @@ function PanelPompaScreen() {
       database().ref(dbPath).off("value", dbListen);
       setInitializing(true);
     };
-  }, [listPanel]);
+  }, [monitorValue, listPanel]);
 
   const renderMonitorList = () => {
     console.log("Render List dipanggil");

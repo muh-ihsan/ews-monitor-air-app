@@ -1,14 +1,16 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { Divider } from "react-native-paper";
+import { StyleSheet, Text, TouchableHighlight, View } from "react-native";
 import database from "@react-native-firebase/database";
+import { StackActions } from "@react-navigation/native";
 
 import colors from "../styles/colors";
+import LoadingModalComponent from "../ui/LoadingModalComponent";
 
-function ListMonitorScreen({ route }) {
-  const { jenisMonitor } = route.params;
+function ListMonitorScreen({ route, navigation }) {
+  const { jenisMonitor, name } = route.params;
   const dbPath = "ewsApp/";
   const [listMonitor, setListMonitor] = useState([]);
+  const [initializing, setInitializing] = useState(true);
 
   // Untuk ambil berapa banyak monitor panel pompa
   React.useEffect(() => {
@@ -24,6 +26,7 @@ function ListMonitorScreen({ route }) {
           });
           console.log("Successfully add list");
           console.log("List: ", listPanelTemp);
+          setInitializing(false);
         }
         setListMonitor(listPanelTemp);
       })
@@ -35,14 +38,26 @@ function ListMonitorScreen({ route }) {
   const renderMonitorList = () => {
     return listMonitor.map((i, index) => {
       return (
-        <View key={index} style={styles.listWrapper}>
+        <TouchableHighlight
+          key={index}
+          style={styles.listWrapper}
+          onPress={() => {
+            navigation.pop();
+            navigation.navigate(name, { monitorValue: i.value });
+          }}
+        >
           <Text style={styles.itemText}>{i.label}</Text>
-        </View>
+        </TouchableHighlight>
       );
     });
   };
 
-  return <View style={styles.container}>{renderMonitorList()}</View>;
+  return (
+    <View style={styles.container}>
+      <LoadingModalComponent show={initializing} />
+      {renderMonitorList()}
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
