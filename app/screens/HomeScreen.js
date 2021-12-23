@@ -59,7 +59,12 @@ function HomeScreen({ navigation }) {
         <Text style={styles.textListMonitor}>{"List Monitor   >"}</Text>
         <TouchableHighlight
           style={styles.buttonMonitor}
-          onPress={() => navigation.navigate("Panel Pompa")}
+          onPress={() =>
+            navigation.navigate("List Monitor", {
+              jenisMonitor: "panel-pompa",
+              name: "Panel Pompa",
+            })
+          }
         >
           <View style={styles.textMonitorWrapper}>
             <Text style={styles.textMonitor}>Panel Pompa</Text>
@@ -67,7 +72,12 @@ function HomeScreen({ navigation }) {
         </TouchableHighlight>
         <TouchableHighlight
           style={styles.buttonMonitor}
-          onPress={() => navigation.navigate("Flow Meter")}
+          onPress={() =>
+            navigation.navigate("List Monitor", {
+              jenisMonitor: "flow-meter",
+              name: "Flow Meter",
+            })
+          }
         >
           <View style={styles.textMonitorWrapper}>
             <Text style={styles.textMonitor}>Flow Meter</Text>
@@ -75,7 +85,12 @@ function HomeScreen({ navigation }) {
         </TouchableHighlight>
         <TouchableHighlight
           style={styles.buttonMonitor}
-          onPress={() => navigation.navigate("Pressure & Solar")}
+          onPress={() =>
+            navigation.navigate("List Monitor", {
+              jenisMonitor: "pressure-solar",
+              name: "Pressure & Solar",
+            })
+          }
         >
           <View style={styles.textMonitorWrapper}>
             <Text style={styles.textMonitor}>Pressure Sensor & Solar</Text>
