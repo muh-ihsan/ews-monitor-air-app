@@ -14,7 +14,7 @@ const Item = Picker.Item;
 
 function FlowMeterScreen({ route }) {
   const { monitorValue } = route.params;
-  const dbPath = "ewsApp/flow-meter/";
+  const dbPath = "ewsApp/flow-meter";
   const [dbObject, setDbObject] = useState({
     energyFlow: 0,
     flowRate: 0,
@@ -53,18 +53,14 @@ function FlowMeterScreen({ route }) {
         console.log("List Panel Flow: ", listPanelTemp);
         setListMonitor(listPanelTemp);
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch(console.log);
   }, []);
 
   // Untuk merender list dari banyak monitor
   const renderMonitorList = () => {
     console.log("Render List dipanggil");
-    console.log("List: ", listMonitor);
+    console.log("Monitor terpilih pada renderMonitor: ", listFlow);
     return listMonitor.map((index) => {
-      console.log("Label: ", index.label);
-      console.log("Value: ", index.value);
       return <Item key={index} label={index.label} value={index.value} />;
     });
   };
@@ -90,20 +86,21 @@ function FlowMeterScreen({ route }) {
   // Untuk real-time data dari monitor
   React.useEffect(() => {
     const dbListen = database()
-      .ref(dbPath + listFlow)
+      .ref(`${dbPath}/${listFlow}`)
       .on("value", (snapshot) => {
+        console.log("Monitor terpilih pada useEffect: ", listFlow);
         let data = snapshot.val();
         setDbObject(data);
         setInitializing(false);
       });
 
     return () => {
-      database().ref(dbPath).off("value", dbListen);
+      database().ref(`${dbPath}/${listFlow}`).off("value", dbListen);
       setInitializing(true);
     };
-  }, [monitorValue, listFlow]);
+  }, [listFlow]);
 
-  console.log("db flow meter: ", dbObject);
+  console.log("Monitor terpilih di luar fungsi: ", listFlow);
 
   return (
     <View style={[styles.container, { flex: 1 }]}>

@@ -25,7 +25,7 @@ const Item = Picker.Item;
 
 function PanelPompaScreen({ route }) {
   const { monitorValue } = route.params;
-  const dbPath = "ewsApp/panel-pompa/";
+  const dbPath = "ewsApp/panel-pompa";
   const [dbObject, setDbObject] = useState({
     led1: {},
     led2: {},
@@ -89,7 +89,7 @@ function PanelPompaScreen({ route }) {
 
   React.useEffect(() => {
     const dbListen = database()
-      .ref(dbPath + listPanel)
+      .ref(`${dbPath}/${listPanel}`)
       .on("value", (snapshot) => {
         let data = snapshot.val();
         let relay1Convert = false;
@@ -114,7 +114,7 @@ function PanelPompaScreen({ route }) {
       });
 
     return () => {
-      database().ref(dbPath).off("value", dbListen);
+      database().ref(`${dbPath}/${listPanel}`).off("value", dbListen);
       setInitializing(true);
     };
   }, [monitorValue, listPanel]);

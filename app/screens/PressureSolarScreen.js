@@ -15,7 +15,7 @@ const screenHeight = Dimensions.get("window").height;
 
 function PressureSolarScreen({ route }) {
   const { monitorValue } = route.params;
-  const dbPath = "ewsApp/pressure-solar/";
+  const dbPath = "ewsApp/pressure-solar";
   const [dbObject, setDbObject] = useState({
     current: 0,
     pressureBar: 0,
@@ -62,9 +62,8 @@ function PressureSolarScreen({ route }) {
   // Untuk merender list dari banyak monitor
   const renderMonitorList = () => {
     console.log("Render List dipanggil");
-    console.log("List: ", listPanel);
+    console.log("Monitor terpilih pada render monitor: ", listValue);
     return listPanel.map((index) => {
-      console.log("Label: ", index.label);
       return <Item key={index} label={index.label} value={index.value} />;
     });
   };
@@ -85,8 +84,9 @@ function PressureSolarScreen({ route }) {
   // Untuk real-time data dari monitor
   React.useEffect(() => {
     const dbListen = database()
-      .ref(dbPath + listValue)
+      .ref(`${dbPath}/${listValue}`)
       .on("value", (snapshot) => {
+        console.log("Monitor terpilih pada useEffect: ", listValue);
         let data = snapshot.val();
         setDbObject(data);
         if (data.current > 0) {
@@ -98,12 +98,12 @@ function PressureSolarScreen({ route }) {
       });
 
     return () => {
-      database().ref(dbPath).off("value", dbListen);
+      database().ref(`${dbPath}/${listValue}`).off("value", dbListen);
       setInitializing(true);
     };
-  }, [monitorValue, listValue]);
+  }, [listValue]);
 
-  console.log("db pressure solar: ", dbObject);
+  console.log("Monitor terpilih di luar fungsi: " + listValue);
 
   // const renderGaugePressure = () => {
   //   return listPressure.map((element, i) => {
