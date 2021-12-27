@@ -47,6 +47,7 @@ function PressureSolarScreen({ route }) {
           });
         }
         console.log("List Panel Pressure: ", listPanelTemp);
+        listPanelTemp.reverse();
         setListPanel(listPanelTemp);
       })
       .catch((err) => {

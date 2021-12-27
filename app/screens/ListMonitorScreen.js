@@ -28,6 +28,7 @@ function ListMonitorScreen({ route, navigation }) {
           console.log("List: ", listPanelTemp);
           setInitializing(false);
         }
+        listPanelTemp.reverse();
         setListMonitor(listPanelTemp);
       })
       .catch((err) => {

@@ -18,7 +18,7 @@ function HomeStackScreen() {
   return (
     <HomeStack.Navigator>
       <HomeStack.Screen
-        name="Home"
+        name="Home Screen"
         component={HomeScreen}
         options={{
           headerShown: false,
@@ -48,7 +48,7 @@ function HomeNavigation() {
       screenOptions={({ route }) => ({
         tabBarIcon: ({ color, size }) => {
           let iconName;
-          if (route.name === "Home Screens") {
+          if (route.name === "Home") {
             iconName = "home";
           } else if (route.name === "Panel Pompa") {
             iconName = "calculator";
@@ -67,7 +67,7 @@ function HomeNavigation() {
       })}
     >
       <Tab.Screen
-        name="Home Screens"
+        name="Home"
         component={HomeStackScreen}
         options={{
           headerShown: false,

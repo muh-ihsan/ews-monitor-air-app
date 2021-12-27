@@ -51,6 +51,7 @@ function FlowMeterScreen({ route }) {
           });
         }
         console.log("List Panel Flow: ", listPanelTemp);
+        listPanelTemp.reverse();
         setListMonitor(listPanelTemp);
       })
       .catch(console.log);

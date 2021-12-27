@@ -37,6 +37,49 @@ function logOut() {
 
 function HomeScreen({ navigation }) {
   const user = auth().currentUser;
+
+  React.useEffect(() => {
+    const notifOnScreen = messaging().onMessage(async (remoteMessage) => {
+      Alert.alert(
+        remoteMessage.notification.title,
+        remoteMessage.notification.body,
+        [
+          {
+            text: "Check",
+            onPress: () => {
+              navigation.navigate(remoteMessage.data.jenisMonitor, {
+                monitorValue: remoteMessage.data.monitorId,
+              });
+            },
+          },
+          { text: "OK" },
+        ]
+      );
+    });
+
+    return notifOnScreen;
+  }, []);
+
+  // React.useEffect(() => {
+  //   messaging().onNotificationOpenedApp((remoteMessage) => {
+  //     console.log("Notification opened from background state!");
+  //     navigation.navigate(remoteMessage.data.jenisMonitor, {
+  //       monitorValue: remoteMessage.data.monitorId,
+  //     });
+  //   });
+
+  //   messaging().getInitialNotification((remoteMessage) => {
+  //     if (remoteMessage) {
+  //       console.log("Notification opened from quit state!");
+  //       navigation.navigate(remoteMessage.data.jenisMonitor, {
+  //         monitorValue: remoteMessage.data.monitorId,
+  //       });
+  //     } else {
+  //       console.log("There's no notification data from quit state.");
+  //     }
+  //   });
+  // }, []);
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar

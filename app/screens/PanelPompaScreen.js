@@ -61,6 +61,7 @@ function PanelPompaScreen({ route }) {
           console.log("Successfully add list");
           console.log("List: ", listPanel);
         }
+        listPanelTemp.reverse();
         setListMonitor(listPanelTemp);
       })
       .catch((err) => {
