@@ -2,15 +2,14 @@ import React, { useState } from "react";
 
 import messaging from "@react-native-firebase/messaging";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { NavigationContainer, useNavigation } from "@react-navigation/native";
+import { NavigationContainer } from "@react-navigation/native";
 import auth from "@react-native-firebase/auth";
 import { Provider as PaperProvider } from "react-native-paper";
 
 import colors from "./app/styles/colors";
-import { Alert, Button, Image, Text, StyleSheet, View } from "react-native";
+import { View } from "react-native";
 import LoginScreen from "./app/screens/LoginScreen";
 import HomeNavigation from "./app/navigations/HomeNavigation";
-import ListMonitorScreen from "./app/screens/ListMonitorScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -39,41 +38,6 @@ export default function App() {
       setAuthenticated(false);
     }
   });
-
-  // React.useEffect(() => {
-  //   const notifOnScreen = messaging().onMessage(async (remoteMessage) => {
-  //     Alert.alert(
-  //       remoteMessage.notification.title,
-  //       remoteMessage.notification.body,
-  //       [
-  //         {
-  //           text: "Check",
-  //           onPress: () => {
-  //             navigation.navigate(remoteMessage.data.jenisMonitor, {
-  //               monitorValue: remoteMessage.data.monitorId,
-  //             });
-  //           },
-  //         },
-  //         { text: "OK" },
-  //       ]
-  //     );
-  //   });
-
-  //   return notifOnScreen;
-  // }, []);
-
-  // React.useEffect(() => {
-  //   messaging().getInitialNotification((remoteMessage) => {
-  //     if (remoteMessage) {
-  //       console.log("Notification opened from quit state!");
-  //       // navigation.navigate(remoteMessage.data.jenisMonitor, {
-  //       //   monitorValue: remoteMessage.data.monitorId,
-  //       // });
-  //     } else {
-  //       console.log("There's no notification data from quit state.");
-  //     }
-  //   });
-  // }, []);
 
   console.log("App started...");
   return (

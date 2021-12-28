@@ -1,39 +1,17 @@
-import React from "react";
-import { Image } from "react-native";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import React, { useState } from "react";
+import { Image, Alert } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import MaterialIcon from "react-native-vector-icons/MaterialCommunityIcons";
+import messaging from "@react-native-firebase/messaging";
 
 import HomeScreen from "../screens/HomeScreen";
 import FlowMeterScreen from "../screens/FlowMeterScreen";
 import PanelPompaScreen from "../screens/PanelPompaScreen";
 import PressureSolarScreen from "../screens/PressureSolarScreen";
 import ListMonitorScreen from "../screens/ListMonitorScreen";
-import colors from "../styles/colors";
 
-const Tab = createBottomTabNavigator();
 const HomeStack = createNativeStackNavigator();
 
-function HomeStackScreen() {
-  return (
-    <HomeStack.Navigator>
-      <HomeStack.Screen
-        name="Home Screen"
-        component={HomeScreen}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <HomeStack.Screen
-        name="List Monitor"
-        component={ListMonitorScreen}
-        options={({ route }) => ({ title: route.params.name })}
-      />
-    </HomeStack.Navigator>
-  );
-}
-
-function HomeNavigation() {
+function HomeNavigation({ navigation }) {
   function Logo() {
     return (
       <Image
@@ -43,64 +21,97 @@ function HomeNavigation() {
     );
   }
 
-  return (
-    <Tab.Navigator
-      screenOptions={({ route }) => ({
-        tabBarIcon: ({ color, size }) => {
-          let iconName;
-          if (route.name === "Home") {
-            iconName = "home";
-          } else if (route.name === "Panel Pompa") {
-            iconName = "calculator";
-          } else if (route.name === "Flow Meter") {
-            iconName = "water-pump";
-          } else if (route.name === "Pressure & Solar") {
-            iconName = "gauge";
-          } else if (route.name === "Setting") {
-            iconName = "cog";
-          }
+  React.useEffect(() => {
+    const notifOnScreen = messaging().onMessage(async (remoteMessage) => {
+      Alert.alert(
+        remoteMessage.notification.title,
+        remoteMessage.notification.body,
+        [
+          {
+            text: "Check",
+            onPress: () => {
+              navigation.navigate(remoteMessage.data.jenisMonitor, {
+                monitorValue: remoteMessage.data.monitorId,
+              });
+            },
+          },
+          { text: "OK" },
+        ]
+      );
+    });
 
-          return <MaterialIcon name={iconName} size={size} color={color} />;
-        },
-        tabBarActiveTintColor: "white",
-        tabBarInactiveTintColor: colors.inactive,
-      })}
-    >
-      <Tab.Screen
+    return notifOnScreen;
+  }, []);
+
+  React.useEffect(() => {
+    messaging().onNotificationOpenedApp((remoteMessage) => {
+      console.log("Notification opened from background state!");
+      navigation.navigate(remoteMessage.data.jenisMonitor, {
+        monitorValue: remoteMessage.data.monitorId,
+      });
+    });
+
+    messaging()
+      .getInitialNotification()
+      .then((remoteMessage) => {
+        if (remoteMessage) {
+          console.log("Notification opened from quit state!");
+          console.log(remoteMessage);
+          navigation.navigate(remoteMessage.data.jenisMonitor, {
+            monitorValue: remoteMessage.data.monitorId,
+          });
+        } else {
+          console.log("There's no notification data from quit state.");
+        }
+      })
+      .catch(console.error);
+  }, []);
+
+  return (
+    <HomeStack.Navigator initialRouteName="Home">
+      <HomeStack.Screen
         name="Home"
-        component={HomeStackScreen}
+        component={HomeScreen}
         options={{
           headerShown: false,
         }}
       />
-      <Tab.Screen
-        name="Panel Pompa"
+      <HomeStack.Screen
+        name="ListMonitor"
+        component={ListMonitorScreen}
+        options={({ route }) => ({ title: "List Monitor" })}
+      />
+      <HomeStack.Screen
+        name="PanelPompa"
         component={PanelPompaScreen}
         initialParams={{ monitorValue: "panelPompa1" }}
         options={{
+          title: "Panel Pompa",
           headerTitleAlign: "center",
-          headerLeft: Logo,
+          headerRight: Logo,
         }}
       />
-      <Tab.Screen
-        name="Flow Meter"
+      <HomeStack.Screen
+        name="FlowMeter"
         component={FlowMeterScreen}
         initialParams={{ monitorValue: "flowMeter1" }}
         options={{
+          title: "Flow Meter",
           headerTitleAlign: "center",
-          headerLeft: Logo,
+          headerRight: Logo,
         }}
       />
-      <Tab.Screen
-        name="Pressure & Solar"
+      <HomeStack.Screen
+        name="PressureSolar"
         component={PressureSolarScreen}
         initialParams={{ monitorValue: "pressureSolar1" }}
         options={{
+          title: "Pressure & Solar",
           headerTitleAlign: "center",
-          headerLeft: Logo,
+          headerRight: Logo,
         }}
       />
-    </Tab.Navigator>
+    </HomeStack.Navigator>
   );
 }
 

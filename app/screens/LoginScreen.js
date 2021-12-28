@@ -80,7 +80,6 @@ function LoginScreen() {
         backgroundColor={colors.background}
       />
       <View style={styles.inputWrapper}>
-        {/* <Text style={styles.textLogin}>Log In</Text> */}
         <Image
           style={styles.imageLogin}
           source={require("../assets/logo_purabaya.png")}

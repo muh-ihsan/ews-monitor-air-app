@@ -1,16 +1,13 @@
 import React, { useState } from "react";
 import {
-  Button,
   Dimensions,
   ScrollView,
   StatusBar,
-  StyleSheet,
   Switch,
   Text,
   View,
 } from "react-native";
 import database from "@react-native-firebase/database";
-import { Picker } from "@react-native-picker/picker";
 import { Card } from "react-native-paper";
 
 import GaugeComponent from "../ui/GaugeComponent";
@@ -21,7 +18,6 @@ import styles from "../styles/stylesheet";
 import colors from "../styles/colors";
 
 const screenHeight = Dimensions.get("window").height;
-const Item = Picker.Item;
 
 function PanelPompaScreen({ route }) {
   const { monitorValue } = route.params;
@@ -42,32 +38,7 @@ function PanelPompaScreen({ route }) {
   });
   const [relay1, setRelay1] = useState(false);
   const [relay2, setRelay2] = useState(false);
-  const [listPanel, setListPanel] = useState(monitorValue);
-  const [listMonitor, setListMonitor] = useState([]);
   const [intializing, setInitializing] = useState(true);
-
-  // Untuk ambil berapa banyak monitor panel pompa
-  React.useEffect(() => {
-    const listPanelTemp = [];
-    database()
-      .ref(dbPath)
-      .once("value", (snapshot) => {
-        const fetchData = snapshot.val();
-        for (const panel in fetchData) {
-          listPanelTemp.push({
-            label: fetchData[panel].nama,
-            value: panel.toString(),
-          });
-          console.log("Successfully add list");
-          console.log("List: ", listPanel);
-        }
-        listPanelTemp.reverse();
-        setListMonitor(listPanelTemp);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
 
   // Untuk ambil value gauge
   React.useEffect(() => {
@@ -83,14 +54,9 @@ function PanelPompaScreen({ route }) {
       });
   }, []);
 
-  // Mengambil value monitor dari route
-  React.useEffect(() => {
-    setListPanel(monitorValue);
-  }, [monitorValue]);
-
   React.useEffect(() => {
     const dbListen = database()
-      .ref(`${dbPath}/${listPanel}`)
+      .ref(`${dbPath}/${monitorValue}`)
       .on("value", (snapshot) => {
         let data = snapshot.val();
         let relay1Convert = false;
@@ -115,22 +81,10 @@ function PanelPompaScreen({ route }) {
       });
 
     return () => {
-      database().ref(`${dbPath}/${listPanel}`).off("value", dbListen);
+      database().ref(`${dbPath}/${monitorValue}`).off("value", dbListen);
       setInitializing(true);
     };
-  }, [monitorValue, listPanel]);
-
-  const renderMonitorList = () => {
-    console.log("Render List dipanggil");
-    console.log("List: ", listMonitor);
-    return listMonitor.map((index) => {
-      console.log("Label: ", index.label);
-      console.log("Value: ", index.value);
-      return <Item key={index} label={index.label} value={index.value} />;
-    });
-  };
-
-  console.log("db panel pompa: ", dbObject);
+  }, [monitorValue]);
 
   return (
     <View style={[styles.container, { flex: 1 }]}>
@@ -140,16 +94,8 @@ function PanelPompaScreen({ route }) {
         translucent={true}
       />
       <LoadingModalComponent show={intializing} />
-      <View style={styles.pickerBorder}>
-        <Picker
-          dropdownIconColor="white"
-          dropdownIconRippleColor="#313C78"
-          style={styles.picker}
-          selectedValue={listPanel}
-          onValueChange={(v) => setListPanel(v)}
-        >
-          {renderMonitorList()}
-        </Picker>
+      <View style={styles.titleMonitorWrapper}>
+        <Text style={styles.titleMonitorText}>{dbObject.nama}</Text>
       </View>
       <ScrollView style={{ marginTop: 24, height: screenHeight - 240 }}>
         <Card
@@ -315,7 +261,7 @@ function PanelPompaScreen({ route }) {
                     const valueInt = value ? 1 : 0;
                     setRelay1(value);
                     database()
-                      .ref(`ewsApp/panel-pompa/${listPanel}/relay1`)
+                      .ref(`ewsApp/panel-pompa/${monitorValue}/relay1`)
                       .update({ trigger: valueInt })
                       .then(() => console.log("Relay 1 triggered"))
                       .catch((err) => {
@@ -336,7 +282,7 @@ function PanelPompaScreen({ route }) {
                     const valueInt = value ? 1 : 0;
                     setRelay2(value);
                     database()
-                      .ref(`ewsApp/panel-pompa/${listPanel}/relay2`)
+                      .ref(`ewsApp/panel-pompa/${monitorValue}/relay2`)
                       .update({ trigger: valueInt })
                       .then(() => console.log("Relay 2 triggered"))
                       .catch((err) => {
@@ -355,20 +301,5 @@ function PanelPompaScreen({ route }) {
     </View>
   );
 }
-
-const localstyles = StyleSheet.create({
-  itemGroupWrapper: {
-    marginVertical: 16,
-    flexDirection: "row",
-    justifyContent: "space-evenly",
-    alignItems: "center",
-  },
-  textCheckmark: {
-    color: "white",
-    alignSelf: "flex-start",
-    marginTop: 8,
-    marginStart: 8,
-  },
-});
 
 export default PanelPompaScreen;

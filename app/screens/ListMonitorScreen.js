@@ -1,13 +1,19 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, TouchableHighlight, View } from "react-native";
+import {
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableHighlight,
+  View,
+} from "react-native";
 import database from "@react-native-firebase/database";
-import { StackActions } from "@react-navigation/native";
 
 import colors from "../styles/colors";
 import LoadingModalComponent from "../ui/LoadingModalComponent";
 
 function ListMonitorScreen({ route, navigation }) {
-  const { jenisMonitor, name } = route.params;
+  const { jenisMonitor, name, screenName } = route.params;
   const dbPath = "ewsApp/";
   const [listMonitor, setListMonitor] = useState([]);
   const [initializing, setInitializing] = useState(true);
@@ -44,7 +50,7 @@ function ListMonitorScreen({ route, navigation }) {
           style={styles.listWrapper}
           onPress={() => {
             navigation.pop();
-            navigation.navigate(name, { monitorValue: i.value });
+            navigation.navigate(screenName, { monitorValue: i.value });
           }}
         >
           <Text style={styles.itemText}>{i.label}</Text>
@@ -55,8 +61,16 @@ function ListMonitorScreen({ route, navigation }) {
 
   return (
     <View style={styles.container}>
+      <StatusBar
+        barStyle="light-content"
+        backgroundColor={colors.secondary}
+        translucent={true}
+      />
       <LoadingModalComponent show={initializing} />
-      {renderMonitorList()}
+      <View style={styles.titleWrapper}>
+        <Text style={styles.titleText}>{name}</Text>
+      </View>
+      <ScrollView>{renderMonitorList()}</ScrollView>
     </View>
   );
 }
@@ -66,22 +80,21 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.background,
     paddingHorizontal: 16,
-    paddingTop: 24,
   },
   divider: {
     backgroundColor: "white",
   },
   itemText: {
     color: "white",
-    fontSize: 18,
-    marginStart: 8,
+    fontSize: 17,
+    marginStart: 12,
   },
   listWrapper: {
     backgroundColor: colors.bgCard,
     borderRadius: 6,
     justifyContent: "center",
-    height: 48,
-    marginVertical: 8,
+    height: 50,
+    marginVertical: 6,
   },
   titleText: {
     color: "white",
@@ -90,7 +103,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   titleWrapper: {
-    marginVertical: 24,
+    marginVertical: 16,
   },
 });
 

@@ -55,6 +55,15 @@ export default styles = StyleSheet.create({
     fontSize: 28,
     textAlign: "center",
   },
+  titleMonitorText: {
+    color: "white",
+    fontSize: 22,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  titleMonitorWrapper: {
+    marginTop: 16,
+  },
   titleWrapper: {
     marginTop: 12,
     marginBottom: 24,
