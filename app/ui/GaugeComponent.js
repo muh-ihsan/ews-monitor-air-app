@@ -22,7 +22,7 @@ const GaugeComponent = (props) => {
         min={props.min || 0}
         max={props.max || 100}
         angle={props.angle || 250}
-        fontFamily={"roboto"}
+        fontFamily={"Montserrat-Medium"}
         accentColor={colors.secondary}
       >
         <Background opacity={0.2} />

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Dimensions, Text, View, StatusBar } from "react-native";
 import database from "@react-native-firebase/database";
-import { Picker } from "@react-native-picker/picker";
 import { Card } from "react-native-paper";
 
 import GaugeComponent from "../ui/GaugeComponent";
@@ -10,11 +9,11 @@ import styles from "../styles/stylesheet";
 import colors from "../styles/colors";
 import { ScrollView } from "react-native-gesture-handler";
 
-const Item = Picker.Item;
 const screenHeight = Dimensions.get("window").height;
 
-function PressureSolarScreen() {
-  const dbPath = "ewsApp/pressure-solar/";
+function PressureSolarScreen({ route }) {
+  const { monitorValue } = route.params;
+  const dbPath = "ewsApp/pressure-solar";
   const [dbObject, setDbObject] = useState({
     current: 0,
     pressureBar: 0,
@@ -25,43 +24,8 @@ function PressureSolarScreen() {
     pressureBar: {},
     pressurePsi: {},
   });
-  const [listValue, setListValue] = useState("pressureSolar1");
-  const [listPanel, setListPanel] = useState([]);
   const [intializing, setInitializing] = useState(true);
   const [charging, setCharging] = useState(false);
-
-  // Untuk ambil berapa banyak monitor pressure
-  React.useEffect(() => {
-    const listPanelTemp = [];
-    database()
-      .ref(dbPath)
-      .once("value", (snapshot) => {
-        const fetchData = snapshot.val();
-        console.log("Pressure Solar Object:\n", fetchData);
-        for (const panel in fetchData) {
-          console.log(panel.toString());
-          listPanelTemp.push({
-            label: fetchData[panel].nama,
-            value: panel.toString(),
-          });
-        }
-        console.log("List Panel Pressure: ", listPanelTemp);
-        setListPanel(listPanelTemp);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
-
-  // Untuk merender list dari banyak monitor
-  const renderMonitorList = () => {
-    console.log("Render List dipanggil");
-    console.log("List: ", listPanel);
-    return listPanel.map((index) => {
-      console.log("Label: ", index.label);
-      return <Item key={index} label={index.label} value={index.value} />;
-    });
-  };
 
   // Untuk ambil value gauge
   React.useEffect(() => {
@@ -79,7 +43,7 @@ function PressureSolarScreen() {
   // Untuk real-time data dari monitor
   React.useEffect(() => {
     const dbListen = database()
-      .ref(dbPath + listValue)
+      .ref(`${dbPath}/${monitorValue}`)
       .on("value", (snapshot) => {
         let data = snapshot.val();
         setDbObject(data);
@@ -92,12 +56,10 @@ function PressureSolarScreen() {
       });
 
     return () => {
-      database().ref(dbPath).off("value", dbListen);
+      database().ref(`${dbPath}/${monitorValue}`).off("value", dbListen);
       setInitializing(true);
     };
-  }, [listValue]);
-
-  console.log("db pressure solar: ", dbObject);
+  }, [monitorValue]);
 
   // const renderGaugePressure = () => {
   //   return listPressure.map((element, i) => {
@@ -123,16 +85,8 @@ function PressureSolarScreen() {
         translucent={true}
       />
       <LoadingModalComponent show={intializing} />
-      <View style={styles.pickerBorder}>
-        <Picker
-          dropdownIconColor="white"
-          dropdownIconRippleColor="#313C78"
-          style={styles.picker}
-          selectedValue={listValue}
-          onValueChange={(v) => setListValue(v)}
-        >
-          {renderMonitorList()}
-        </Picker>
+      <View style={styles.titleMonitorWrapper}>
+        <Text style={styles.titleMonitorText}>{dbObject.nama}</Text>
       </View>
       <ScrollView style={{ marginTop: 24, height: screenHeight - 240 }}>
         <Card

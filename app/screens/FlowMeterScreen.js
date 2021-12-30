@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { View, ScrollView, Dimensions, StatusBar, Text } from "react-native";
 import database from "@react-native-firebase/database";
-import { Picker } from "@react-native-picker/picker";
 import { Card } from "react-native-paper";
 
 import GaugeComponent from "../ui/GaugeComponent";
@@ -10,10 +9,10 @@ import styles from "../styles/stylesheet";
 import colors from "../styles/colors";
 
 const screenHeight = Dimensions.get("window").height;
-const Item = Picker.Item;
 
-function FlowMeterScreen() {
-  const dbPath = "ewsApp/flow-meter/";
+function FlowMeterScreen({ route }) {
+  const { monitorValue } = route.params;
+  const dbPath = "ewsApp/flow-meter";
   const [dbObject, setDbObject] = useState({
     energyFlow: 0,
     flowRate: 0,
@@ -31,42 +30,7 @@ function FlowMeterScreen() {
     temperature: {},
     velocity: {},
   });
-  const [listFlow, setListFlow] = useState("flowMeter1");
-  const [listMonitor, setListMonitor] = useState([]);
   const [intializing, setInitializing] = useState(true);
-
-  // Untuk ambil berapa banyak monitor flow
-  React.useEffect(() => {
-    const listPanelTemp = [];
-    database()
-      .ref(dbPath)
-      .once("value", (snapshot) => {
-        const fetchData = snapshot.val();
-        console.log("FLow Meter Object:\n", fetchData);
-        for (const panel in fetchData) {
-          listPanelTemp.push({
-            label: fetchData[panel].nama,
-            value: panel.toString(),
-          });
-        }
-        console.log("List Panel Flow: ", listPanelTemp);
-        setListMonitor(listPanelTemp);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
-
-  // Untuk merender list dari banyak monitor
-  const renderMonitorList = () => {
-    console.log("Render List dipanggil");
-    console.log("List: ", listMonitor);
-    return listMonitor.map((index) => {
-      console.log("Label: ", index.label);
-      console.log("Value: ", index.value);
-      return <Item key={index} label={index.label} value={index.value} />;
-    });
-  };
 
   // Untuk ambil value gauge
   React.useEffect(() => {
@@ -84,7 +48,7 @@ function FlowMeterScreen() {
   // Untuk real-time data dari monitor
   React.useEffect(() => {
     const dbListen = database()
-      .ref(dbPath + listFlow)
+      .ref(`${dbPath}/${monitorValue}`)
       .on("value", (snapshot) => {
         let data = snapshot.val();
         setDbObject(data);
@@ -92,12 +56,10 @@ function FlowMeterScreen() {
       });
 
     return () => {
-      database().ref(dbPath).off("value", dbListen);
+      database().ref(`${dbPath}/${monitorValue}`).off("value", dbListen);
       setInitializing(true);
     };
-  }, [listFlow]);
-
-  console.log("db flow meter: ", dbObject);
+  }, [monitorValue]);
 
   return (
     <View style={[styles.container, { flex: 1 }]}>
@@ -107,16 +69,8 @@ function FlowMeterScreen() {
         translucent={true}
       />
       <LoadingModalComponent show={intializing} />
-      <View style={styles.pickerBorder}>
-        <Picker
-          dropdownIconColor="white"
-          dropdownIconRippleColor="#313C78"
-          style={styles.picker}
-          selectedValue={listFlow}
-          onValueChange={(v) => setListFlow(v)}
-        >
-          {renderMonitorList()}
-        </Picker>
+      <View style={styles.titleMonitorWrapper}>
+        <Text style={styles.titleMonitorText}>{dbObject.nama}</Text>
       </View>
       <ScrollView style={{ marginTop: 24, height: screenHeight - 240 }}>
         <Card
