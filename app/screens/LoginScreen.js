@@ -14,11 +14,21 @@ import messaging from "@react-native-firebase/messaging";
 
 import colors from "../styles/colors";
 
+// messaging()
+//   .unsubscribeFromTopic("notif")
+//   .then(() => console.log("Unsubscribe to topic"));
+
 function LoginScreen() {
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
   const [error, setError] = useState("");
   const [isValid, setValid] = useState(true);
+
+  React.useEffect(() => {
+    messaging()
+      .unsubscribeFromTopic("notif")
+      .then(() => console.log("Unsubscribe to topic"));
+  }, []);
 
   const emailValidity = (emailArg) => {
     var rEx =
@@ -50,9 +60,9 @@ function LoginScreen() {
       .signInWithEmailAndPassword(email, pass.trim())
       .then(() => {
         console.log("User signed in!");
-        messaging()
-          .subscribeToTopic("notif")
-          .then(() => console.log("Subscribe to topic"));
+        // messaging()
+        //   .subscribeToTopic("notif")
+        //   .then(() => console.log("Subscribe to topic"));
       })
       .catch((err) => {
         if (err.code === "auth/invalid-email") {
