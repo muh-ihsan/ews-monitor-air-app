@@ -48,6 +48,7 @@ function ListMonitorScreen({ route, navigation }) {
         <TouchableHighlight
           key={index}
           style={styles.listWrapper}
+          underlayColor="#B3B3B3"
           onPress={() => {
             navigation.pop();
             navigation.navigate(screenName, { monitorValue: i.value });
@@ -66,7 +67,7 @@ function ListMonitorScreen({ route, navigation }) {
         backgroundColor={colors.secondary}
         translucent={true}
       />
-      <LoadingModalComponent show={initializing} />
+      <LoadingModalComponent show={initializing} navigation={navigation} />
       <View style={styles.titleWrapper}>
         <Text style={styles.titleText}>{name}</Text>
       </View>
@@ -85,7 +86,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
   itemText: {
-    color: "white",
+    color: colors.text,
     fontSize: 17,
     marginStart: 12,
   },
@@ -97,7 +98,7 @@ const styles = StyleSheet.create({
     marginVertical: 6,
   },
   titleText: {
-    color: "white",
+    color: colors.text,
     fontSize: 24,
     fontWeight: "bold",
     textAlign: "center",

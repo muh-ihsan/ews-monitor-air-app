@@ -84,16 +84,12 @@ function PressureSolarScreen({ route }) {
         backgroundColor={colors.secondary}
         translucent={true}
       />
-      <LoadingModalComponent show={intializing} />
+      <LoadingModalComponent show={intializing} navigation={navigation} />
       <View style={styles.titleMonitorWrapper}>
         <Text style={styles.titleMonitorText}>{dbObject.nama}</Text>
       </View>
       <ScrollView style={{ marginTop: 24, height: screenHeight - 240 }}>
-        <Card
-          mode="outlined"
-          elevation={3}
-          style={[styles.groupWrapper, { height: 288 }]}
-        >
+        <Card elevation={2} style={[styles.groupWrapper, { height: 288 }]}>
           <Card.Title title="Pressure" titleStyle={styles.textTitle} />
           <Card.Content>
             <View style={styles.itemGroupWrapper}>
@@ -121,11 +117,7 @@ function PressureSolarScreen({ route }) {
             </View>
           </Card.Content>
         </Card>
-        <Card
-          mode="outlined"
-          elevation={3}
-          style={[styles.groupWrapper, { height: 250 }]}
-        >
+        <Card elevation={2} style={[styles.groupWrapper, { height: 250 }]}>
           <Card.Title title="Solar Panel" titleStyle={styles.textTitle} />
           <Card.Content>
             <View style={styles.itemGroupWrapper}>

@@ -23,9 +23,9 @@ function logOut() {
           .signOut()
           .then(() => {
             console.log("User signed out!");
-            messaging()
-              .unsubscribeFromTopic("notif")
-              .then(() => console.log("Unsubscribe to topic"));
+            // messaging()
+            //   .unsubscribeFromTopic("notif")
+            //   .then(() => console.log("Unsubscribe to topic"));
           });
       },
     },
@@ -42,24 +42,27 @@ function HomeScreen({ navigation }) {
     <SafeAreaView style={styles.container}>
       <StatusBar
         barStyle="light-content"
-        backgroundColor={colors.background}
+        backgroundColor={colors.secondary}
         translucent={true}
       />
-      <View style={styles.headerWrapper}>
-        <Image
-          style={styles.imageLogo}
-          source={require("../assets/logo_purabaya.png")}
-          fadeDuration={0}
-        />
-        <View style={styles.headerTextWrapper}>
-          <Text style={styles.headerTextTitle}>EWS & Monitor Air</Text>
-          <Text style={styles.headerTextEmail}>{user.email}</Text>
+      <View style={styles.headerBackground}>
+        <View style={styles.headerWrapper}>
+          <Image
+            style={styles.imageLogo}
+            source={require("../assets/logo_purabaya.png")}
+            fadeDuration={0}
+          />
+          <View style={styles.headerTextWrapper}>
+            <Text style={styles.headerTextTitle}>EWS & Monitor Air</Text>
+            <Text style={styles.headerTextEmail}>{user.email}</Text>
+          </View>
         </View>
       </View>
       <View style={styles.monitorListWrapper}>
         <Text style={styles.textListMonitor}>{"List Monitor   >"}</Text>
         <TouchableHighlight
           style={styles.buttonMonitor}
+          underlayColor="#B3B3B3"
           onPress={() =>
             navigation.navigate("ListMonitor", {
               jenisMonitor: "panel-pompa",
@@ -74,6 +77,7 @@ function HomeScreen({ navigation }) {
         </TouchableHighlight>
         <TouchableHighlight
           style={styles.buttonMonitor}
+          underlayColor="#B3B3B3"
           onPress={() =>
             navigation.navigate("ListMonitor", {
               jenisMonitor: "flow-meter",
@@ -88,6 +92,7 @@ function HomeScreen({ navigation }) {
         </TouchableHighlight>
         <TouchableHighlight
           style={styles.buttonMonitor}
+          underlayColor="#B3B3B3"
           onPress={() =>
             navigation.navigate("ListMonitor", {
               jenisMonitor: "pressure-solar",
@@ -103,7 +108,7 @@ function HomeScreen({ navigation }) {
       </View>
       <TouchableHighlight
         style={styles.buttonLogout}
-        underlayColor={"#74414B"}
+        underlayColor={"#B52F45"}
         onPress={logOut}
       >
         <View style={{ justifyContent: "center" }}>
@@ -116,7 +121,7 @@ function HomeScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   buttonLogout: {
-    backgroundColor: "#CA566B",
+    backgroundColor: "#f43f5e",
     height: 56,
     width: 120,
     borderRadius: 8,
@@ -136,6 +141,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.background,
   },
+  headerBackground: {
+    backgroundColor: colors.secondary,
+    height: 200,
+    borderBottomEndRadius: 32,
+    borderBottomStartRadius: 32,
+  },
   headerWrapper: {
     flexDirection: "row",
     alignContent: "stretch",
@@ -144,11 +155,11 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   headerTextEmail: {
-    color: "#fff",
+    color: colors.textWhite,
     paddingVertical: 8,
   },
   headerTextTitle: {
-    color: "#fff",
+    color: colors.textWhite,
     fontWeight: "bold",
     fontSize: 24,
   },
@@ -170,19 +181,19 @@ const styles = StyleSheet.create({
   },
   textListMonitor: {
     marginStart: 8,
-    color: "#FFF",
+    color: colors.text,
     fontWeight: "bold",
     textTransform: "uppercase",
   },
   textMonitorWrapper: { flexDirection: "row" },
   textMonitor: {
-    color: "#fff",
+    color: colors.text,
     marginStart: 16,
     fontSize: 18,
     fontWeight: "bold",
   },
   textLogout: {
-    color: "#fff",
+    color: colors.textWhite,
     fontSize: 18,
   },
 });

@@ -86,7 +86,7 @@ function LoginScreen() {
   return (
     <View style={styles.container}>
       <StatusBar
-        barStyle={"light-content"}
+        barStyle={"dark-content"}
         backgroundColor={colors.background}
       />
       <View style={styles.inputWrapper}>
@@ -123,7 +123,11 @@ function LoginScreen() {
             <Text style={styles.textError}>{error}</Text>
           </View>
         ) : null}
-        <TouchableHighlight style={styles.buttonSignIn} onPress={loginCheck}>
+        <TouchableHighlight
+          style={styles.buttonSignIn}
+          underlayColor="#0075AB"
+          onPress={loginCheck}
+        >
           <View
             style={{ flexDirection: "row", justifyContent: "space-around" }}
           >
@@ -176,12 +180,14 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   textInput: {
+    borderColor: colors.primary,
+    borderWidth: 0.5,
     marginVertical: 8,
     borderRadius: 6,
     padding: 8,
     height: 55,
     backgroundColor: colors.bgCard,
-    color: "white",
+    color: colors.text,
   },
   textLogin: {
     marginBottom: 28,

@@ -93,16 +93,12 @@ function PanelPompaScreen({ route }) {
         backgroundColor={colors.secondary}
         translucent={true}
       />
-      <LoadingModalComponent show={intializing} />
+      <LoadingModalComponent show={intializing} navigation={navigation} />
       <View style={styles.titleMonitorWrapper}>
         <Text style={styles.titleMonitorText}>{dbObject.nama}</Text>
       </View>
       <ScrollView style={{ marginTop: 24, height: screenHeight - 240 }}>
-        <Card
-          mode="outlined"
-          elevation={3}
-          style={[styles.groupWrapper, { height: 520 }]}
-        >
+        <Card elevation={2} style={[styles.groupWrapper, { height: 520 }]}>
           <Card.Title title="Tegangan" titleStyle={styles.textTitle} />
           <Card.Content>
             <View style={styles.itemGroupWrapper}>
@@ -133,11 +129,7 @@ function PanelPompaScreen({ route }) {
             </View>
           </Card.Content>
         </Card>
-        <Card
-          mode="outlined"
-          elevation={3}
-          style={[styles.groupWrapper, { height: 520 }]}
-        >
+        <Card elevation={2} style={[styles.groupWrapper, { height: 520 }]}>
           <Card.Title title="Arus Listrik" titleStyle={styles.textTitle} />
           <Card.Content>
             <View style={styles.itemGroupWrapper}>
@@ -174,11 +166,7 @@ function PanelPompaScreen({ route }) {
             </View>
           </Card.Content>
         </Card>
-        <Card
-          mode="outlined"
-          elevation={3}
-          style={[styles.groupWrapper, { height: 160 }]}
-        >
+        <Card elevation={2} style={[styles.groupWrapper, { height: 160 }]}>
           <Card.Title title="Power" titleStyle={styles.textTitle} />
           <Card.Content>
             <View style={styles.itemGroupWrapper}>
@@ -201,11 +189,7 @@ function PanelPompaScreen({ route }) {
             </View>
           </Card.Content>
         </Card>
-        <Card
-          mode="outlined"
-          elevation={3}
-          style={[styles.groupWrapper, { height: 248 }]}
-        >
+        <Card elevation={2} style={[styles.groupWrapper, { height: 248 }]}>
           <Card.Title title="LED States" titleStyle={styles.textTitle} />
           <Card.Content>
             <View style={styles.itemGroupWrapper}>
@@ -238,11 +222,7 @@ function PanelPompaScreen({ route }) {
             </View>
           </Card.Content>
         </Card>
-        <Card
-          mode="outlined"
-          elevation={3}
-          style={[styles.groupWrapper, { height: 132 }]}
-        >
+        <Card elevation={2} style={[styles.groupWrapper, { height: 132 }]}>
           <Card.Title title="Button Relays" titleStyle={styles.textTitle} />
           <Card.Content>
             <View

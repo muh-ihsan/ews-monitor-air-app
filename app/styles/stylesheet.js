@@ -4,7 +4,6 @@ import colors from "./colors";
 
 export default styles = StyleSheet.create({
   container: {
-    marginHorizontal: 16,
     flexDirection: "column",
     justifyContent: "space-between",
     fontFamily: "Roboto",
@@ -23,7 +22,7 @@ export default styles = StyleSheet.create({
     alignItems: "center",
   },
   textGroupTitle: {
-    color: "white",
+    color: colors.text,
     textTransform: "uppercase",
     fontWeight: "bold",
     fontSize: 14,
@@ -31,6 +30,7 @@ export default styles = StyleSheet.create({
     marginStart: 8,
   },
   groupWrapper: {
+    marginHorizontal: 16,
     backgroundColor: colors.bgCard,
     marginBottom: 12,
     borderRadius: 10,
@@ -45,18 +45,18 @@ export default styles = StyleSheet.create({
     elevation: 5,
   },
   textGaugeValue: {
-    color: "white",
+    color: colors.text,
     fontSize: 16,
     textAlign: "center",
     marginTop: 8,
   },
   textItemValue: {
-    color: "white",
+    color: colors.text,
     fontSize: 28,
     textAlign: "center",
   },
   titleMonitorText: {
-    color: "white",
+    color: colors.text,
     fontSize: 22,
     fontWeight: "bold",
     textAlign: "center",
@@ -69,7 +69,7 @@ export default styles = StyleSheet.create({
     marginBottom: 24,
   },
   textItemTitle: {
-    color: "white",
+    color: colors.text,
     textTransform: "uppercase",
     fontSize: 12,
     fontWeight: "bold",
@@ -81,7 +81,7 @@ export default styles = StyleSheet.create({
     flexGrow: 1,
   },
   textTitle: {
-    color: "white",
+    color: colors.text,
     textAlign: "center",
   },
 });
