@@ -33,8 +33,12 @@ function PanelPompaScreen({ route, navigation }) {
     relay2: { nama: "" },
   });
   const [gaugeValue, setGaugeValue] = useState({
-    current: {},
-    volt: {},
+    currentR: {},
+    currentS: {},
+    currentT: {},
+    voltR: {},
+    voltS: {},
+    voltT: {},
   });
   const [relay1, setRelay1] = useState(false);
   const [relay2, setRelay2] = useState(false);
@@ -105,25 +109,25 @@ function PanelPompaScreen({ route, navigation }) {
               <GaugeComponent
                 title="Volt R"
                 value={dbObject["voltR"]}
-                min={gaugeValue.volt.min}
-                max={gaugeValue.volt.max}
-                markStep={(gaugeValue.volt.max - gaugeValue.volt.min) / 10}
+                min={gaugeValue.voltR.min}
+                max={gaugeValue.voltR.max}
+                markStep={(gaugeValue.voltR.max - gaugeValue.voltR.min) / 10}
                 unit="V"
               />
               <GaugeComponent
                 title="Volt S"
                 value={dbObject["voltS"]}
-                min={gaugeValue.volt.min}
-                max={gaugeValue.volt.max}
-                markStep={(gaugeValue.volt.max - gaugeValue.volt.min) / 10}
+                min={gaugeValue.voltS.min}
+                max={gaugeValue.voltS.max}
+                markStep={(gaugeValue.voltS.max - gaugeValue.voltS.min) / 10}
                 unit="V"
               />
               <GaugeComponent
                 title="Volt T"
                 value={dbObject["voltT"]}
-                min={gaugeValue.volt.min}
-                max={gaugeValue.volt.max}
-                markStep={(gaugeValue.volt.max - gaugeValue.volt.min) / 10}
+                min={gaugeValue.voltT.min}
+                max={gaugeValue.voltT.max}
+                markStep={(gaugeValue.voltT.max - gaugeValue.voltT.min) / 10}
                 unit="V"
               />
             </View>
@@ -136,30 +140,30 @@ function PanelPompaScreen({ route, navigation }) {
               <GaugeComponent
                 title="Current R"
                 value={dbObject["currentR"]}
-                min={gaugeValue.current.min}
-                max={gaugeValue.current.max}
+                min={gaugeValue.currentR.min}
+                max={gaugeValue.currentR.max}
                 markStep={
-                  (gaugeValue.current.max - gaugeValue.current.min) / 10
+                  (gaugeValue.currentR.max - gaugeValue.currentR.min) / 10
                 }
                 unit="mA"
               />
               <GaugeComponent
                 title="Current S"
                 value={dbObject["currentS"]}
-                min={gaugeValue.current.min}
-                max={gaugeValue.current.max}
+                min={gaugeValue.currentS.min}
+                max={gaugeValue.currentS.max}
                 markStep={
-                  (gaugeValue.current.max - gaugeValue.current.min) / 10
+                  (gaugeValue.currentS.max - gaugeValue.currentS.min) / 10
                 }
                 unit="mA"
               />
               <GaugeComponent
                 title="Current T"
                 value={dbObject["currentT"]}
-                min={gaugeValue.current.min}
-                max={gaugeValue.current.max}
+                min={gaugeValue.currentT.min}
+                max={gaugeValue.currentT.max}
                 markStep={
-                  (gaugeValue.current.max - gaugeValue.current.min) / 10
+                  (gaugeValue.currentT.max - gaugeValue.currentT.min) / 10
                 }
                 unit="mA"
               />

@@ -14,6 +14,7 @@ const screenHeight = Dimensions.get("window").height;
 function PressureSolarScreen({ route, navigation }) {
   const { monitorValue } = route.params;
   const dbPath = "ewsApp/pressure-solar";
+  const [kebocoran, setKebocoran] = useState(true);
   const [dbObject, setDbObject] = useState({
     current: 0,
     pressureBar: 0,
@@ -61,6 +62,19 @@ function PressureSolarScreen({ route, navigation }) {
     };
   }, [monitorValue]);
 
+  React.useEffect(() => {
+    database()
+      .ref("ewsApp/warning/kebocoran")
+      .on("value", (snapshot) => {
+        setKebocoran(snapshot.val());
+      });
+
+    // return () => {
+    //   database().ref("ewsApp/warning/kebocoran").off("value", dbListen);
+    //   setInitializing(true);
+    // };
+  }, []);
+
   // const renderGaugePressure = () => {
   //   return listPressure.map((element, i) => {
   //     return (
@@ -77,6 +91,16 @@ function PressureSolarScreen({ route, navigation }) {
   //   });
   // };
 
+  function viewKebocoran() {
+    return (
+      <View>
+        <Text style={{ color: "#f43f5e", fontWeight: "bold" }}>
+          Kemungkinan terjadi kebocoran.
+        </Text>
+      </View>
+    );
+  }
+
   return (
     <View style={[styles.container, { flex: 1 }]}>
       <StatusBar
@@ -89,7 +113,13 @@ function PressureSolarScreen({ route, navigation }) {
         <Text style={styles.titleMonitorText}>{dbObject.nama}</Text>
       </View>
       <ScrollView style={{ marginTop: 24, height: screenHeight - 240 }}>
-        <Card elevation={2} style={[styles.groupWrapper, { height: 288 }]}>
+        <Card
+          elevation={2}
+          style={[
+            styles.groupWrapper,
+            kebocoran ? { height: 312 } : { height: 288 },
+          ]}
+        >
           <Card.Title title="Pressure" titleStyle={styles.textTitle} />
           <Card.Content>
             <View style={styles.itemGroupWrapper}>
@@ -114,6 +144,7 @@ function PressureSolarScreen({ route, navigation }) {
                 }
                 unit="psi"
               />
+              {kebocoran ? viewKebocoran() : null}
             </View>
           </Card.Content>
         </Card>

@@ -38,7 +38,7 @@ const GaugeComponent = (props) => {
         <Progress />
         <Marks
           fontSize={12}
-          lineColor={colors.primary}
+          lineColor={colors.text}
           lineOpacity={0.4}
           lineSize={10}
           step={props.markStep || 10}

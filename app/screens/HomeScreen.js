@@ -1,6 +1,7 @@
 import React from "react";
 import {
   Image,
+  ImageBackground,
   StatusBar,
   StyleSheet,
   TouchableHighlight,
@@ -9,7 +10,6 @@ import {
   Alert,
 } from "react-native";
 import auth from "@react-native-firebase/auth";
-import messaging from "@react-native-firebase/messaging";
 
 import colors from "../styles/colors";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -45,7 +45,11 @@ function HomeScreen({ navigation }) {
         backgroundColor={colors.secondary}
         translucent={true}
       />
-      <View style={styles.headerBackground}>
+      <ImageBackground
+        style={styles.headerBackground}
+        imageStyle={styles.headerImage}
+        source={require("../assets/home_header.png")}
+      >
         <View style={styles.headerWrapper}>
           <Image
             style={styles.imageLogo}
@@ -57,7 +61,7 @@ function HomeScreen({ navigation }) {
             <Text style={styles.headerTextEmail}>{user.email}</Text>
           </View>
         </View>
-      </View>
+      </ImageBackground>
       <View style={styles.monitorListWrapper}>
         <Text style={styles.textListMonitor}>{"List Monitor   >"}</Text>
         <TouchableHighlight
@@ -142,10 +146,11 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
   },
   headerBackground: {
-    backgroundColor: colors.secondary,
     height: 200,
-    borderBottomEndRadius: 32,
-    borderBottomStartRadius: 32,
+  },
+  headerImage: {
+    borderBottomRightRadius: 32,
+    borderBottomLeftRadius: 32,
   },
   headerWrapper: {
     flexDirection: "row",
