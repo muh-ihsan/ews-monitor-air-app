@@ -11,7 +11,7 @@ import { ScrollView } from "react-native-gesture-handler";
 
 const screenHeight = Dimensions.get("window").height;
 
-function PressureSolarScreen({ route }) {
+function PressureSolarScreen({ route, navigation }) {
   const { monitorValue } = route.params;
   const dbPath = "ewsApp/pressure-solar";
   const [dbObject, setDbObject] = useState({
@@ -123,7 +123,7 @@ function PressureSolarScreen({ route }) {
             <View style={styles.itemGroupWrapper}>
               <View style={styles.itemTextValueWrapper}>
                 <Text style={styles.textItemTitle}>Battery</Text>
-                <Text style={styles.textItemValue}>{dbObject["voltage"]}%</Text>
+                <Text style={styles.textItemValue}>{dbObject["voltage"]}</Text>
               </View>
               <View style={styles.itemTextValueWrapper}>
                 <Text style={styles.textItemTitle}>Charging Current</Text>

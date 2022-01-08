@@ -10,7 +10,7 @@ import colors from "../styles/colors";
 
 const screenHeight = Dimensions.get("window").height;
 
-function FlowMeterScreen({ route }) {
+function FlowMeterScreen({ route, navigation }) {
   const { monitorValue } = route.params;
   const dbPath = "ewsApp/flow-meter";
   const [dbObject, setDbObject] = useState({

@@ -19,7 +19,7 @@ import colors from "../styles/colors";
 
 const screenHeight = Dimensions.get("window").height;
 
-function PanelPompaScreen({ route }) {
+function PanelPompaScreen({ route, navigation }) {
   const { monitorValue } = route.params;
   const dbPath = "ewsApp/panel-pompa";
   const [dbObject, setDbObject] = useState({
