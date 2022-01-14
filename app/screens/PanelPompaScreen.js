@@ -145,7 +145,7 @@ function PanelPompaScreen({ route, navigation }) {
                 markStep={
                   (gaugeValue.currentR.max - gaugeValue.currentR.min) / 10
                 }
-                unit="mA"
+                unit="A"
               />
               <GaugeComponent
                 title="Current S"
@@ -155,7 +155,7 @@ function PanelPompaScreen({ route, navigation }) {
                 markStep={
                   (gaugeValue.currentS.max - gaugeValue.currentS.min) / 10
                 }
-                unit="mA"
+                unit="A"
               />
               <GaugeComponent
                 title="Current T"
@@ -165,7 +165,7 @@ function PanelPompaScreen({ route, navigation }) {
                 markStep={
                   (gaugeValue.currentT.max - gaugeValue.currentT.min) / 10
                 }
-                unit="mA"
+                unit="A"
               />
             </View>
           </Card.Content>
@@ -177,7 +177,7 @@ function PanelPompaScreen({ route, navigation }) {
               <View style={styles.itemTextValueWrapper}>
                 <Text style={styles.textItemTitle}>Power Factor</Text>
                 <Text style={styles.textItemValue}>
-                  {dbObject["powerFactor"] * 100}%
+                  {dbObject["powerFactor"]}
                 </Text>
               </View>
               <View style={styles.itemTextValueWrapper}>

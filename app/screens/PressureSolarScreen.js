@@ -14,7 +14,7 @@ const screenHeight = Dimensions.get("window").height;
 function PressureSolarScreen({ route, navigation }) {
   const { monitorValue } = route.params;
   const dbPath = "ewsApp/pressure-solar";
-  const [kebocoran, setKebocoran] = useState(true);
+  const [kebocoran, setKebocoran] = useState(false);
   const [dbObject, setDbObject] = useState({
     current: 0,
     pressureBar: 0,
@@ -24,6 +24,7 @@ function PressureSolarScreen({ route, navigation }) {
   const [gaugeValue, setGaugeValue] = useState({
     pressureBar: {},
     pressurePsi: {},
+    chargeThreshold: 0,
   });
   const [intializing, setInitializing] = useState(true);
   const [charging, setCharging] = useState(false);
@@ -48,7 +49,7 @@ function PressureSolarScreen({ route, navigation }) {
       .on("value", (snapshot) => {
         let data = snapshot.val();
         setDbObject(data);
-        if (data.current > 0) {
+        if (Number(data.current) > gaugeValue.chargeThreshold) {
           setCharging(true);
         } else {
           setCharging(false);
@@ -154,12 +155,12 @@ function PressureSolarScreen({ route, navigation }) {
             <View style={styles.itemGroupWrapper}>
               <View style={styles.itemTextValueWrapper}>
                 <Text style={styles.textItemTitle}>Battery</Text>
-                <Text style={styles.textItemValue}>{dbObject["voltage"]}</Text>
+                <Text style={styles.textItemValue}>{dbObject["voltage"]}%</Text>
               </View>
               <View style={styles.itemTextValueWrapper}>
                 <Text style={styles.textItemTitle}>Charging Current</Text>
                 <Text style={styles.textItemValue}>
-                  {dbObject["current"]} mA
+                  {dbObject["current"]} A
                 </Text>
               </View>
             </View>

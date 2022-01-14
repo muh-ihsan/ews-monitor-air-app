@@ -7,7 +7,7 @@ const LedStatusComponent = (props) => {
   return (
     <View style={styles.itemTextValueWrapper}>
       <Text style={styles.textItemTitle}>{props.name}</Text>
-      <Text style={styles.textItemValue}>{props.value ? "ON" : "OFF"}</Text>
+      <Text style={styles.textItemValue}>{props.value}</Text>
     </View>
   );
 };
