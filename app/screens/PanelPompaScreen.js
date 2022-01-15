@@ -19,7 +19,7 @@ import colors from "../styles/colors";
 
 const screenHeight = Dimensions.get("window").height;
 
-function PanelPompaScreen({ route }) {
+function PanelPompaScreen({ route, navigation }) {
   const { monitorValue } = route.params;
   const dbPath = "ewsApp/panel-pompa";
   const [dbObject, setDbObject] = useState({
@@ -33,8 +33,12 @@ function PanelPompaScreen({ route }) {
     relay2: { nama: "" },
   });
   const [gaugeValue, setGaugeValue] = useState({
-    current: {},
-    volt: {},
+    currentR: {},
+    currentS: {},
+    currentT: {},
+    voltR: {},
+    voltS: {},
+    voltT: {},
   });
   const [relay1, setRelay1] = useState(false);
   const [relay2, setRelay2] = useState(false);
@@ -93,99 +97,87 @@ function PanelPompaScreen({ route }) {
         backgroundColor={colors.secondary}
         translucent={true}
       />
-      <LoadingModalComponent show={intializing} />
+      <LoadingModalComponent show={intializing} navigation={navigation} />
       <View style={styles.titleMonitorWrapper}>
         <Text style={styles.titleMonitorText}>{dbObject.nama}</Text>
       </View>
       <ScrollView style={{ marginTop: 24, height: screenHeight - 240 }}>
-        <Card
-          mode="outlined"
-          elevation={3}
-          style={[styles.groupWrapper, { height: 520 }]}
-        >
+        <Card elevation={2} style={[styles.groupWrapper, { height: 520 }]}>
           <Card.Title title="Tegangan" titleStyle={styles.textTitle} />
           <Card.Content>
             <View style={styles.itemGroupWrapper}>
               <GaugeComponent
                 title="Volt R"
                 value={dbObject["voltR"]}
-                min={gaugeValue.volt.min}
-                max={gaugeValue.volt.max}
-                markStep={(gaugeValue.volt.max - gaugeValue.volt.min) / 10}
+                min={gaugeValue.voltR.min}
+                max={gaugeValue.voltR.max}
+                markStep={(gaugeValue.voltR.max - gaugeValue.voltR.min) / 10}
                 unit="V"
               />
               <GaugeComponent
                 title="Volt S"
                 value={dbObject["voltS"]}
-                min={gaugeValue.volt.min}
-                max={gaugeValue.volt.max}
-                markStep={(gaugeValue.volt.max - gaugeValue.volt.min) / 10}
+                min={gaugeValue.voltS.min}
+                max={gaugeValue.voltS.max}
+                markStep={(gaugeValue.voltS.max - gaugeValue.voltS.min) / 10}
                 unit="V"
               />
               <GaugeComponent
                 title="Volt T"
                 value={dbObject["voltT"]}
-                min={gaugeValue.volt.min}
-                max={gaugeValue.volt.max}
-                markStep={(gaugeValue.volt.max - gaugeValue.volt.min) / 10}
+                min={gaugeValue.voltT.min}
+                max={gaugeValue.voltT.max}
+                markStep={(gaugeValue.voltT.max - gaugeValue.voltT.min) / 10}
                 unit="V"
               />
             </View>
           </Card.Content>
         </Card>
-        <Card
-          mode="outlined"
-          elevation={3}
-          style={[styles.groupWrapper, { height: 520 }]}
-        >
+        <Card elevation={2} style={[styles.groupWrapper, { height: 520 }]}>
           <Card.Title title="Arus Listrik" titleStyle={styles.textTitle} />
           <Card.Content>
             <View style={styles.itemGroupWrapper}>
               <GaugeComponent
                 title="Current R"
                 value={dbObject["currentR"]}
-                min={gaugeValue.current.min}
-                max={gaugeValue.current.max}
+                min={gaugeValue.currentR.min}
+                max={gaugeValue.currentR.max}
                 markStep={
-                  (gaugeValue.current.max - gaugeValue.current.min) / 10
+                  (gaugeValue.currentR.max - gaugeValue.currentR.min) / 10
                 }
-                unit="mA"
+                unit="A"
               />
               <GaugeComponent
                 title="Current S"
                 value={dbObject["currentS"]}
-                min={gaugeValue.current.min}
-                max={gaugeValue.current.max}
+                min={gaugeValue.currentS.min}
+                max={gaugeValue.currentS.max}
                 markStep={
-                  (gaugeValue.current.max - gaugeValue.current.min) / 10
+                  (gaugeValue.currentS.max - gaugeValue.currentS.min) / 10
                 }
-                unit="mA"
+                unit="A"
               />
               <GaugeComponent
                 title="Current T"
                 value={dbObject["currentT"]}
-                min={gaugeValue.current.min}
-                max={gaugeValue.current.max}
+                min={gaugeValue.currentT.min}
+                max={gaugeValue.currentT.max}
                 markStep={
-                  (gaugeValue.current.max - gaugeValue.current.min) / 10
+                  (gaugeValue.currentT.max - gaugeValue.currentT.min) / 10
                 }
-                unit="mA"
+                unit="A"
               />
             </View>
           </Card.Content>
         </Card>
-        <Card
-          mode="outlined"
-          elevation={3}
-          style={[styles.groupWrapper, { height: 160 }]}
-        >
+        <Card elevation={2} style={[styles.groupWrapper, { height: 160 }]}>
           <Card.Title title="Power" titleStyle={styles.textTitle} />
           <Card.Content>
             <View style={styles.itemGroupWrapper}>
               <View style={styles.itemTextValueWrapper}>
                 <Text style={styles.textItemTitle}>Power Factor</Text>
                 <Text style={styles.textItemValue}>
-                  {dbObject["powerFactor"] * 100}%
+                  {dbObject["powerFactor"]}
                 </Text>
               </View>
               <View style={styles.itemTextValueWrapper}>
@@ -201,11 +193,7 @@ function PanelPompaScreen({ route }) {
             </View>
           </Card.Content>
         </Card>
-        <Card
-          mode="outlined"
-          elevation={3}
-          style={[styles.groupWrapper, { height: 248 }]}
-        >
+        <Card elevation={2} style={[styles.groupWrapper, { height: 248 }]}>
           <Card.Title title="LED States" titleStyle={styles.textTitle} />
           <Card.Content>
             <View style={styles.itemGroupWrapper}>
@@ -238,11 +226,7 @@ function PanelPompaScreen({ route }) {
             </View>
           </Card.Content>
         </Card>
-        <Card
-          mode="outlined"
-          elevation={3}
-          style={[styles.groupWrapper, { height: 132 }]}
-        >
+        <Card elevation={2} style={[styles.groupWrapper, { height: 132 }]}>
           <Card.Title title="Button Relays" titleStyle={styles.textTitle} />
           <Card.Content>
             <View

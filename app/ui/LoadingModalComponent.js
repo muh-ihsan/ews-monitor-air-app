@@ -4,9 +4,16 @@ import { Modal, View, ActivityIndicator } from "react-native";
 import colors from "../styles/colors";
 
 const LoadingModalComponent = (props) => {
-  const { show = false } = props;
+  const { show = false, navigation } = props;
   return (
-    <Modal animationType="fade" transparent={true} visible={show}>
+    <Modal
+      animationType="fade"
+      transparent={true}
+      onRequestClose={() => {
+        navigation.goBack();
+      }}
+      visible={show}
+    >
       <View
         style={{
           flex: 1,

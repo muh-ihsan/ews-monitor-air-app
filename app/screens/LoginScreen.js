@@ -14,11 +14,21 @@ import messaging from "@react-native-firebase/messaging";
 
 import colors from "../styles/colors";
 
+// messaging()
+//   .unsubscribeFromTopic("notif")
+//   .then(() => console.log("Unsubscribe to topic"));
+
 function LoginScreen() {
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
   const [error, setError] = useState("");
   const [isValid, setValid] = useState(true);
+
+  React.useEffect(() => {
+    messaging()
+      .unsubscribeFromTopic("notif")
+      .then(() => console.log("Unsubscribe to topic"));
+  }, []);
 
   const emailValidity = (emailArg) => {
     var rEx =
@@ -50,9 +60,9 @@ function LoginScreen() {
       .signInWithEmailAndPassword(email, pass.trim())
       .then(() => {
         console.log("User signed in!");
-        messaging()
-          .subscribeToTopic("notif")
-          .then(() => console.log("Subscribe to topic"));
+        // messaging()
+        //   .subscribeToTopic("notif")
+        //   .then(() => console.log("Subscribe to topic"));
       })
       .catch((err) => {
         if (err.code === "auth/invalid-email") {
@@ -76,7 +86,7 @@ function LoginScreen() {
   return (
     <View style={styles.container}>
       <StatusBar
-        barStyle={"light-content"}
+        barStyle={"dark-content"}
         backgroundColor={colors.background}
       />
       <View style={styles.inputWrapper}>
@@ -113,7 +123,11 @@ function LoginScreen() {
             <Text style={styles.textError}>{error}</Text>
           </View>
         ) : null}
-        <TouchableHighlight style={styles.buttonSignIn} onPress={loginCheck}>
+        <TouchableHighlight
+          style={styles.buttonSignIn}
+          underlayColor="#0075AB"
+          onPress={loginCheck}
+        >
           <View
             style={{ flexDirection: "row", justifyContent: "space-around" }}
           >
@@ -166,12 +180,14 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   textInput: {
+    borderColor: colors.primary,
+    borderWidth: 0.5,
     marginVertical: 8,
     borderRadius: 6,
     padding: 8,
     height: 55,
     backgroundColor: colors.bgCard,
-    color: "white",
+    color: colors.text,
   },
   textLogin: {
     marginBottom: 28,

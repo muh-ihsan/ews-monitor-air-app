@@ -21,17 +21,26 @@ const GaugeComponent = (props) => {
         width={props.width || 140}
         min={props.min || 0}
         max={props.max || 100}
-        angle={props.angle || 250}
+        angle={props.angle || 280}
         fontFamily={"Montserrat-Medium"}
+        lineCap="round"
         accentColor={colors.secondary}
       >
-        <Background opacity={0.2} />
+        <Background color={colors.background} opacity={1} />
         <Arc opacity={0} />
-        <Needle offset={35} circleRadius={12} baseWidth={4} baseOffset={6} />
+        <Needle
+          offset={36}
+          circleRadius={8}
+          baseWidth={3}
+          color={colors.secondary}
+          baseOffset={6}
+        />
         <Progress />
         <Marks
           fontSize={12}
-          lineColor={colors.primary}
+          lineColor={colors.text}
+          lineOpacity={0.4}
+          lineSize={10}
           step={props.markStep || 10}
         />
       </Speedometer>

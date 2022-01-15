@@ -11,9 +11,10 @@ import { ScrollView } from "react-native-gesture-handler";
 
 const screenHeight = Dimensions.get("window").height;
 
-function PressureSolarScreen({ route }) {
+function PressureSolarScreen({ route, navigation }) {
   const { monitorValue } = route.params;
   const dbPath = "ewsApp/pressure-solar";
+  const [kebocoran, setKebocoran] = useState(false);
   const [dbObject, setDbObject] = useState({
     current: 0,
     pressureBar: 0,
@@ -23,6 +24,7 @@ function PressureSolarScreen({ route }) {
   const [gaugeValue, setGaugeValue] = useState({
     pressureBar: {},
     pressurePsi: {},
+    chargeThreshold: 0,
   });
   const [intializing, setInitializing] = useState(true);
   const [charging, setCharging] = useState(false);
@@ -47,7 +49,7 @@ function PressureSolarScreen({ route }) {
       .on("value", (snapshot) => {
         let data = snapshot.val();
         setDbObject(data);
-        if (data.current > 0) {
+        if (Number(data.current) > gaugeValue.chargeThreshold) {
           setCharging(true);
         } else {
           setCharging(false);
@@ -60,6 +62,19 @@ function PressureSolarScreen({ route }) {
       setInitializing(true);
     };
   }, [monitorValue]);
+
+  React.useEffect(() => {
+    database()
+      .ref("ewsApp/warning/kebocoran")
+      .on("value", (snapshot) => {
+        setKebocoran(snapshot.val());
+      });
+
+    // return () => {
+    //   database().ref("ewsApp/warning/kebocoran").off("value", dbListen);
+    //   setInitializing(true);
+    // };
+  }, []);
 
   // const renderGaugePressure = () => {
   //   return listPressure.map((element, i) => {
@@ -77,6 +92,16 @@ function PressureSolarScreen({ route }) {
   //   });
   // };
 
+  function viewKebocoran() {
+    return (
+      <View>
+        <Text style={{ color: "#f43f5e", fontWeight: "bold" }}>
+          Kemungkinan terjadi kebocoran.
+        </Text>
+      </View>
+    );
+  }
+
   return (
     <View style={[styles.container, { flex: 1 }]}>
       <StatusBar
@@ -84,15 +109,17 @@ function PressureSolarScreen({ route }) {
         backgroundColor={colors.secondary}
         translucent={true}
       />
-      <LoadingModalComponent show={intializing} />
+      <LoadingModalComponent show={intializing} navigation={navigation} />
       <View style={styles.titleMonitorWrapper}>
         <Text style={styles.titleMonitorText}>{dbObject.nama}</Text>
       </View>
       <ScrollView style={{ marginTop: 24, height: screenHeight - 240 }}>
         <Card
-          mode="outlined"
-          elevation={3}
-          style={[styles.groupWrapper, { height: 288 }]}
+          elevation={2}
+          style={[
+            styles.groupWrapper,
+            kebocoran ? { height: 312 } : { height: 288 },
+          ]}
         >
           <Card.Title title="Pressure" titleStyle={styles.textTitle} />
           <Card.Content>
@@ -118,14 +145,11 @@ function PressureSolarScreen({ route }) {
                 }
                 unit="psi"
               />
+              {kebocoran ? viewKebocoran() : null}
             </View>
           </Card.Content>
         </Card>
-        <Card
-          mode="outlined"
-          elevation={3}
-          style={[styles.groupWrapper, { height: 250 }]}
-        >
+        <Card elevation={2} style={[styles.groupWrapper, { height: 250 }]}>
           <Card.Title title="Solar Panel" titleStyle={styles.textTitle} />
           <Card.Content>
             <View style={styles.itemGroupWrapper}>
@@ -136,7 +160,7 @@ function PressureSolarScreen({ route }) {
               <View style={styles.itemTextValueWrapper}>
                 <Text style={styles.textItemTitle}>Charging Current</Text>
                 <Text style={styles.textItemValue}>
-                  {dbObject["current"]} mA
+                  {dbObject["current"]} A
                 </Text>
               </View>
             </View>
