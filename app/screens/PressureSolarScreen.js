@@ -49,11 +49,6 @@ function PressureSolarScreen({ route, navigation }) {
       .on("value", (snapshot) => {
         let data = snapshot.val();
         setDbObject(data);
-        if (Number(data.current) > gaugeValue.chargeThreshold) {
-          setCharging(true);
-        } else {
-          setCharging(false);
-        }
         setInitializing(false);
       });
 
@@ -62,6 +57,15 @@ function PressureSolarScreen({ route, navigation }) {
       setInitializing(true);
     };
   }, [monitorValue]);
+
+  // Untuk deteksi charging
+  React.useEffect(() => {
+    if (Number(dbObject.current) >= gaugeValue.chargeThreshold) {
+      setCharging(true);
+    } else {
+      setCharging(false);
+    }
+  }, [dbObject.current, gaugeValue.chargeThreshold]);
 
   React.useEffect(() => {
     database()
