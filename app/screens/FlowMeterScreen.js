@@ -171,7 +171,9 @@ function FlowMeterScreen({ route, navigation }) {
               </View>
               <View style={styles.itemTextValueWrapper}>
                 <Text style={styles.textItemTitle}>Total Air</Text>
-                <Text style={styles.textItemValue}>{dbObject["totalAir"]}</Text>
+                <Text style={styles.textItemValue}>
+                  {dbObject["totalAir"]} m3
+                </Text>
               </View>
             </View>
           </Card.Content>
