@@ -22,6 +22,7 @@ function FlowMeterScreen({ route, navigation }) {
     negativeAcc: 0,
     positiveAcc: 0,
     velocity: 0,
+    totalAir: 0,
   });
   const [gaugeValue, setGaugeValue] = useState({
     energyFlowRate: {},
@@ -149,8 +150,11 @@ function FlowMeterScreen({ route, navigation }) {
             </View>
           </Card.Content>
         </Card>
-        <Card elevation={2} style={[styles.groupWrapper, { height: 148 }]}>
-          <Card.Title title="Accumulator" titleStyle={styles.textTitle} />
+        <Card elevation={2} style={[styles.groupWrapper, { height: 248 }]}>
+          <Card.Title
+            title="Accumulator & Total"
+            titleStyle={styles.textTitle}
+          />
           <Card.Content>
             <View style={styles.itemGroupWrapper}>
               <View style={styles.itemTextValueWrapper}>
@@ -163,6 +167,12 @@ function FlowMeterScreen({ route, navigation }) {
                 <Text style={styles.textItemTitle}>Negative Accumulator</Text>
                 <Text style={styles.textItemValue}>
                   {dbObject["negativeAcc"]}
+                </Text>
+              </View>
+              <View style={styles.itemTextValueWrapper}>
+                <Text style={styles.textItemTitle}>Total Air</Text>
+                <Text style={styles.textItemValue}>
+                  {dbObject["totalAir"]} m3
                 </Text>
               </View>
             </View>

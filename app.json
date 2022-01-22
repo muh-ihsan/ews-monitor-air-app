@@ -3,7 +3,7 @@
     "name": "ta_monitor_air",
     "displayName": "EWS Monitor Air",
     "slug": "ta_monitor_air",
-    "version": "0.7.3.1",
+    "version": "0.7.5.1",
     "orientation": "portrait",
     "icon": "./app/assets/appicon_purabaya.png",
     "splash": {
