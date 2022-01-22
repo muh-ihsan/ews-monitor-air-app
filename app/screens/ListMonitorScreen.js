@@ -8,6 +8,7 @@ import {
   View,
 } from "react-native";
 import database from "@react-native-firebase/database";
+import { Surface, TouchableRipple } from "react-native-paper";
 
 import colors from "../styles/colors";
 import LoadingModalComponent from "../ui/LoadingModalComponent";
@@ -45,17 +46,20 @@ function ListMonitorScreen({ route, navigation }) {
   const renderMonitorList = () => {
     return listMonitor.map((i, index) => {
       return (
-        <TouchableHighlight
-          key={index}
-          style={styles.listWrapper}
-          underlayColor="#B3B3B3"
-          onPress={() => {
-            navigation.pop();
-            navigation.navigate(screenName, { monitorValue: i.value });
-          }}
-        >
-          <Text style={styles.itemText}>{i.label}</Text>
-        </TouchableHighlight>
+        <Surface key={index} style={[styles.listWrapper, { elevation: 2 }]}>
+          <TouchableRipple
+            style={styles.listWrapper}
+            borderless={true}
+            rippleColor="#B3B3B3"
+            underlayColor="#B3B3B3"
+            onPress={() => {
+              navigation.pop();
+              navigation.navigate(screenName, { monitorValue: i.value });
+            }}
+          >
+            <Text style={styles.itemText}>{i.label}</Text>
+          </TouchableRipple>
+        </Surface>
       );
     });
   };

@@ -13,6 +13,7 @@ import auth from "@react-native-firebase/auth";
 import messaging from "@react-native-firebase/messaging";
 
 import colors from "../styles/colors";
+import { Button, TouchableRipple } from "react-native-paper";
 
 // messaging()
 //   .unsubscribeFromTopic("notif")
@@ -23,6 +24,7 @@ function LoginScreen() {
   const [pass, setPass] = useState("");
   const [error, setError] = useState("");
   const [isValid, setValid] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   React.useEffect(() => {
     messaging()
@@ -52,6 +54,7 @@ function LoginScreen() {
     } else {
       setError(null);
       setValid(true);
+      setLoading(true);
     }
 
     console.log(error);
@@ -123,8 +126,11 @@ function LoginScreen() {
             <Text style={styles.textError}>{error}</Text>
           </View>
         ) : null}
-        <TouchableHighlight
+
+        {/* <TouchableRipple
           style={styles.buttonSignIn}
+          borderless={true}
+          rippleColor="#0075AB"
           underlayColor="#0075AB"
           onPress={loginCheck}
         >
@@ -133,7 +139,19 @@ function LoginScreen() {
           >
             <Text style={styles.textSignInButton}>Sign In</Text>
           </View>
-        </TouchableHighlight>
+        </TouchableRipple> */}
+        <Button
+          mode="contained"
+          color={colors.primary}
+          dark={true}
+          style={styles.buttonSignIn}
+          contentStyle={{ height: 50, width: 140 }}
+          loading={loading}
+          labelStyle={{ fontSize: 14 }}
+          onPress={loginCheck}
+        >
+          Login
+        </Button>
       </View>
     </View>
   );
@@ -141,15 +159,13 @@ function LoginScreen() {
 
 const styles = StyleSheet.create({
   buttonSignIn: {
-    width: 160,
+    width: 140,
     height: 50,
     marginVertical: 24,
     flexDirection: "row",
     justifyContent: "center",
-    borderRadius: 10,
     alignSelf: "center",
     alignItems: "center",
-    backgroundColor: colors.primary,
   },
   buttonWrapper: {
     flex: 0.2,
