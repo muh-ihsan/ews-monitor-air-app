@@ -13,6 +13,7 @@ import auth from "@react-native-firebase/auth";
 
 import colors from "../styles/colors";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { Button, Surface, TouchableRipple } from "react-native-paper";
 
 function logOut() {
   Alert.alert("", "Apakah anda ingin log out?", [
@@ -45,90 +46,106 @@ function HomeScreen({ navigation }) {
         backgroundColor={colors.secondary}
         translucent={true}
       />
-      <ImageBackground
-        style={styles.headerBackground}
-        imageStyle={styles.headerImage}
-        source={require("../assets/home_header.png")}
-      >
-        <View style={styles.headerWrapper}>
-          <Image
-            style={styles.imageLogo}
-            source={require("../assets/logo_purabaya.png")}
-            fadeDuration={0}
-          />
-          <View style={styles.headerTextWrapper}>
-            <Text style={styles.headerTextTitle}>EWS & Monitor Air</Text>
-            <Text style={styles.headerTextEmail}>{user.email}</Text>
+      <Surface style={{ elevation: 10, borderRadius: 32 }}>
+        <ImageBackground
+          style={styles.headerBackground}
+          imageStyle={styles.headerImage}
+          source={require("../assets/home_header.png")}
+        >
+          <View style={styles.headerWrapper}>
+            <Image
+              style={styles.imageLogo}
+              source={require("../assets/logo_purabaya.png")}
+              fadeDuration={0}
+            />
+            <View style={styles.headerTextWrapper}>
+              <Text style={styles.headerTextTitle}>EWS & Monitor Air</Text>
+              <Text style={styles.headerTextEmail}>{user.email}</Text>
+            </View>
           </View>
-        </View>
-      </ImageBackground>
+        </ImageBackground>
+      </Surface>
       <View style={styles.monitorListWrapper}>
         <Text style={styles.textListMonitor}>{"List Monitor   >"}</Text>
-        <TouchableHighlight
-          style={styles.buttonMonitor}
-          underlayColor="#B3B3B3"
-          onPress={() =>
-            navigation.navigate("ListMonitor", {
-              jenisMonitor: "panel-pompa",
-              name: "Panel Pompa",
-              screenName: "PanelPompa",
-            })
-          }
-        >
-          <View style={styles.textMonitorWrapper}>
-            <Text style={styles.textMonitor}>Panel Pompa</Text>
-          </View>
-        </TouchableHighlight>
-        <TouchableHighlight
-          style={styles.buttonMonitor}
-          underlayColor="#B3B3B3"
-          onPress={() =>
-            navigation.navigate("ListMonitor", {
-              jenisMonitor: "flow-meter",
-              name: "Flow Meter",
-              screenName: "FlowMeter",
-            })
-          }
-        >
-          <View style={styles.textMonitorWrapper}>
-            <Text style={styles.textMonitor}>Flow Meter</Text>
-          </View>
-        </TouchableHighlight>
-        <TouchableHighlight
-          style={styles.buttonMonitor}
-          underlayColor="#B3B3B3"
-          onPress={() =>
-            navigation.navigate("ListMonitor", {
-              jenisMonitor: "pressure-solar",
-              name: "Pressure & Solar",
-              screenName: "PressureSolar",
-            })
-          }
-        >
-          <View style={styles.textMonitorWrapper}>
-            <Text style={styles.textMonitor}>Pressure Sensor & Solar</Text>
-          </View>
-        </TouchableHighlight>
+        <Surface style={{ elevation: 3, borderRadius: 8 }}>
+          <TouchableRipple
+            style={styles.buttonMonitor}
+            borderless={true}
+            rippleColor="#B3B3B3"
+            underlayColor="#B3B3B3"
+            onPress={() =>
+              navigation.navigate("ListMonitor", {
+                jenisMonitor: "panel-pompa",
+                name: "Panel Pompa",
+                screenName: "PanelPompa",
+              })
+            }
+          >
+            <View style={styles.textMonitorWrapper}>
+              <Text style={styles.textMonitor}>Panel Pompa</Text>
+            </View>
+          </TouchableRipple>
+        </Surface>
+        <Surface style={{ elevation: 3, borderRadius: 8 }}>
+          <TouchableRipple
+            style={styles.buttonMonitor}
+            borderless={true}
+            rippleColor="#B3B3B3"
+            underlayColor="#B3B3B3"
+            onPress={() =>
+              navigation.navigate("ListMonitor", {
+                jenisMonitor: "flow-meter",
+                name: "Flow Meter",
+                screenName: "FlowMeter",
+              })
+            }
+          >
+            <View style={styles.textMonitorWrapper}>
+              <Text style={styles.textMonitor}>Flow Meter</Text>
+            </View>
+          </TouchableRipple>
+        </Surface>
+        <Surface style={{ elevation: 3, borderRadius: 8 }}>
+          <TouchableRipple
+            style={styles.buttonMonitor}
+            borderless={true}
+            underlayColor="#B3B3B3"
+            rippleColor="#B3B3B3"
+            onPress={() =>
+              navigation.navigate("ListMonitor", {
+                jenisMonitor: "pressure-solar",
+                name: "Pressure & Solar",
+                screenName: "PressureSolar",
+              })
+            }
+          >
+            <View style={styles.textMonitorWrapper}>
+              <Text style={styles.textMonitor}>Pressure Sensor & Solar</Text>
+            </View>
+          </TouchableRipple>
+        </Surface>
       </View>
-      <TouchableHighlight
+      <Button
+        mode="contained"
+        color="#f43f5e"
+        dark={true}
         style={styles.buttonLogout}
-        underlayColor={"#B52F45"}
+        contentStyle={{ height: 56, width: 120 }}
+        labelStyle={{ fontSize: 15 }}
         onPress={logOut}
       >
-        <View style={{ justifyContent: "center" }}>
-          <Text style={styles.textLogout}>Log Out</Text>
-        </View>
-      </TouchableHighlight>
+        Log Out
+      </Button>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   buttonLogout: {
-    backgroundColor: "#f43f5e",
+    // backgroundColor: "#f43f5e",
     height: 56,
     width: 120,
-    borderRadius: 8,
+    borderRadius: 6,
     alignSelf: "center",
     marginTop: 64,
     justifyContent: "center",
@@ -146,7 +163,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
   },
   headerBackground: {
-    height: 200,
+    height: 190,
   },
   headerImage: {
     borderBottomRightRadius: 32,
@@ -190,7 +207,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textTransform: "uppercase",
   },
-  textMonitorWrapper: { flexDirection: "row" },
+  textMonitorWrapper: { flexDirection: "row", elevation: 2 },
   textMonitor: {
     color: colors.text,
     marginStart: 16,
