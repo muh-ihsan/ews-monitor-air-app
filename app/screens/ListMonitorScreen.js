@@ -35,7 +35,10 @@ function ListMonitorScreen({ route, navigation }) {
           console.log("List: ", listPanelTemp);
           setInitializing(false);
         }
-        listPanelTemp.reverse();
+        listPanelTemp.sort((a, b) => {
+          if (a.value > b.value) return 1;
+          else return -1;
+        });
         setListMonitor(listPanelTemp);
       })
       .catch((err) => {
