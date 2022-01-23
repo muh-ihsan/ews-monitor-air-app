@@ -6,7 +6,6 @@ import {
   StyleSheet,
   Text,
   TextInput,
-  TouchableHighlight,
   View,
 } from "react-native";
 import auth from "@react-native-firebase/auth";
@@ -14,10 +13,6 @@ import messaging from "@react-native-firebase/messaging";
 
 import colors from "../styles/colors";
 import { Button, TouchableRipple } from "react-native-paper";
-
-// messaging()
-//   .unsubscribeFromTopic("notif")
-//   .then(() => console.log("Unsubscribe to topic"));
 
 function LoginScreen() {
   const [email, setEmail] = useState("");
@@ -126,20 +121,6 @@ function LoginScreen() {
             <Text style={styles.textError}>{error}</Text>
           </View>
         ) : null}
-
-        {/* <TouchableRipple
-          style={styles.buttonSignIn}
-          borderless={true}
-          rippleColor="#0075AB"
-          underlayColor="#0075AB"
-          onPress={loginCheck}
-        >
-          <View
-            style={{ flexDirection: "row", justifyContent: "space-around" }}
-          >
-            <Text style={styles.textSignInButton}>Sign In</Text>
-          </View>
-        </TouchableRipple> */}
         <Button
           mode="contained"
           color={colors.primary}

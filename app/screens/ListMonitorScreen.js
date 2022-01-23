@@ -1,12 +1,5 @@
 import React, { useState } from "react";
-import {
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  TouchableHighlight,
-  View,
-} from "react-native";
+import { FlatList, StatusBar, StyleSheet, Text, View } from "react-native";
 import database from "@react-native-firebase/database";
 import { Surface, TouchableRipple } from "react-native-paper";
 
@@ -35,7 +28,10 @@ function ListMonitorScreen({ route, navigation }) {
           console.log("List: ", listPanelTemp);
           setInitializing(false);
         }
-        listPanelTemp.reverse();
+        listPanelTemp.sort((a, b) => {
+          if (a.value > b.value) return 1;
+          else return -1;
+        });
         setListMonitor(listPanelTemp);
       })
       .catch((err) => {
@@ -43,25 +39,22 @@ function ListMonitorScreen({ route, navigation }) {
       });
   }, []);
 
-  const renderMonitorList = () => {
-    return listMonitor.map((i, index) => {
-      return (
-        <Surface key={index} style={[styles.listWrapper, { elevation: 2 }]}>
-          <TouchableRipple
-            style={styles.listWrapper}
-            borderless={true}
-            rippleColor="#B3B3B3"
-            underlayColor="#B3B3B3"
-            onPress={() => {
-              navigation.pop();
-              navigation.navigate(screenName, { monitorValue: i.value });
-            }}
-          >
-            <Text style={styles.itemText}>{i.label}</Text>
-          </TouchableRipple>
-        </Surface>
-      );
-    });
+  const renderMonitorList = ({ item }) => {
+    return (
+      <Surface style={[styles.listWrapper, { elevation: 2 }]}>
+        <TouchableRipple
+          style={styles.listWrapper}
+          borderless={true}
+          rippleColor="#B3B3B3"
+          underlayColor="#B3B3B3"
+          onPress={() => {
+            navigation.navigate(screenName, { monitorValue: item.value });
+          }}
+        >
+          <Text style={styles.itemText}>{item.label}</Text>
+        </TouchableRipple>
+      </Surface>
+    );
   };
 
   return (
@@ -75,7 +68,11 @@ function ListMonitorScreen({ route, navigation }) {
       <View style={styles.titleWrapper}>
         <Text style={styles.titleText}>{name}</Text>
       </View>
-      <ScrollView>{renderMonitorList()}</ScrollView>
+      <FlatList
+        data={listMonitor}
+        renderItem={renderMonitorList}
+        keyExtractor={(item) => item.value}
+      />
     </View>
   );
 }
