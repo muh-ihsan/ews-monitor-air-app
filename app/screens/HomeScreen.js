@@ -4,7 +4,6 @@ import {
   ImageBackground,
   StatusBar,
   StyleSheet,
-  TouchableHighlight,
   Text,
   View,
   Alert,

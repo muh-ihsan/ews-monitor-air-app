@@ -52,7 +52,7 @@ export default styles = StyleSheet.create({
   },
   textItemValue: {
     color: colors.text,
-    fontSize: 28,
+    fontSize: 25,
     textAlign: "center",
   },
   titleMonitorText: {
