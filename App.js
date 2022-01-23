@@ -39,6 +39,18 @@ export default function App() {
     }
   });
 
+  React.useEffect(() => {
+    if (authenticated) {
+      messaging()
+        .subscribeToTopic("notif")
+        .then(() => console.log("Subscribe to topic"));
+    } else {
+      messaging()
+        .unsubscribeFromTopic("notif")
+        .then(() => console.log("unsubscribe to topic"));
+    }
+  }, [authenticated]);
+
   console.log("App started...");
   return (
     <PaperProvider>

@@ -26,12 +26,6 @@ function LoginScreen() {
   const [isValid, setValid] = useState(true);
   const [loading, setLoading] = useState(false);
 
-  React.useEffect(() => {
-    messaging()
-      .unsubscribeFromTopic("notif")
-      .then(() => console.log("Unsubscribe to topic"));
-  }, []);
-
   const emailValidity = (emailArg) => {
     var rEx =
       /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import {
   Alert,
-  ScrollView,
+  FlatList,
   StatusBar,
   StyleSheet,
   Text,
@@ -13,8 +13,11 @@ import database from "@react-native-firebase/database";
 import {
   Button,
   FAB,
+  IconButton,
+  Menu,
   Modal,
   Portal,
+  Snackbar,
   Surface,
   TouchableRipple,
 } from "react-native-paper";
@@ -28,7 +31,12 @@ function ListMonitorScreen({ route, navigation }) {
   const [listMonitor, setListMonitor] = useState([]);
   const [initializing, setInitializing] = useState(true);
   const [tambahVisible, setTambahVisible] = useState(false);
+  const [ubahVisible, setUbahVisible] = useState(false);
   const [tambahNama, setTambahNama] = useState("");
+  const [ubahNama, setUbahNama] = useState("");
+  const [ubahNamaOri, setUbahNamaOri] = useState("");
+  const [idUbahNama, setIdUbahNama] = useState("");
+  const [refreshList, setRefreshList] = useState(false);
 
   // Untuk ambil berapa banyak monitor panel pompa
   React.useEffect(() => {
@@ -41,6 +49,7 @@ function ListMonitorScreen({ route, navigation }) {
           listPanelTemp.push({
             label: fetchData[panel].nama,
             value: panel.toString(),
+            menuVisible: false,
           });
           console.log("Successfully add list");
           console.log("List: ", listPanelTemp);
@@ -55,12 +64,11 @@ function ListMonitorScreen({ route, navigation }) {
       .catch((err) => {
         console.log(err);
       });
-  }, [tambahVisible]);
+  }, [refreshList]);
 
   const tambahMonitor = () => {
     let objTambah = {};
     let id;
-    let jenisMonitorTambah;
     if (name === "Panel Pompa") {
       objTambah = {
         currentR: 0,
@@ -104,7 +112,6 @@ function ListMonitorScreen({ route, navigation }) {
         listMonitor[listMonitor.length - 1].value.substring(10) // ekstrak nomor dari id terakhir
       );
       id = `panelPompa${extractLastId + 1}`;
-      jenisMonitorTambah = "panel-pompa";
     } else if (name === "Flow Meter") {
       objTambah = {
         energyFlow: 0,
@@ -122,7 +129,6 @@ function ListMonitorScreen({ route, navigation }) {
         listMonitor[listMonitor.length - 1].value.substring(9) // ekstrak nomor dari id terakhir
       );
       id = `flowMeter${extractLastId + 1}`;
-      jenisMonitorTambah = "flow-meter";
     } else if (name === "Pressure & Solar") {
       objTambah = {
         nama: tambahNama,
@@ -135,48 +141,146 @@ function ListMonitorScreen({ route, navigation }) {
         listMonitor[listMonitor.length - 1].value.substring(13) // ekstrak nomor dari id terakhir
       );
       id = `pressureSolar${extractLastId + 1}`;
-      jenisMonitorTambah = "pressure-solar";
     }
 
     database()
-      .ref(`ewsApp/${jenisMonitorTambah}/${id}`)
+      .ref(`ewsApp/${jenisMonitor}/${id}`)
       .set(objTambah)
       .then(() => {
         console.log("Tambah Monitor berhasil!");
         setTambahVisible(false);
+        setTambahNama("");
+        setRefreshList(!refreshList);
       })
       .catch(() => {
         Alert.alert("Error", "Gagal tambah monitor");
       });
   };
 
-  const renderMonitorList = () => {
-    return listMonitor.map((i, index) => {
-      return (
-        <Surface key={index} style={[styles.listWrapper, { elevation: 2 }]}>
+  const ubahNamaMonitor = () => {
+    let objUbah = {};
+    let jenisMonitorUbah;
+    if (name === "Panel Pompa") {
+      objUbah = {
+        nama: ubahNama,
+      };
+      jenisMonitorUbah = "panel-pompa";
+    } else if (name === "Flow Meter") {
+      objUbah = {
+        nama: ubahNama,
+      };
+      jenisMonitorUbah = "flow-meter";
+    } else if (name === "Pressure & Solar") {
+      objUbah = {
+        nama: ubahNama,
+      };
+      jenisMonitorUbah = "pressure-solar";
+    }
+
+    database()
+      .ref(`ewsApp/${jenisMonitorUbah}/${idUbahNama}`)
+      .update(objUbah)
+      .then(() => {
+        console.log("Ubah Nama Monitor berhasil!");
+        setUbahVisible(false);
+        setUbahNama("");
+        setUbahNamaOri("");
+        setIdUbahNama("");
+        setRefreshList(!refreshList);
+      })
+      .catch(() => {
+        Alert.alert("Error", "Gagal ubah nama monitor");
+      });
+  };
+
+  const renderMonitorList = ({ item, index }) => {
+    return (
+      <Surface style={[styles.listWrapper, { elevation: 2 }]}>
+        <View style={styles.listViewWrapper}>
           <TouchableRipple
-            style={styles.listWrapper}
+            style={[styles.listWrapper, { width: "88%" }]}
             borderless={true}
             rippleColor="#B3B3B3"
             underlayColor="#B3B3B3"
             onPress={() => {
-              navigation.navigate(screenName, { monitorValue: i.value });
+              navigation.navigate(screenName, { monitorValue: item.value });
             }}
           >
-            <Text style={styles.itemText}>{i.label}</Text>
+            <Text style={styles.itemText}>{item.label}</Text>
           </TouchableRipple>
-        </Surface>
-      );
-    });
-  };
+          <Menu
+            visible={item.menuVisible}
+            onDismiss={() => {
+              const tempArr = [...listMonitor];
+              tempArr[index].menuVisible = false;
 
-  // console.log(
-  //   "Sorting: ",
-  //   listMonitor.sort((a, b) => {
-  //     if (a.value > b.value) return 1;
-  //     else return -1;
-  //   })
-  // );
+              setListMonitor(tempArr);
+            }}
+            anchor={
+              <IconButton
+                icon="dots-vertical"
+                color="grey"
+                size={24}
+                onPress={() => {
+                  const tempArr = [...listMonitor];
+                  tempArr[index].menuVisible = true;
+
+                  setListMonitor(tempArr);
+                }}
+              />
+            }
+          >
+            <Menu.Item
+              title="Ubah Nama"
+              onPress={() => {
+                setUbahNama(item.label);
+                setUbahNamaOri(item.label);
+                setIdUbahNama(item.value);
+                setUbahVisible(true);
+                const tempArr = [...listMonitor];
+                tempArr[index].menuVisible = false;
+
+                setListMonitor(tempArr);
+              }}
+            />
+            <Menu.Item
+              title="Hapus"
+              onPress={() => {
+                const tempArr = [...listMonitor];
+                tempArr[index].menuVisible = false;
+
+                setListMonitor(tempArr);
+                Alert.alert(
+                  "",
+                  "Apakah anda yakin ingin menghapus monitor ini?",
+                  [
+                    {
+                      text: "Iya",
+                      onPress: () => {
+                        database()
+                          .ref(`ewsApp/${jenisMonitor}/${item.value}`)
+                          .remove()
+                          .then(() => {
+                            console.log("Hapus monitor berhasil!");
+                            setRefreshList(!refreshList);
+                          })
+                          .catch(() => {
+                            Alert.alert("Error", "Gagal hapus monitor");
+                          });
+                      },
+                    },
+                    {
+                      text: "Tidak",
+                    },
+                  ]
+                );
+              }}
+            />
+          </Menu>
+        </View>
+      </Surface>
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -187,6 +291,7 @@ function ListMonitorScreen({ route, navigation }) {
       />
       <LoadingModalComponent show={initializing} navigation={navigation} />
       <Portal>
+        {/* Untuk tambah nama */}
         <Modal
           visible={tambahVisible}
           contentContainerStyle={styles.tambahModalContainer}
@@ -223,10 +328,53 @@ function ListMonitorScreen({ route, navigation }) {
           </View>
         </Modal>
       </Portal>
+      <Portal>
+        {/* Untuk ubah nama */}
+        <Modal
+          visible={ubahVisible}
+          contentContainerStyle={styles.tambahModalContainer}
+          onDismiss={() => setUbahVisible(false)}
+        >
+          <Text style={[styles.titleText, { marginBottom: 16 }]}>
+            Ubah Nama
+          </Text>
+          <TextInput
+            style={styles.textInput}
+            value={ubahNama}
+            selectTextOnFocus={true}
+            placeholderTextColor="grey"
+            onChangeText={(text) => setUbahNama(text)}
+            autoCapitalize="none"
+            keyboardType="default"
+          />
+          <View style={styles.buttonModalWrapper}>
+            <Button
+              mode="contained"
+              disabled={!ubahNama || ubahNama === ubahNamaOri}
+              color={colors.primary}
+              style={styles.buttonModal}
+              onPress={ubahNamaMonitor}
+            >
+              Ubah Nama
+            </Button>
+            <Button
+              mode="text"
+              color={colors.primary}
+              onPress={() => setUbahVisible(false)}
+            >
+              Batal
+            </Button>
+          </View>
+        </Modal>
+      </Portal>
       <View style={styles.titleWrapper}>
         <Text style={styles.titleText}>{name}</Text>
       </View>
-      <ScrollView>{renderMonitorList()}</ScrollView>
+      <FlatList
+        data={listMonitor}
+        renderItem={renderMonitorList}
+        keyExtractor={(item) => item.value}
+      />
       <FAB
         style={styles.fab}
         icon="plus"
@@ -273,6 +421,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     height: 50,
     marginVertical: 6,
+  },
+  listViewWrapper: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   tambahModalContainer: {
     height: 210,

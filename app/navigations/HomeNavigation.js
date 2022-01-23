@@ -22,12 +22,6 @@ function HomeNavigation({ navigation }) {
   }
 
   React.useEffect(() => {
-    messaging()
-      .subscribeToTopic("notif")
-      .then(() => console.log("Subscribe to topic"));
-  }, []);
-
-  React.useEffect(() => {
     const notifOnScreen = messaging().onMessage(async (remoteMessage) => {
       Alert.alert(
         remoteMessage.notification.title,
