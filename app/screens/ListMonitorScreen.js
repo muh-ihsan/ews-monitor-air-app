@@ -101,10 +101,41 @@ function ListMonitorScreen({ route, navigation }) {
         voltT: 0,
       };
       const extractLastId = Number(
-        listMonitor[listMonitor.length - 1].value.substring(10)
+        listMonitor[listMonitor.length - 1].value.substring(10) // ekstrak nomor dari id terakhir
       );
       id = `panelPompa${extractLastId + 1}`;
       jenisMonitorTambah = "panel-pompa";
+    } else if (name === "Flow Meter") {
+      objTambah = {
+        energyFlow: 0,
+        flowRate: 0,
+        fluidSoundSpeed: 0,
+        nama: tambahNama,
+        tempInlet: 0,
+        tempOutlet: 0,
+        negativeAcc: 0,
+        positiveAcc: 0,
+        velocity: 0,
+        totalAir: 0,
+      };
+      const extractLastId = Number(
+        listMonitor[listMonitor.length - 1].value.substring(9) // ekstrak nomor dari id terakhir
+      );
+      id = `flowMeter${extractLastId + 1}`;
+      jenisMonitorTambah = "flow-meter";
+    } else if (name === "Pressure & Solar") {
+      objTambah = {
+        nama: tambahNama,
+        current: 0,
+        pressureBar: 0,
+        pressurePsi: 0,
+        voltage: 0,
+      };
+      const extractLastId = Number(
+        listMonitor[listMonitor.length - 1].value.substring(13) // ekstrak nomor dari id terakhir
+      );
+      id = `pressureSolar${extractLastId + 1}`;
+      jenisMonitorTambah = "pressure-solar";
     }
 
     database()

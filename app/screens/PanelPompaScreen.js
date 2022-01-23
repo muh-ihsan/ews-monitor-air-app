@@ -23,6 +23,8 @@ function PanelPompaScreen({ route, navigation }) {
   const { monitorValue } = route.params;
   const dbPath = "ewsApp/panel-pompa";
   const [dbObject, setDbObject] = useState({
+    frequency: 0,
+    power: 0,
     led1: {},
     led2: {},
     led3: {},
@@ -188,7 +190,9 @@ function PanelPompaScreen({ route, navigation }) {
               </View>
               <View style={styles.itemTextValueWrapper}>
                 <Text style={styles.textItemTitle}>Power</Text>
-                <Text style={styles.textItemValue}>{dbObject["power"]} W</Text>
+                <Text style={styles.textItemValue}>
+                  {dbObject["power"].toFixed(2)} W
+                </Text>
               </View>
             </View>
           </Card.Content>
