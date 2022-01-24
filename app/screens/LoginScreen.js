@@ -92,6 +92,7 @@ function LoginScreen() {
           source={require("../assets/logo_purabaya.png")}
           fadeDuration={0}
         />
+        <Text style={styles.appTitle}>EWS & Monitor Air PDAM</Text>
         <TextInput
           style={styles.textInput}
           placeholder="Email"
@@ -152,6 +153,14 @@ function LoginScreen() {
 }
 
 const styles = StyleSheet.create({
+  appTitle: {
+    color: colors.text,
+    textAlign: "center",
+    marginBottom: 12,
+    fontSize: 18,
+    fontWeight: "bold",
+    // fontFamily: "Montserrat-Bold",
+  },
   buttonSignIn: {
     width: 140,
     height: 50,
@@ -179,7 +188,7 @@ const styles = StyleSheet.create({
     width: 148,
     height: 148,
     alignSelf: "center",
-    marginBottom: 40,
+    marginBottom: 16,
   },
   inputWrapper: {
     paddingHorizontal: 24,

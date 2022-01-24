@@ -72,8 +72,9 @@ function FlowMeterScreen({ route, navigation }) {
       <LoadingModalComponent show={intializing} navigation={navigation} />
       <View style={styles.titleMonitorWrapper}>
         <Text style={styles.titleMonitorText}>{dbObject.nama}</Text>
+        <Text style={styles.detailMonitorText}>ID: {monitorValue}</Text>
       </View>
-      <ScrollView style={{ marginTop: 24, height: screenHeight - 240 }}>
+      <ScrollView style={{ marginTop: 16, height: screenHeight - 240 }}>
         <Card elevation={2} style={[styles.groupWrapper, { height: 520 }]}>
           <Card.Title title="Flow Rate" titleStyle={styles.textTitle} />
           <Card.Content>

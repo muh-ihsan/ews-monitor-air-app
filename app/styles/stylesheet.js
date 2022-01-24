@@ -9,6 +9,12 @@ export default styles = StyleSheet.create({
     fontFamily: "Roboto",
     backgroundColor: colors.background,
   },
+  detailMonitorText: {
+    color: colors.text,
+    marginTop: 8,
+    fontSize: 14,
+    textAlign: "center",
+  },
   itemGroupWrapper: {
     flexWrap: "wrap",
     alignContent: "stretch",

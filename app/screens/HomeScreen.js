@@ -18,7 +18,7 @@ import { Button, Surface, TouchableRipple } from "react-native-paper";
 function logOut() {
   Alert.alert("", "Apakah anda ingin log out?", [
     {
-      text: "Ya",
+      text: "Iya",
       onPress: () => {
         auth()
           .signOut()
