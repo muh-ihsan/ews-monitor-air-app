@@ -132,14 +132,14 @@ function PressureSolarScreen({ route, navigation }) {
             <View style={styles.itemGroupWrapper}>
               {/* {renderGaugePressure()} */}
               <GaugeComponent
-                title="Pressure kPa"
-                value={dbObject["pressurePascal"]} // edit disini
-                min={100}
-                max={1000}
+                title="Pressure Bar"
+                value={dbObject["pressureBar"]} // edit disini
+                min={gaugeValue.pressureBar.min}
+                max={gaugeValue.pressureBar.max}
                 markStep={
                   (gaugeValue.pressureBar.max - gaugeValue.pressureBar.min) / 10
                 }
-                unit="kPa"
+                unit="bar"
               />
               <GaugeComponent
                 title="Pressure Psi"
