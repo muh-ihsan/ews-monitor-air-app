@@ -10,7 +10,6 @@ import {
   View,
 } from "react-native";
 import auth from "@react-native-firebase/auth";
-import messaging from "@react-native-firebase/messaging";
 
 import colors from "../styles/colors";
 import { Button, TouchableRipple } from "react-native-paper";
@@ -159,7 +158,6 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     fontSize: 18,
     fontWeight: "bold",
-    // fontFamily: "Montserrat-Bold",
   },
   buttonSignIn: {
     width: 140,

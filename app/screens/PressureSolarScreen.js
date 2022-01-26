@@ -19,6 +19,7 @@ function PressureSolarScreen({ route, navigation }) {
     current: 0,
     pressureBar: 0,
     pressurePsi: 0,
+    pressurePascal: 0,
     voltage: 0,
   });
   const [gaugeValue, setGaugeValue] = useState({
@@ -131,14 +132,14 @@ function PressureSolarScreen({ route, navigation }) {
             <View style={styles.itemGroupWrapper}>
               {/* {renderGaugePressure()} */}
               <GaugeComponent
-                title="Pressure Bar"
-                value={dbObject["pressureBar"]}
-                min={gaugeValue.pressureBar.min}
-                max={gaugeValue.pressureBar.max}
+                title="Pressure kPa"
+                value={dbObject["pressurePascal"]} // edit disini
+                min={100}
+                max={1000}
                 markStep={
                   (gaugeValue.pressureBar.max - gaugeValue.pressureBar.min) / 10
                 }
-                unit="bar"
+                unit="kPa"
               />
               <GaugeComponent
                 title="Pressure Psi"
