@@ -66,96 +66,96 @@ function ListMonitorScreen({ route, navigation }) {
       });
   }, [refreshList]);
 
-  const tambahMonitor = () => {
-    let objTambah = {};
-    let id;
-    if (name === "Panel Pompa") {
-      objTambah = {
-        currentR: 0,
-        currentS: 0,
-        currentT: 0,
-        frequency: 0,
-        led1: {
-          nama: "LED 1",
-          value: "OFF",
-        },
-        led2: {
-          nama: "LED 2",
-          value: "OFF",
-        },
-        led3: {
-          nama: "LED 3",
-          value: "OFF",
-        },
-        led4: {
-          nama: "LED 4",
-          value: "OFF",
-        },
-        led5: {
-          nama: "LED 5",
-          value: "OFF",
-        },
-        led6: {
-          nama: "LED 6",
-          value: "OFF",
-        },
-        relay1: { nama: "Relay 1", trigger: 0 },
-        relay2: { nama: "Relay 2", trigger: 1 },
-        nama: tambahNama,
-        power: 0,
-        powerFactor: 0,
-        voltR: 0,
-        voltS: 0,
-        voltT: 0,
-      };
-      const extractLastId = Number(
-        listMonitor[listMonitor.length - 1].value.substring(10) // ekstrak nomor dari id terakhir
-      );
-      id = `panelPompa${extractLastId + 1}`;
-    } else if (name === "Flow Meter") {
-      objTambah = {
-        energyFlow: 0,
-        flowRate: 0,
-        fluidSoundSpeed: 0,
-        nama: tambahNama,
-        tempInlet: 0,
-        tempOutlet: 0,
-        negativeAcc: 0,
-        positiveAcc: 0,
-        velocity: 0,
-        totalAir: 0,
-      };
-      const extractLastId = Number(
-        listMonitor[listMonitor.length - 1].value.substring(9) // ekstrak nomor dari id terakhir
-      );
-      id = `flowMeter${extractLastId + 1}`;
-    } else if (name === "Pressure & Solar") {
-      objTambah = {
-        nama: tambahNama,
-        current: 0,
-        pressureBar: 0,
-        pressurePsi: 0,
-        voltage: 0,
-      };
-      const extractLastId = Number(
-        listMonitor[listMonitor.length - 1].value.substring(13) // ekstrak nomor dari id terakhir
-      );
-      id = `pressureSolar${extractLastId + 1}`;
-    }
+  // const tambahMonitor = () => {
+  //   let objTambah = {};
+  //   let id;
+  //   if (name === "Panel Pompa") {
+  //     objTambah = {
+  //       currentR: 0,
+  //       currentS: 0,
+  //       currentT: 0,
+  //       frequency: 0,
+  //       led1: {
+  //         nama: "LED 1",
+  //         value: "OFF",
+  //       },
+  //       led2: {
+  //         nama: "LED 2",
+  //         value: "OFF",
+  //       },
+  //       led3: {
+  //         nama: "LED 3",
+  //         value: "OFF",
+  //       },
+  //       led4: {
+  //         nama: "LED 4",
+  //         value: "OFF",
+  //       },
+  //       led5: {
+  //         nama: "LED 5",
+  //         value: "OFF",
+  //       },
+  //       led6: {
+  //         nama: "LED 6",
+  //         value: "OFF",
+  //       },
+  //       relay1: { nama: "Relay 1", trigger: 0 },
+  //       relay2: { nama: "Relay 2", trigger: 1 },
+  //       nama: tambahNama,
+  //       power: 0,
+  //       powerFactor: 0,
+  //       voltR: 0,
+  //       voltS: 0,
+  //       voltT: 0,
+  //     };
+  //     const extractLastId = Number(
+  //       listMonitor[listMonitor.length - 1].value.substring(10) // ekstrak nomor dari id terakhir
+  //     );
+  //     id = `panelPompa${extractLastId + 1}`;
+  //   } else if (name === "Flow Meter") {
+  //     objTambah = {
+  //       energyFlow: 0,
+  //       flowRate: 0,
+  //       fluidSoundSpeed: 0,
+  //       nama: tambahNama,
+  //       tempInlet: 0,
+  //       tempOutlet: 0,
+  //       negativeAcc: 0,
+  //       positiveAcc: 0,
+  //       velocity: 0,
+  //       totalAir: 0,
+  //     };
+  //     const extractLastId = Number(
+  //       listMonitor[listMonitor.length - 1].value.substring(9) // ekstrak nomor dari id terakhir
+  //     );
+  //     id = `flowMeter${extractLastId + 1}`;
+  //   } else if (name === "Pressure & Solar") {
+  //     objTambah = {
+  //       nama: tambahNama,
+  //       current: 0,
+  //       pressureBar: 0,
+  //       pressurePsi: 0,
+  //       voltage: 0,
+  //     };
+  //     const extractLastId = Number(
+  //       listMonitor[listMonitor.length - 1].value.substring(13) // ekstrak nomor dari id terakhir
+  //     );
+  //     id = `pressureSolar${extractLastId + 1}`;
+  //   }
 
-    database()
-      .ref(`ewsApp/${jenisMonitor}/${id}`)
-      .set(objTambah)
-      .then(() => {
-        console.log("Tambah Monitor berhasil!");
-        setTambahVisible(false);
-        setTambahNama("");
-        setRefreshList(!refreshList);
-      })
-      .catch(() => {
-        Alert.alert("Error", "Gagal tambah monitor");
-      });
-  };
+  //   database()
+  //     .ref(`ewsApp/${jenisMonitor}/${id}`)
+  //     .set(objTambah)
+  //     .then(() => {
+  //       console.log("Tambah Monitor berhasil!");
+  //       setTambahVisible(false);
+  //       setTambahNama("");
+  //       setRefreshList(!refreshList);
+  //     })
+  //     .catch(() => {
+  //       Alert.alert("Error", "Gagal tambah monitor");
+  //     });
+  // };
 
   const ubahNamaMonitor = () => {
     let objUbah = {};
@@ -290,8 +290,7 @@ function ListMonitorScreen({ route, navigation }) {
         translucent={true}
       />
       <LoadingModalComponent show={initializing} navigation={navigation} />
-      <Portal>
-        {/* Untuk tambah nama */}
+      {/* <Portal>
         <Modal
           visible={tambahVisible}
           contentContainerStyle={styles.tambahModalContainer}
@@ -327,7 +326,7 @@ function ListMonitorScreen({ route, navigation }) {
             </Button>
           </View>
         </Modal>
-      </Portal>
+      </Portal> */}
       <Portal>
         {/* Untuk ubah nama */}
         <Modal
@@ -375,13 +374,13 @@ function ListMonitorScreen({ route, navigation }) {
         renderItem={renderMonitorList}
         keyExtractor={(item) => item.value}
       />
-      <FAB
+      {/* <FAB
         style={styles.fab}
         icon="plus"
         label="tambah"
         visible={!initializing}
         onPress={() => setTambahVisible(true)}
-      />
+      /> */}
     </View>
   );
 }
