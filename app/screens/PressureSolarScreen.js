@@ -19,11 +19,13 @@ function PressureSolarScreen({ route, navigation }) {
     current: 0,
     pressureBar: 0,
     pressurePsi: 0,
+    pressurePascal: 0,
     voltage: 0,
   });
   const [gaugeValue, setGaugeValue] = useState({
     pressureBar: {},
     pressurePsi: {},
+    pressurePascal: {},
     chargeThreshold: 0,
   });
   const [intializing, setInitializing] = useState(true);
@@ -131,8 +133,8 @@ function PressureSolarScreen({ route, navigation }) {
             <View style={styles.itemGroupWrapper}>
               {/* {renderGaugePressure()} */}
               <GaugeComponent
-                title="Pressure Bar"
-                value={dbObject["pressureBar"]}
+                title="Pressure bar"
+                value={Number(dbObject["pressureBar"])}
                 min={gaugeValue.pressureBar.min}
                 max={gaugeValue.pressureBar.max}
                 markStep={
@@ -141,14 +143,16 @@ function PressureSolarScreen({ route, navigation }) {
                 unit="bar"
               />
               <GaugeComponent
-                title="Pressure Psi"
-                value={dbObject["pressurePsi"]}
-                min={gaugeValue.pressurePsi.min}
-                max={gaugeValue.pressurePsi.max}
+                title="Pressure kiloPascal"
+                value={Number(dbObject["pressurePascal"])}
+                min={gaugeValue.pressurePascal.min}
+                max={gaugeValue.pressurePascal.max}
                 markStep={
-                  (gaugeValue.pressurePsi.max - gaugeValue.pressurePsi.min) / 10
+                  (gaugeValue.pressurePascal.max -
+                    gaugeValue.pressurePascal.min) /
+                  10
                 }
-                unit="psi"
+                unit="kPa"
               />
               {kebocoran ? viewKebocoran() : null}
             </View>
