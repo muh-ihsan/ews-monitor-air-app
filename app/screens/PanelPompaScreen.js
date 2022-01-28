@@ -8,6 +8,7 @@ import {
   View,
 } from "react-native";
 import database from "@react-native-firebase/database";
+import perf from "@react-native-firebase/perf";
 import { Card } from "react-native-paper";
 
 import GaugeComponent from "../ui/GaugeComponent";
@@ -63,11 +64,14 @@ function PanelPompaScreen({ route, navigation }) {
   React.useEffect(() => {
     const dbListen = database()
       .ref(`${dbPath}/${monitorValue}`)
-      .on("value", (snapshot) => {
+      .on("value", async (snapshot) => {
+        const traceRealTime = await perf().startTrace("real-time-panel-pompa");
+        const traceRelaySwitch = await perf().startTrace("relay-changes");
         let data = snapshot.val();
         let relay1Convert = false;
         let relay2Convert = false;
         setDbObject(data);
+        await traceRealTime.stop();
 
         if (data["relay1"]["trigger"] === 1) {
           relay1Convert = true;
@@ -84,6 +88,8 @@ function PanelPompaScreen({ route, navigation }) {
         // setRelay1(data.relay1.trigger);
         // setRelay2(data.relay2.trigger);
         setInitializing(false);
+
+        traceRelaySwitch.stop();
       });
 
     return () => {

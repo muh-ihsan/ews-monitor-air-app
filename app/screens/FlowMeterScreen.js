@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { View, ScrollView, Dimensions, StatusBar, Text } from "react-native";
 import database from "@react-native-firebase/database";
+import perf from "@react-native-firebase/perf";
 import { Card } from "react-native-paper";
 
 import GaugeComponent from "../ui/GaugeComponent";
@@ -50,10 +51,12 @@ function FlowMeterScreen({ route, navigation }) {
   React.useEffect(() => {
     const dbListen = database()
       .ref(`${dbPath}/${monitorValue}`)
-      .on("value", (snapshot) => {
+      .on("value", async (snapshot) => {
+        const trace = await perf().startTrace("real-time-flow-meter");
         let data = snapshot.val();
         setDbObject(data);
         setInitializing(false);
+        await trace.stop();
       });
 
     return () => {

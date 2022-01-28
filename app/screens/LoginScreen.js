@@ -12,7 +12,7 @@ import {
 import auth from "@react-native-firebase/auth";
 
 import colors from "../styles/colors";
-import { Button, TouchableRipple } from "react-native-paper";
+import { Button } from "react-native-paper";
 
 // messaging()
 //   .unsubscribeFromTopic("notif")
