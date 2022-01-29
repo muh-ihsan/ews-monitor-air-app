@@ -136,8 +136,8 @@ android {
         applicationId 'com.ewsmonitorair'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 21
-        versionName "0.8.1-custom"
+        versionCode 22
+        versionName "0.8.2-custom"
     }
     splits {
         abi {
