@@ -1,10 +1,9 @@
 {
   "expo": {
     "name": "ta_monitor_air",
-    "plugins": ["@react-native-firebase/app", "@react-native-firebase/perf"],
     "displayName": "EWS Monitor Air",
     "slug": "ta_monitor_air",
-    "version": "0.8.2",
+    "version": "0.8",
     "orientation": "portrait",
     "icon": "./app/assets/appicon_purabaya.png",
     "splash": {
@@ -22,9 +21,8 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./app/assets/logo_purabaya.png",
-        "backgroundColor": "#FFFFFF"
+        "backgroundColor": "#029ADF"
       },
-      "googleServicesFile": "./google-services.json",
       "package": "com.ewsmonitorair"
     },
     "web": {
