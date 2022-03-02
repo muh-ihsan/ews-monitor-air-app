@@ -88,7 +88,8 @@ function LoginScreen() {
       <View style={styles.inputWrapper}>
         <Image
           style={styles.imageLogin}
-          source={require("../assets/logo_purabaya.png")}
+          resizeMode="center"
+          source={require("../assets/logo_boyolali_full.png")}
           fadeDuration={0}
         />
         <Text style={styles.appTitle}>EWS & Monitor Air PDAM</Text>
@@ -174,7 +175,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    justifyContent: "space-evenly",
+    justifyContent: "center",
     backgroundColor: colors.background,
   },
   errorLabelContainer: {
@@ -183,10 +184,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   imageLogin: {
-    width: 148,
-    height: 148,
+    width: 340,
+    height: 140,
+    marginEnd: 24,
     alignSelf: "center",
-    marginBottom: 16,
   },
   inputWrapper: {
     paddingHorizontal: 24,

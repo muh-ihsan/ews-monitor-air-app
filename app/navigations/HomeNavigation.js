@@ -16,7 +16,7 @@ function HomeNavigation({ navigation }) {
     return (
       <Image
         style={{ width: 32, height: 32, marginLeft: 20 }}
-        source={require("../assets/logo_purabaya.png")}
+        source={require("../assets/logo_boyolali.png")}
       />
     );
   }

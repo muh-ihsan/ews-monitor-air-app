@@ -55,7 +55,7 @@ function HomeScreen({ navigation }) {
           <View style={styles.headerWrapper}>
             <Image
               style={styles.imageLogo}
-              source={require("../assets/logo_purabaya.png")}
+              source={require("../assets/logo_boyolali.png")}
               fadeDuration={0}
             />
             <View style={styles.headerTextWrapper}>
@@ -187,12 +187,12 @@ const styles = StyleSheet.create({
   },
   headerTextWrapper: {
     justifyContent: "center",
-    marginStart: 16,
+    marginStart: 6,
     alignContent: "stretch",
   },
   imageLogo: {
-    width: 120,
-    height: 120,
+    width: 116,
+    height: 116,
     marginLeft: 16,
   },
   monitorListWrapper: {
