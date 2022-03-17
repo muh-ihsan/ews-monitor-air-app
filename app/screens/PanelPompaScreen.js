@@ -192,7 +192,7 @@ function PanelPompaScreen({ route, navigation }) {
               <View style={styles.itemTextValueWrapper}>
                 <Text style={styles.textItemTitle}>Power</Text>
                 <Text style={styles.textItemValue}>
-                  {dbObject["power"].toFixed(2)} W
+                  {dbObject["power"].toFixed(2)} kW
                 </Text>
               </View>
             </View>
