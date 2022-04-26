@@ -45,6 +45,8 @@ function PanelPompaScreen({ route, navigation }) {
   const [relay1, setRelay1] = useState(false);
   const [relay2, setRelay2] = useState(false);
   const [intializing, setInitializing] = useState(true);
+  const [online, setOnline] = useState(false);
+  const [lastOnline, setLastOnline] = useState("");
 
   // Untuk ambil value gauge
   React.useEffect(() => {
@@ -59,6 +61,55 @@ function PanelPompaScreen({ route, navigation }) {
         console.log(err);
       });
   }, []);
+
+  // Untuk cek status online
+  React.useEffect(() => {
+    const onlineListen = database()
+      .ref(`ewsApp/others/lastUpdate/panel-pompa/${monitorValue}`)
+      .on("value", (snapshot) => {
+        if (snapshot.val() == null) {
+          setOnline(false);
+          setLastOnline("No data");
+        } else {
+          // Calculate time differerence
+          const currentTime = new Date();
+          const timeDb = new Date(snapshot.val());
+          const diff = Math.abs(currentTime - timeDb);
+          const minDiff = Math.floor(diff / 1000 / 60);
+
+          if (minDiff <= 5) {
+            setOnline(true);
+          } else {
+            setOnline(false);
+            const months = [
+              "Jan",
+              "Feb",
+              "Mar",
+              "Apr",
+              "Mei",
+              "Jun",
+              "Jul",
+              "Ags",
+              "Sep",
+              "Okt",
+              "Nov",
+              "Des",
+            ];
+            const bulan = months[timeDb.getMonth()];
+            const lastOnlineText = `${timeDb.getDate()} ${bulan}, ${timeDb.getHours()}:${String(
+              timeDb.getMinutes()
+            ).padStart(2, "0")}`;
+            setLastOnline(lastOnlineText);
+          }
+        }
+      });
+
+    return () => {
+      database()
+        .ref(`ewsApp/others/lastUpdate/panel-pompa/${monitorValue}`)
+        .off("value", onlineListen);
+    };
+  }, [dbObject]);
 
   React.useEffect(() => {
     const dbListen = database()
@@ -103,6 +154,29 @@ function PanelPompaScreen({ route, navigation }) {
       <View style={styles.titleMonitorWrapper}>
         <Text style={styles.titleMonitorText}>{dbObject.nama}</Text>
         <Text style={styles.detailMonitorText}>ID: {monitorValue}</Text>
+        <View style={{ flexDirection: "row", justifyContent: "center" }}>
+          <View
+            style={[
+              styles.statusCircle,
+              { backgroundColor: online ? "#04A777" : "#f43f5e" },
+            ]}
+          />
+          <Text
+            style={[
+              styles.detailMonitorText,
+              {
+                marginLeft: 4,
+                color: online ? "#04A777" : "#f43f5e",
+                fontWeight: "bold",
+              },
+            ]}
+          >
+            {online ? "Online" : "Offline"}
+          </Text>
+          <Text style={[styles.detailMonitorText, { marginLeft: 4 }]}>
+            {online ? null : `• Update terakhir: ${lastOnline}`}
+          </Text>
+        </View>
       </View>
       <ScrollView style={{ marginTop: 16, height: screenHeight - 240 }}>
         <Card elevation={2} style={[styles.groupWrapper, { height: 520 }]}>

@@ -50,6 +50,13 @@ export default styles = StyleSheet.create({
     borderRadius: 8,
     elevation: 5,
   },
+  statusCircle: {
+    width: 8,
+    height: 8,
+    borderRadius: 8,
+    marginTop: 8,
+    alignSelf: "center",
+  },
   textGaugeValue: {
     color: colors.text,
     fontSize: 16,
