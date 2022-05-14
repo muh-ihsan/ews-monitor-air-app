@@ -125,28 +125,7 @@ function PressureSolarScreen({ route, navigation }) {
       .on("value", (snapshot) => {
         setKebocoran(snapshot.val());
       });
-
-    // return () => {
-    //   database().ref("ewsApp/warning/kebocoran").off("value", dbListen);
-    //   setInitializing(true);
-    // };
   }, []);
-
-  // const renderGaugePressure = () => {
-  //   return listPressure.map((element, i) => {
-  //     return (
-  //       <GaugeComponent
-  //         key={i}
-  //         title={element.nama}
-  //         value={element.value}
-  //         min={0}
-  //         max={80}
-  //         markStep={5}
-  //         unit="psi"
-  //       />
-  //     );
-  //   });
-  // };
 
   function viewKebocoran() {
     return (
